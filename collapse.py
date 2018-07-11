@@ -5,7 +5,8 @@ import pygame
 from pygame.locals import *
 import pymunk
 import pymunk.pygame_util
-# impor5t pymunk.Vec2d
+
+import pymunk_cd.CompoundObject
 
 def to_pygame(p):
     """Small hack to convert pymunk to pygame coordinates"""
@@ -16,15 +17,15 @@ def add_ball(space):
     radius = 4
     moment = pymunk.moment_for_circle(mass, 0, radius) # 1
     body = pymunk.Body(mass, moment) # 2
-    x = random.randint(200, 300)
-    y = random.randint(200, 300)
+    x = random.randint(200, 400)
+    y = random.randint(200, 400)
     body.position = x, y # 3
     shape = pymunk.Circle(body, radius) # 4
     space.add(body, shape) # 5
     return shape
 
 def calc_gravitational_force(body1,body2):
-    G = 1000
+    G = 500
     translation_vec = (body1.position - body2.position)
     r_sqrd = translation_vec.get_length_sqrd()
     if(r_sqrd == 0):
@@ -49,9 +50,14 @@ def main():
     balls = []
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
-    for n in range(50):
+    NUM_BALLS = 40
+
+    star = pymunk_cd.CompoundObject.CompoundObject()
+
+    for n in range(NUM_BALLS):
         ball_shape = add_ball(space)
         balls.append(ball_shape)
+        star.group.append(ball_shape)
 
     while True:
         for event in pygame.event.get():
@@ -75,15 +81,23 @@ def main():
             space.remove(ball, ball.body) # 3
             balls.remove(ball) # 4
 
-        steps = 30
+        steps = 50
         for x in range(steps):
             space.step(1/50.0)
 
         screen.fill((255,255,255))
+
+        pygame.draw.circle(screen, 
+            (0,0,0),
+            to_pygame(star.get_centre_of_gravity()),
+            int(star.get_max_radius()),
+            1
+        )
         space.debug_draw(draw_options)
 
         pygame.display.flip()
         clock.tick(50)
+        # print(star.get_centre_of_gravity())
 
 if __name__ == '__main__':
     main()
