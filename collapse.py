@@ -7,6 +7,7 @@ import pymunk
 import pymunk.pygame_util
 
 import pymunk_cd.CompoundObject
+import pymunk_cd.CDManager
 
 def to_pygame(p):
     """Small hack to convert pymunk to pygame coordinates"""
@@ -16,7 +17,7 @@ def add_ball(space):
     mass = 1
     radius = 4
     moment = pymunk.moment_for_circle(mass, 0, radius) # 1
-    body = pymunk.Body(mass, moment) # 2
+    body = pymunk.Body(mass, moment) # 2cog
     x = random.randint(200, 400)
     y = random.randint(200, 400)
     body.position = x, y # 3
@@ -46,13 +47,19 @@ def main():
     space = pymunk.Space()
     space.gravity = (0.0, 0.0)
 
+    
+
+
     # lines = add_L(space)
     balls = []
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
     NUM_BALLS = 40
 
+    # setup CD stuff
     star = pymunk_cd.CompoundObject.CompoundObject()
+    manager = pymunk_cd.CDManager.CDManager()
+    manager.objects.append(star)
 
     for n in range(NUM_BALLS):
         ball_shape = add_ball(space)
@@ -81,9 +88,11 @@ def main():
             space.remove(ball, ball.body) # 3
             balls.remove(ball) # 4
 
-        steps = 50
-        for x in range(steps):
-            space.step(1/50.0)
+        steps_per_frame = 20 #larger value increases accuracy of simulation, but decreases speed
+        frames_per_tick = 1
+
+        for x in range(steps_per_frame):
+            space.step(1/(frames_per_tick*steps_per_frame))
 
         screen.fill((255,255,255))
 
@@ -96,8 +105,10 @@ def main():
         space.debug_draw(draw_options)
 
         pygame.display.flip()
-        clock.tick(50)
-        # print(star.get_centre_of_gravity())
+        clock.tick(50) # argument is max framerate, which we'll probably never reach!
+
+        manager.tick() #processes changes in CDobjects
+        
 
 if __name__ == '__main__':
     main()
