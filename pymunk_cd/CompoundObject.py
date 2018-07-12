@@ -18,7 +18,7 @@ class CompoundObject:
 
     
     def tick(self):
-        '''Updates history of properties and returns any events'''
+        "Updates history of properties and returns any events"
         cog = self.get_centre_of_gravity()
         self.cog_history.append(cog)
 
@@ -26,14 +26,19 @@ class CompoundObject:
 
         #check for events
         min_event_span = 4
+        if(len(self.radius_history) < min_event_span):
+            return []
+        
+        first_index = len(self.radius_history) - min_event_span
+
+        #check for whole object movements
+        recent_cog_history = self.cog_history[first_index:]
+        x_coords = list(map(lambda cog: cog.x, recent_cog_history))
+        y_coords = list(map(lambda cog: cog.y, recent_cog_history))
+        if (max(x_coords) - min(x_coords) > 5) or (max(y_coords) - min(y_coords) > 5):
+            return [pymunk_cd.CDEvent.CDEvent(self, EventType.EventType.PTRANS)]
 
         #check radius
-        if(len(self.radius_history) < min_event_span):
-            return False
-
-        first_index = len(self.radius_history) - min_event_span
-        
-
         for i, j in zip(self.radius_history[first_index-1:], self.radius_history[first_index:]):
             if(j > i):
                 return []
