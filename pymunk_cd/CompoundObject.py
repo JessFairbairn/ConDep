@@ -25,7 +25,7 @@ class CompoundObject:
         self.radius_history.append(self.get_max_radius(cog))
 
         #check for events
-        min_event_span = 5
+        min_event_span = 4
 
         #check radius
         if(len(self.radius_history) < min_event_span):
@@ -34,11 +34,11 @@ class CompoundObject:
         first_index = len(self.radius_history) - min_event_span
         
 
-        for i, j in zip(self.radius_history, self.radius_history[first_index:]):
+        for i, j in zip(self.radius_history[first_index-1:], self.radius_history[first_index:]):
             if(j > i):
                 return []
             
-        return pymunk_cd.CDEvent.CDEvent(self, EventType.EventType.MOVE)
+        return [pymunk_cd.CDEvent.CDEvent(self, EventType.EventType.MOVE)]
 
 
     # Get methods
