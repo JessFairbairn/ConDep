@@ -58,7 +58,7 @@ def main():
 
     # setup CD stuff
     star = pymunk_cd.CompoundObject.CompoundObject()
-    manager = pymunk_cd.CDManager.CDManager()
+    manager = pymunk_cd.CDManager.CDManager(screen)
     manager.objects.append(star)
 
     for n in range(NUM_BALLS):
@@ -104,10 +104,12 @@ def main():
         )
         space.debug_draw(draw_options)
 
+
+        manager.tick() #processes changes in CDobjects
+
         pygame.display.flip()
         clock.tick(50) # argument is max framerate, which we'll probably never reach!
 
-        manager.tick() #processes changes in CDobjects
         
 
 if __name__ == '__main__':
