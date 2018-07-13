@@ -14,6 +14,7 @@ class CompoundObject:
         self.radius_history = []
         self.cog_history = []
 
+        self.name = None
 
 
     
@@ -42,8 +43,11 @@ class CompoundObject:
         for i, j in zip(self.radius_history[first_index-1:], self.radius_history[first_index:]):
             if(j > i):
                 return []
-            
-        return [pymunk_cd.CDEvent.CDEvent(self, EventType.EventType.MOVE)]
+
+        new_event = pymunk_cd.CDEvent.CDEvent(self, EventType.EventType.MOVE)
+        new_event.part = "radius"
+        new_event.direction = "decrease"
+        return [new_event]
 
 
     # Get methods

@@ -47,10 +47,6 @@ def main():
     space = pymunk.Space()
     space.gravity = (0.0, 0.0)
 
-    
-
-
-    # lines = add_L(space)
     balls = []
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
@@ -58,6 +54,8 @@ def main():
 
     # setup CD stuff
     star = pymunk_cd.CompoundObject.CompoundObject()
+    star.name = 'Star1'
+
     manager = pymunk_cd.CDManager.CDManager(screen)
     manager.objects.append(star)
 
@@ -81,14 +79,11 @@ def main():
 
             ball.body.apply_force_at_local_point(grav_force, (0,0))
 
-            if ball.body.position.y < 0: # 1
-                balls_to_remove.append(ball) # 2
-
         for ball in balls_to_remove:
             space.remove(ball, ball.body) # 3
             balls.remove(ball) # 4
 
-        steps_per_frame = 20 #larger value increases accuracy of simulation, but decreases speed
+        steps_per_frame = 50 #larger value increases accuracy of simulation, but decreases speed
         frames_per_tick = 1
 
         for x in range(steps_per_frame):
