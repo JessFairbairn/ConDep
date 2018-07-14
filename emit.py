@@ -26,7 +26,7 @@ def main():
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
     manager = pymunk_cd.CDManager.CDManager(screen,space)
-    star = CDUtilities.create_star(manager)
+    star = CDUtilities.create_spitting_star(manager)
     balls = star.parts
 
     while True:

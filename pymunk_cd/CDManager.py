@@ -1,27 +1,41 @@
 import ctypes
 import pygame.font
+from .Utilities import *
+
 from .EventType import EventType 
 
 
 class CDManager:
-    def __init__(self, screen):
+    'Tracks all CompoundEntity instances, acts when a CD event is detected'
+    def __init__(self, screen, space):
         self.objects = []
         self.screen = screen
+        self.space = space
         return
 
 
     def tick(self):
         for obj in self.objects:
+            obj_cog = obj.get_centre_of_gravity()
+            inclusion_radius = obj.get_inclusion_radius(obj_cog)
+
             events = obj.tick()
             if events:
                 for event in events:
-                    obj_name = event.object.name or ''
-                    print(event.type.name + ' from object ' + obj_name)
+                    print(event)
 
-                    if event.type == EventType.MOVE:
+                    #Detect scenarios
+                    if event.event_type == EventType.MOVE:
                         if event.part == "radius" and event.direction == "decrease":
-                            print("Collapse event in " + event.object.name)                
+                            print("Collapse event in " + event.subject.name)                
 
+
+            pygame.draw.circle(self.screen, 
+                (0,0,0),
+                to_pygame(obj_cog),
+                int(inclusion_radius),
+                1
+            )
         return
 
     def display_text(self, message):
