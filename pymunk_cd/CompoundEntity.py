@@ -69,7 +69,7 @@ class CompoundEntity:
                 return new_events
 
         move_event = CDEvent.CDEvent(self, EventType.EventType.MOVE)
-        move_event.part = "radius"
+        move_event.object = "radius"
         move_event.direction = "decrease"
         new_events.append(move_event)
         return new_events

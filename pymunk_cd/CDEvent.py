@@ -6,8 +6,6 @@ class CDEvent:
 
         # 'Object' in logical sense
         self.object = object
-
-        self.part = None
         self.direction = None
         
         return

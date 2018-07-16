@@ -24,11 +24,7 @@ class CDManager:
                 for event in events:
                     print(event)
 
-                    #Detect scenarios
-                    if event.event_type == EventType.MOVE:
-                        if event.part == "radius" and event.direction == "decrease":
-                            print("Collapse event in " + event.subject.name)                
-
+                    self.detect_scenarios(event)
 
             pygame.draw.circle(self.screen, 
                 (0,0,0),
@@ -37,6 +33,12 @@ class CDManager:
                 1
             )
         return
+
+    def detect_scenarios(self, event):
+        if event.event_type == EventType.MOVE:
+            if event.object == "radius" and event.direction == "decrease":
+                print("Collapse event in " + event.subject.name)
+
 
     def display_text(self, message):
         # display text for event
