@@ -1,5 +1,7 @@
+from .EventType import EventType
+
 class CDEvent:
-    def __init__(self, subject, event_type, object = None):
+    def __init__(self, subject:str, event_type:EventType, object = None):
         "Takes CDEntity and event type as arguments"
         self.subject = subject
         self.event_type = event_type
