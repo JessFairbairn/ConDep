@@ -108,13 +108,21 @@ class MergeFunctionWorks(unittest.TestCase):
         from pymunk_cd.parsing.cd_converter import _merge_definitions
 
         def1 = CDDefinition(EventType.INGEST)
+        def1.object_constraint = 'blah'
         def2 = CDDefinition()
         def2.sense_id = 'emit.01'
         def2.affected_attribute = EntityAttributes.VELOCITY
+        def2.attribute_change_polarity = False
 
-        result = _merge_definitions(def1,def2)
+
+        result = _merge_definitions(def1, def2)
 
         self.assertEqual(result.primitive, EventType.INGEST)
+        self.assertEqual(result.sense_id, 'emit.01')
+        self.assertEqual(result.affected_attribute, EntityAttributes.VELOCITY)
+        self.assertEqual(result.object_constraint, 'blah')
+        self.assertEqual(result.attribute_change_polarity, False)
+        
 
 
 if __name__ == '__main__':
