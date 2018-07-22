@@ -3,6 +3,8 @@ from typing import List
 
 class VerbSense:
 
+    verb_sense_id = None
+
     def __init__(self, verb_name:str, arguments:list):
         self.verb_name = verb_name
         self.arguments = arguments

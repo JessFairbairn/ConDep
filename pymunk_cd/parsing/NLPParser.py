@@ -1,3 +1,4 @@
+from .cd_converter import CDConverter
 from .VerbSense import *
 
 class VerbLookup:
@@ -13,7 +14,7 @@ class VerbLookup:
         
 
 class NLPParser:
-    def __init__(self, verbLookup, cdConverter):
+    def __init__(self, verbLookup, cdConverter:CDConverter):
         self.verbLookup = verbLookup
         self.cdConverter = cdConverter
 
