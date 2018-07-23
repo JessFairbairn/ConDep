@@ -1,6 +1,8 @@
 from unittest import mock
 from unittest.mock import patch
 import unittest
+
+from pymunk_cd.action_event import ActionEvent
 from pymunk_cd.CDEvent import CDEvent
 from pymunk_cd.EventType import EventType
 
@@ -23,26 +25,14 @@ class ReturnsCorrectSubjectAndObject(unittest.TestCase):
         arg1 = VerbArgumentInstance('thing emitted', 'PPT', 'radiation')
         mock_verb_data = VerbSense("emit", [arg0, arg1])
 
-        result = converter.convert_verb_event(mock_verb_data)
+        result = converter.convert_verb_event_to_action_event(mock_verb_data)
 
-        self.assertIsInstance(result, CDEvent)
+        self.assertIsInstance(result, ActionEvent)
         self.assertEqual(result.subject, arg0.argument,
                          'should set the correct subject for the cd event')
         self.assertEqual(result.event_object, arg1.argument,
                          'should set the correct object for the cd event')
 
-
-class ReturnsCorrectCDPrimitive(unittest.TestCase):
-    def runTest(self):
-        converter = cd_converter.CDConverter()
-
-        arg0 = VerbArgumentInstance('emitting entity', 'PAG', 'black hole')
-        arg1 = VerbArgumentInstance('thing emitted', 'PPT', 'radiation')
-        mock_verb_data = VerbSense("emit", [arg0, arg1])
-
-        result = converter.convert_verb_event(mock_verb_data)
-
-        self.assertEqual(result.event_type, EventType.EXPEL)
 
 
 class CallsVerbDictionary(unittest.TestCase):
@@ -64,7 +54,7 @@ class CallsVerbDictionary(unittest.TestCase):
         with patch('verbs.dictionary', new=mock_dictionary):
             # verbs.dictionary = mock_dictionary
 
-            converter.convert_verb_event(mock_verb_data)
+            converter.convert_verb_event_to_action_event(mock_verb_data)
 
             mock_dictionary.__getitem__.assert_any_call('spew')
 
@@ -99,7 +89,7 @@ class CallsPrimitiveDictionary(unittest.TestCase):
             # primitives.dictionary = mock_prim_dictionary
             with patch('primitives.dictionary', new=mock_prim_dictionary):
 
-                converter.convert_verb_event(mock_verb_data)
+                converter.convert_verb_event_to_action_event(mock_verb_data)
 
                 mock_prim_dictionary.__getitem__.assert_any_call(EventType.INGEST)
 
@@ -111,7 +101,7 @@ class MergeFunctionWorks(unittest.TestCase):
         def1.object_constraint = 'blah'
         def2 = CDDefinition()
         def2.sense_id = 'emit.01'
-        def2.affected_attribute = EntityAttributes.VELOCITY
+        def2.affected_attribute = EntityAttributes.velocity
         def2.attribute_change_polarity = False
 
 
@@ -119,7 +109,7 @@ class MergeFunctionWorks(unittest.TestCase):
 
         self.assertEqual(result.primitive, EventType.INGEST)
         self.assertEqual(result.sense_id, 'emit.01')
-        self.assertEqual(result.affected_attribute, EntityAttributes.VELOCITY)
+        self.assertEqual(result.affected_attribute, EntityAttributes.velocity)
         self.assertEqual(result.object_constraint, 'blah')
         self.assertEqual(result.attribute_change_polarity, False)
         

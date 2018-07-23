@@ -4,6 +4,11 @@ from .Utilities import *
 
 from .EventType import EventType 
 
+from .action_event import ActionEvent
+from .parsing.primitives import dictionary as prim_dictionary
+
+# from parsing.cd_definitions.CD
+
 
 class CDManager:
     'Tracks all CompoundEntity instances, acts when a CD event is detected'
@@ -34,10 +39,25 @@ class CDManager:
             )
         return
 
-    def detect_scenarios(self, event):
-        if event.event_type == EventType.MOVE:
-            if event.object == "radius" and event.direction == "decrease":
-                print("Collapse event in " + event.subject.name)
+    def detect_scenarios(self, event:ActionEvent):
+        
+        # Eliminate incompatible primitives
+        eliminated_primitives = []
+        for prim in EventType:
+            prim_def = prim_dictionary[prim]
+            # for attr in ['affected_attribute', 'object_constraint', 'attribute_change_polarity']:
+                
+            attr_1 = event.affected_attribute
+            attr_2 = prim_def.affected_attribute
+
+            if attr_1 and attr_2 and (attr_1 != attr_2):
+                eliminated_primitives.append(prim)
+        
+        
+            # TODO: handle attribute_change_polarity better as it's boolean
+            # TODO: implement object_constraint properly
+        return
+        
 
 
     def display_text(self, message):

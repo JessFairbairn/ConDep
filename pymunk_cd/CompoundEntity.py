@@ -1,6 +1,7 @@
 import math
 import pymunk
-from .CDEvent import CDEvent as CDEvent
+from .action_event import ActionEvent
+from .action_event import EntityAttributes
 import pymunk_cd.EventType as EventType
 # from .EventType import EventType
 from pymunk_cd import *
@@ -23,26 +24,30 @@ class CompoundEntity:
     def tick(self):
         "Updates history of properties and returns any events"
         
-        #First work out if any particles have been emitted
         cog = self.get_centre_of_gravity()
         inclusion_radius = self.get_inclusion_radius(cog)
         distances_from_centre = self.get_distances_from_cog(cog)
 
-        has_exited = list(map(lambda part_dist: part_dist > inclusion_radius, distances_from_centre))
-        
-        
         new_events = []
+
+        # check for parts of the object seperating/leaving
+        has_exited = list(map(lambda part_dist: part_dist > inclusion_radius, distances_from_centre))        
+        
         for idx in range(len(has_exited) - 1, 0, -1):
             if has_exited[idx]:
                 #remove from parts
                 removed_object = self.parts[idx]
                 del self.parts[idx]
-                emit_event = CDEvent.CDEvent(self, EventType.EventType.EXPEL, removed_object)
+                emit_event = ActionEvent()
+                emit_event.event_object = removed_object
+                emit_event.subject = self
+                emit_event.affected_attribute = EntityAttributes.inside_subject
+                emit_event.attribute_change_polarity = False
                 new_events.append(emit_event)
 
         
 
-        #Then update histories
+        #Then log to histories
         cog = self.get_centre_of_gravity()
         self.cog_history.append(cog)
         self.radius_history.append(self.get_max_radius(cog))
@@ -60,7 +65,11 @@ class CompoundEntity:
         y_coords = list(map(lambda cog: cog.y, recent_cog_history))
 
         if (max(x_coords) - min(x_coords) > 5) or (max(y_coords) - min(y_coords) > 5):
-            new_events.append(CDEvent.CDEvent(self, EventType.EventType.PTRANS))
+            event = ActionEvent()
+            event.affected_attribute = EntityAttributes.position #something to better express this
+            event.subject = self
+
+            new_events.append(event)
             return new_events
 
         #check radius
@@ -68,10 +77,11 @@ class CompoundEntity:
             if(j > i):
                 return new_events
 
-        move_event = CDEvent.CDEvent(self, EventType.EventType.MOVE)
-        move_event.object = "radius"
-        move_event.direction = "decrease"
-        new_events.append(move_event)
+        radius_change = ActionEvent()
+        radius_change.subject = self
+        radius_change.affected_attribute = EntityAttributes.radius
+        radius_change.attribute_change_polarity = True
+        new_events.append(radius_change)
         return new_events
 
 

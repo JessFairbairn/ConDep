@@ -1,4 +1,5 @@
 from pymunk_cd.EventType import EventType
+from pymunk_cd.action_event import EntityAttributes
 from enum import Enum
 
 class CDDefinition:
@@ -16,8 +17,3 @@ class CDDefinition:
     # def __iter__(self):
     #     for attr, value in self.__dict__.iteritems():
     #         yield attr, value
-
-class EntityAttributes(Enum):
-    RADIUS = 1
-    VELOCITY = 2
-    DISTANCE_FROM_SUBJECT = 3
