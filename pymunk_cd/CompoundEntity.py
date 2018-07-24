@@ -18,8 +18,10 @@ class CompoundEntity:
         self.radius_history = []
         self.cog_history = []
 
-        self.name = None
+        self.name = None # Type: str
 
+    def __str__(self):
+        return self.name
     
     def tick(self):
         "Updates history of properties and returns any events"

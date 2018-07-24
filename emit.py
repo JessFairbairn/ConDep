@@ -9,14 +9,15 @@ import pymunk.pygame_util
 import pymunk_cd.CompoundEntity
 import pymunk_cd.CDManager
 
-from pymunk_cd import Utilities
+from pymunk_cd import utilities
 
 from pymunk_cd import CDUtilities    
 
 def main():
+    #pylint: disable=no-member
     pygame.init()
     screen = pygame.display.set_mode((600, 600))
-    pygame.display.set_caption("Collapse")
+    pygame.display.set_caption("Emit")
     clock = pygame.time.Clock()
 
     space = pymunk.Space()
@@ -40,7 +41,7 @@ def main():
         for ball in balls:
             grav_force = pymunk.Vec2d()
             for other_ball in balls:
-                grav_force = grav_force + Utilities.calc_gravitational_force(other_ball.body, ball.body)
+                grav_force = grav_force + utilities.calc_gravitational_force(other_ball.body, ball.body)
 
             ball.body.apply_force_at_local_point(grav_force, (0,0))
 

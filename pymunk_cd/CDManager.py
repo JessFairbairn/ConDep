@@ -1,11 +1,16 @@
 import ctypes
 import pygame.font
-from .Utilities import *
+import pymunk
+from pymunk_cd import utilities
 
 from .EventType import EventType 
 
 from .action_event import ActionEvent
+from .CompoundEntity import CompoundEntity
 from .parsing.primitives import dictionary as prim_dictionary
+from .parsing.verbs import dictionary as verb_dictionary
+
+import typing
 
 # from parsing.cd_definitions.CD
 
@@ -27,26 +32,36 @@ class CDManager:
             events = obj.tick()
             if events:
                 for event in events:
-                    print(event)
 
-                    self.detect_scenarios(event)
+                    candidate_verbs = self.detect_scenarios(event)
+                    
+                    if len(candidate_verbs):
+                        print(stringify_entity(event.subject)
+                            + ' ' 
+                            + candidate_verbs[0].sense_id 
+                            + 's '
+                            + stringify_entity(event.event_object)
+                            )
+                    else:
+                        utilities.warn('No candiates verbs found for event!')
 
             pygame.draw.circle(self.screen, 
                 (0,0,0),
-                to_pygame(obj_cog),
+                utilities.to_pygame(obj_cog),
                 int(inclusion_radius),
                 1
             )
         return
 
-    def detect_scenarios(self, event:ActionEvent):
+    @staticmethod
+    def detect_scenarios(event:ActionEvent):
         
         # Eliminate incompatible primitives
         eliminated_primitives = []
         for prim in EventType:
             prim_def = prim_dictionary[prim]
             # for attr in ['affected_attribute', 'object_constraint', 'attribute_change_polarity']:
-                
+            
             attr_1 = event.affected_attribute
             attr_2 = prim_def.affected_attribute
 
@@ -56,8 +71,20 @@ class CDManager:
         
             # TODO: handle attribute_change_polarity better as it's boolean
             # TODO: implement object_constraint properly
-        return
+
+        # Look up a verb to describe what's happened
+        candidate_verbs = []
+ 
+        # remaining_verbs = [verb_def for verb_def in verb_dictionary if verb_def.primitive not in eliminated_primitives]
+        for verb_def in verb_dictionary.values():
+            if (verb_def.primitive in eliminated_primitives):
+                continue
+
+            if event.affected_attribute == verb_def.affected_attribute:
+                candidate_verbs.append(verb_def)
+
         
+        return candidate_verbs
 
 
     def display_text(self, message):
@@ -68,3 +95,12 @@ class CDManager:
         label = myfont.render(message, 1, (0,0,0))
         # put the label object on the screen at point x=100, y=100
         self.screen.blit(label, (100, 100))
+
+
+def stringify_entity(entity : typing.Union[CompoundEntity, pymunk.Shape]):
+    if type(entity) == CompoundEntity:
+        return entity.__str__()
+    elif entity is None:
+        return ''
+    else:
+        return type(entity).__name__
