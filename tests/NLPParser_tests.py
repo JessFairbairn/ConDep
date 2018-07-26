@@ -18,5 +18,5 @@ class PassesVerbDataToCDConverter(unittest.TestCase):
         parser = NLPParser(mockVerbLookup, mockCDConverter)
         parser.parse_sentence('Black holes emit hawking raidiation.')
 
-        mockCDConverter.convert_verb_event.assert_called_once_with(mock_verb_data)
+        mockCDConverter.convert_verb_event_to_action_event.assert_called_once_with(mock_verb_data)
         

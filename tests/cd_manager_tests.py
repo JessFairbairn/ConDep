@@ -20,7 +20,7 @@ class ReturnsCandidateVerbsForScenario(unittest.TestCase):
         action_event = ActionEvent()
         action_event.subject = 'blah'
         action_event.event_object = 'blah'
-        action_event.affected_attribute = EntityAttributes.inside_subject
+        action_event.affected_attribute = EntityAttributes.radius
 
         result = CDManager.detect_scenarios(action_event)
 
