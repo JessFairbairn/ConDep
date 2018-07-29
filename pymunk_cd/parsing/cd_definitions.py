@@ -12,7 +12,7 @@ class CDDefinition:
     primitive = None # type: EventType
     object_constraint = None 
     affected_attribute = None # type: EntityAttributes
-    attribute_change_polarity = None # type: Boolean
+    attribute_outcome = None # type: Boolean
 
     # def __iter__(self):
     #     for attr, value in self.__dict__.iteritems():

@@ -10,14 +10,23 @@ dictionary = dict() # type: Dict[EventType, object]
 _EXPEL = CDDefinition(EventType.EXPEL)
 _EXPEL.object_constraint = 'kind(raidiation)'
 _EXPEL.affected_attribute = EntityAttributes.inside_subject
-_EXPEL.attribute_change_polarity = True
+_EXPEL.attribute_outcome = False
 dictionary[EventType.EXPEL] = _EXPEL
 
 _ptrans = CDDefinition(EventType.PTRANS)
 _ptrans.affected_attribute = EntityAttributes.position
 dictionary[EventType.PTRANS] = _ptrans
 
-dictionary[EventType.INGEST] = CDDefinition(EventType.INGEST)
-dictionary[EventType.PROPEL] = CDDefinition(EventType.PROPEL)
+_propel = CDDefinition(EventType.PROPEL)
+_propel.affected_attribute = EntityAttributes.velocity
+dictionary[EventType.PROPEL] = _propel
+
+_INGEST = CDDefinition(EventType.EXPEL)
+_INGEST.object_constraint = 'kind(raidiation)'
+_INGEST.affected_attribute = EntityAttributes.inside_subject
+_INGEST.attribute_outcome = True
+
+dictionary[EventType.INGEST] = _INGEST
+
 dictionary[EventType.MOVE] = CDDefinition(EventType.MOVE)
 

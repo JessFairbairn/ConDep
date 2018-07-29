@@ -3,7 +3,6 @@ from unittest.mock import patch
 import unittest
 
 from pymunk_cd.action_event import ActionEvent
-from pymunk_cd.CDEvent import CDEvent
 from pymunk_cd.EventType import EventType
 
 from pymunk_cd.parsing import cd_converter
@@ -102,7 +101,7 @@ class MergeFunctionWorks(unittest.TestCase):
         def2 = CDDefinition()
         def2.sense_id = 'emit.01'
         def2.affected_attribute = EntityAttributes.velocity
-        def2.attribute_change_polarity = False
+        def2.attribute_outcome = False
 
 
         result = _merge_definitions(def1, def2)
@@ -111,7 +110,7 @@ class MergeFunctionWorks(unittest.TestCase):
         self.assertEqual(result.sense_id, 'emit.01')
         self.assertEqual(result.affected_attribute, EntityAttributes.velocity)
         self.assertEqual(result.object_constraint, 'blah')
-        self.assertEqual(result.attribute_change_polarity, False)
+        self.assertEqual(result.attribute_outcome, False)
         
 
 

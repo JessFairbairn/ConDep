@@ -10,14 +10,14 @@ _emit = CDDefinition(EventType.EXPEL)
 _emit.sense_id = 'emit'
 _emit.object_constraint = 'kind(raidiation)'
 _emit.affected_attribute = EntityAttributes.inside_subject
-_emit.attribute_change_polarity = False
+_emit.attribute_outcome = False
 
 dictionary['emit'] = _emit
 
 _eject = CDDefinition(EventType.EXPEL)
 _eject.sense_id = 'eject'
 _eject.affected_attribute = EntityAttributes.inside_subject
-_eject.attribute_change_polarity = False
+_eject.attribute_outcome = False
 
 dictionary['eject'] = _eject
 
@@ -25,7 +25,7 @@ dictionary['eject'] = _eject
 _absorb = CDDefinition(EventType.INGEST)
 _absorb.sense_id = 'absorb'
 _absorb.affected_attribute = EntityAttributes.inside_subject
-_absorb.attribute_change_polarity = False
+_absorb.attribute_outcome = False
 
 dictionary['absorb'] = _absorb
 
@@ -34,7 +34,7 @@ dictionary['absorb'] = _absorb
 _move = CDDefinition(EventType.PTRANS)
 _move.sense_id = 'move'
 _move.affected_attribute = EntityAttributes.position
-_move.attribute_change_polarity = False
+_move.attribute_outcome = False
 
 dictionary['move'] = _move
 
@@ -43,14 +43,14 @@ dictionary['move'] = _move
 _contract = CDDefinition(EventType.MOVE)
 _contract.sense_id = 'contract'
 _contract.affected_attribute = EntityAttributes.radius
-_contract.attribute_change_polarity = False
+_contract.attribute_outcome = False
 
 dictionary['contract'] = _contract
 
 _collapse = CDDefinition(EventType.MOVE)
 _collapse.sense_id = 'collapse'
 _collapse.affected_attribute = EntityAttributes.radius
-_collapse.attribute_change_polarity = False
+_collapse.attribute_outcome = False
 
 dictionary['collapse'] = _collapse
 

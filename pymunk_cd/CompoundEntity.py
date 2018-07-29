@@ -17,6 +17,7 @@ class CompoundEntity:
 
         self.radius_history = []
         self.cog_history = []
+        self.cog_delta_history = []
 
         self.name = None # Type: str
 
@@ -27,36 +28,51 @@ class CompoundEntity:
         "Updates history of properties and returns any events"
         
         cog = self.get_centre_of_gravity()
-        inclusion_radius = self.get_inclusion_radius(cog)
-        distances_from_centre = self.get_distances_from_cog(cog)
 
         new_events = []
 
-        # check for parts of the object seperating/leaving
-        has_exited = list(map(lambda part_dist: part_dist > inclusion_radius, distances_from_centre))        
-        
-        for idx in range(len(has_exited) - 1, 0, -1):
-            if has_exited[idx]:
-                #remove from parts
-                removed_object = self.parts[idx]
-                del self.parts[idx]
-                emit_event = ActionEvent()
-                emit_event.event_object = removed_object
-                emit_event.subject = self
-                emit_event.affected_attribute = EntityAttributes.inside_subject
-                emit_event.attribute_change_polarity = False
-                new_events.append(emit_event)
+        if len(self.parts) > 1:
+            # check for parts of the object seperating/leaving
+            inclusion_radius = self.get_inclusion_radius(cog)
+            distances_from_centre = self.get_distances_from_cog(cog)
+
+            has_exited = list(map(lambda part_dist: part_dist > inclusion_radius, distances_from_centre))        
+            
+            for idx in range(len(has_exited) - 1, 0, -1):
+                if has_exited[idx]:
+                    #remove from parts
+                    removed_object = self.parts[idx]
+                    del self.parts[idx]
+
+                    #add event
+                    emit_event = ActionEvent()
+                    emit_event.event_object = removed_object
+                    emit_event.subject = self
+                    emit_event.affected_attribute = EntityAttributes.inside_subject
+                    emit_event.attribute_outcome = False
+                    new_events.append(emit_event)
+
+                    #TODO: create a compound object for newly seperate obj
+
 
         
 
         #Then log to histories
         cog = self.get_centre_of_gravity()
         self.cog_history.append(cog)
+
+        history_length = len(self.cog_history)
+        if history_length > 1:
+            cog_delta = self.cog_history[history_length - 1] - self.cog_history[history_length - 2]
+            self.cog_delta_history.append(cog_delta.get_length())
+            if self.name == 'Particle':
+                print(cog_delta.get_length())
+
         self.radius_history.append(self.get_max_radius(cog))
 
-        #check for events
+        #CHECK FOR EVENTS
         min_event_span = 4
-        if(len(self.radius_history) < min_event_span):
+        if len(self.radius_history) < min_event_span:
             return new_events
         
         first_index = len(self.radius_history) - min_event_span
@@ -66,29 +82,42 @@ class CompoundEntity:
         x_coords = list(map(lambda cog: cog.x, recent_cog_history))
         y_coords = list(map(lambda cog: cog.y, recent_cog_history))
 
-        if (max(x_coords) - min(x_coords) > 5) or (max(y_coords) - min(y_coords) > 5):
+        min_movement = 5
+        if (max(x_coords) - min(x_coords) > min_movement) or (max(y_coords) - min(y_coords) > min_movement):
             event = ActionEvent()
-            event.affected_attribute = EntityAttributes.position #something to better express this
+            event.affected_attribute = EntityAttributes.position
             event.subject = self
 
             new_events.append(event)
             return new_events
 
-        #check radius
-        for i, j in zip(self.radius_history[first_index-1:], self.radius_history[first_index:]):
-            if(j > i):
-                return new_events
+        recent_delta_history = self.cog_delta_history[first_index:]
 
-        radius_change = ActionEvent()
-        radius_change.subject = self
-        radius_change.affected_attribute = EntityAttributes.radius
-        radius_change.attribute_change_polarity = True
-        new_events.append(radius_change)
-        return new_events
+        
+        if (max(recent_delta_history) - min(recent_delta_history) > 0.5):
+            event = ActionEvent()
+            event.affected_attribute = EntityAttributes.velocity
+            event.object = self
+            #TODO: need subject
+
+            new_events.append(event)
+            return new_events
+
+        #check radius
+        if len(self.parts) > 1:
+            for i, j in zip(self.radius_history[first_index-1:], self.radius_history[first_index:]):
+                if j > i:
+                    return new_events
+
+            radius_change = ActionEvent()
+            radius_change.subject = self
+            radius_change.affected_attribute = EntityAttributes.radius
+            radius_change.attribute_outcome = True
+            new_events.append(radius_change)
+            return new_events
 
 
     # Get methods
-
     def get_distances_from_cog(self, cog = None):
         'Returns the distance of each particle from the centre of gravity'
 

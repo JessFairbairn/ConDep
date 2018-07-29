@@ -6,7 +6,7 @@ def to_pygame(p:int):
 
 
 def calc_gravitational_force(body1:pymunk.Body, body2:pymunk.Body):
-    G = 500
+    G = 1000
     translation_vec = (body1.position - body2.position)
     r_sqrd = translation_vec.get_length_sqrd()
     if(r_sqrd == 0):

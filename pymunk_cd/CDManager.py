@@ -12,13 +12,10 @@ from .parsing.verbs import dictionary as verb_dictionary
 
 import typing
 
-# from parsing.cd_definitions.CD
-
-
 class CDManager:
     'Tracks all CompoundEntity instances, acts when a CD event is detected'
-    def __init__(self, screen, space):
-        self.objects = []
+    def __init__(self, screen:pygame.surface.Surface, space:pymunk.Space):
+        self.objects = [] 
         self.screen = screen
         self.space = space
         return
@@ -27,7 +24,6 @@ class CDManager:
     def tick(self):
         for obj in self.objects:
             obj_cog = obj.get_centre_of_gravity()
-            inclusion_radius = obj.get_inclusion_radius(obj_cog)
 
             events = obj.tick()
             if events:
@@ -45,12 +41,14 @@ class CDManager:
                     else:
                         utilities.warn('No candiates verbs found for event!')
 
-            pygame.draw.circle(self.screen, 
-                (0,0,0),
-                utilities.to_pygame(obj_cog),
-                int(inclusion_radius),
-                1
-            )
+            if len(obj.parts) > 1:
+                inclusion_radius = obj.get_inclusion_radius(obj_cog)
+                pygame.draw.circle(self.screen,
+                    (0,0,0),
+                    utilities.to_pygame(obj_cog),
+                    int(inclusion_radius),
+                    1
+                )
         return
 
     @staticmethod
@@ -60,7 +58,7 @@ class CDManager:
         eliminated_primitives = []
         for prim in EventType:
             prim_def = prim_dictionary[prim]
-            # for attr in ['affected_attribute', 'object_constraint', 'attribute_change_polarity']:
+            # for attr in ['affected_attribute', 'object_constraint', 'attribute_outcome']:
             
             attr_1 = event.affected_attribute
             attr_2 = prim_def.affected_attribute
@@ -69,7 +67,7 @@ class CDManager:
                 eliminated_primitives.append(prim)
         
         
-            # TODO: handle attribute_change_polarity better as it's boolean
+            # TODO: handle attribute_outcome better as it's boolean
             # TODO: implement object_constraint properly
 
         # Look up a verb to describe what's happened
