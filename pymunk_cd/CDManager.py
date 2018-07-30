@@ -64,10 +64,11 @@ class CDManager:
             attr_2 = prim_def.affected_attribute
 
             if attr_1 and attr_2 and (attr_1 != attr_2):
-                eliminated_primitives.append(prim)
+                outcome_1 = event.attribute_outcome
+                outcome_2 = prim_def.attribute_outcome
+                if outcome_1 and outcome_2 and (outcome_1 != outcome_2):
+                    eliminated_primitives.append(prim)
         
-        
-            # TODO: handle attribute_outcome better as it's boolean
             # TODO: implement object_constraint properly
 
         # Look up a verb to describe what's happened
@@ -78,7 +79,7 @@ class CDManager:
             if (verb_def.primitive in eliminated_primitives):
                 continue
 
-            if event.affected_attribute == verb_def.affected_attribute:
+            if (event.affected_attribute == verb_def.affected_attribute) and (event.attribute_outcome == verb_def.attribute_outcome):
                 candidate_verbs.append(verb_def)
 
         

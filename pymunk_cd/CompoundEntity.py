@@ -2,6 +2,7 @@ import math
 import pymunk
 from .action_event import ActionEvent
 from .action_event import EntityAttributes
+from .action_event import EntityAttributeOutcomes
 import pymunk_cd.EventType as EventType
 # from .EventType import EventType
 from pymunk_cd import *
@@ -49,7 +50,7 @@ class CompoundEntity:
                     emit_event.event_object = removed_object
                     emit_event.subject = self
                     emit_event.affected_attribute = EntityAttributes.inside_subject
-                    emit_event.attribute_outcome = False
+                    emit_event.attribute_outcome = EntityAttributeOutcomes.outside
                     new_events.append(emit_event)
 
                     #TODO: create a compound object for newly seperate obj
@@ -65,8 +66,6 @@ class CompoundEntity:
         if history_length > 1:
             cog_delta = self.cog_history[history_length - 1] - self.cog_history[history_length - 2]
             self.cog_delta_history.append(cog_delta.get_length())
-            if self.name == 'Particle':
-                print(cog_delta.get_length())
 
         self.radius_history.append(self.get_max_radius(cog))
 
@@ -97,22 +96,25 @@ class CompoundEntity:
         if (max(recent_delta_history) - min(recent_delta_history) > 0.5):
             event = ActionEvent()
             event.affected_attribute = EntityAttributes.velocity
-            event.object = self
-            #TODO: need subject
-
+            event.subject = self
+            #TODO: add increase/decrease outcome
             new_events.append(event)
             return new_events
 
         #check radius
         if len(self.parts) > 1:
-            for i, j in zip(self.radius_history[first_index-1:], self.radius_history[first_index:]):
-                if j > i:
+            radius_changes = list(zip(self.radius_history[first_index-1:], self.radius_history[first_index:]))
+            is_increase = radius_changes[0][1] > radius_changes[0][0]
+            for i, j in radius_changes:
+                if (j > i) != is_increase: #check the direction of radius change is consistent over 5 ticks
                     return new_events
 
             radius_change = ActionEvent()
             radius_change.subject = self
             radius_change.affected_attribute = EntityAttributes.radius
-            radius_change.attribute_outcome = True
+            radius_change.attribute_outcome = (
+                EntityAttributeOutcomes.increase if is_increase else EntityAttributeOutcomes.decrease
+            )
             new_events.append(radius_change)
             return new_events
 
