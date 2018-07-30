@@ -19,3 +19,11 @@ def calc_gravitational_force(body1:pymunk.Body, body2:pymunk.Body):
 def warn(message:str):
     '''Prints a warning in yellow text'''
     print('\033[93m' + message + '\033[0m') 
+
+def square_matrix(width:int):
+    distance_matrix = []
+    for i in range(width):
+        distance_matrix.append([])
+        for j in range(width):
+            distance_matrix[i].append(None)
+    return distance_matrix
