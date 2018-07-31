@@ -25,6 +25,25 @@ class CDManager:
 
 
     def tick(self):
+        #create distance matrix
+        distance_matrix = utilities.square_matrix(len(self.objects))
+
+        for i in range(len(self.objects)):
+            obj = self.objects[i]
+            obj_cog = obj.get_centre_of_gravity()
+
+            for j in range(len(self.objects)):
+                if i == j or distance_matrix[i][j]:
+                    continue
+                other_obj_cog = self.objects[j].get_centre_of_gravity()
+                distance = (other_obj_cog - obj_cog).get_length()
+                distance_matrix[i][j] = distance
+                distance_matrix[j][i] = distance
+
+
+        self.distance_matrices.append(distance_matrix)
+
+        # 
         for obj in self.objects:
             obj_cog = obj.get_centre_of_gravity()
 
@@ -53,23 +72,7 @@ class CDManager:
                     1
                 )
         
-        #create distance matrix
-        distance_matrix = utilities.square_matrix(len(self.objects))
-
-        for i in range(len(self.objects)):
-            obj = self.objects[i]
-            obj_cog = obj.get_centre_of_gravity()
-
-            for j in range(len(self.objects)):
-                if i == j or distance_matrix[i][j]:
-                    continue
-                other_obj_cog = self.objects[j].get_centre_of_gravity()
-                distance = (other_obj_cog - obj_cog).get_length()
-                distance_matrix[i][j] = distance
-                distance_matrix[j][i] = distance
-
-
-        self.distance_matrices.append(distance_matrix)
+        
         return
 
     @staticmethod
