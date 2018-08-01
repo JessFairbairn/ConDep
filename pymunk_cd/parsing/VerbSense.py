@@ -11,6 +11,12 @@ class VerbSense:
 
         assert(isinstance(arguments,list))
 
+    def get_verb_subject(self):
+        return [arg for arg in self.arguments if arg.type == 'PAG'][0]
+
+    def get_verb_object(self):
+        return [arg for arg in self.arguments if arg.type == 'PPT'][0]
+
 
 class VerbArgument:
     def __init__(self, description, type):

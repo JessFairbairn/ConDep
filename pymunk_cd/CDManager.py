@@ -23,6 +23,8 @@ class CDManager:
         self.distance_matrices = []
         return
 
+    def get_entity_index(self, entity:CompoundEntity):
+        return self.objects.index(entity)
 
     def tick(self):
         #create distance matrix
@@ -43,11 +45,11 @@ class CDManager:
 
         self.distance_matrices.append(distance_matrix)
 
-        # 
+        # objects to do regular tasks, and return any events
         for obj in self.objects:
             obj_cog = obj.get_centre_of_gravity()
 
-            events = obj.tick()
+            events = obj.tick(self)
             if events:
                 for event in events:
 

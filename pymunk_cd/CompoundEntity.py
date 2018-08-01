@@ -25,7 +25,7 @@ class CompoundEntity:
     def __str__(self):
         return self.name
     
-    def tick(self):
+    def tick(self, manager):
         "Updates history of properties and returns any events"
         
         cog = self.get_centre_of_gravity()
@@ -93,13 +93,17 @@ class CompoundEntity:
         recent_delta_history = self.cog_delta_history[first_index:]
 
         
-        if (max(recent_delta_history) - min(recent_delta_history) > 0.5):
+        if (max(recent_delta_history) - min(recent_delta_history)) > 0.5:
             event = ActionEvent()
             event.affected_attribute = EntityAttributes.velocity
             event.subject = self
             #TODO: add increase/decrease outcome
             new_events.append(event)
             return new_events
+
+        #check distances from other objects
+        index = manager.get_index_of_entity(self)
+        manager.distance_matricies
 
         #check radius
         if len(self.parts) > 1:

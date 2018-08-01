@@ -1,4 +1,6 @@
-from .cd_converter import CDConverter
+import sys
+
+from pymunk_cd.parsing.cd_converter import CDConverter
 from .VerbSense import *
 
 class VerbLookup:
@@ -14,13 +16,18 @@ class VerbLookup:
         
 
 class NLPParser:
-    def __init__(self, verbLookup, cdConverter:CDConverter):
+    def __init__(self, verbLookup:VerbLookup, cdConverter:CDConverter):
         self.verbLookup = verbLookup
         self.cdConverter = cdConverter
 
-    def parse_sentence(self, sentence):
+    def parse_sentence(self, sentence:str):
+        words = sentence.split()
         if " emit" in sentence:
             verb_info = self.verbLookup.get_verb('emit')
-            action_event = self.cdConverter.convert_verb_event_to_action_event(verb_info) #TODO: what do we actually do with this?
+            
+            verb_info.get_verb_subject().argument = words[0]
+            verb_info.get_verb_object().argument = words[2]
+
+            return self.cdConverter.convert_verb_event_to_action_event(verb_info)
         else:
             raise NotImplementedError
