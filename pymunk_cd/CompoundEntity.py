@@ -102,8 +102,8 @@ class CompoundEntity:
             return new_events
 
         #check distances from other objects
-        index = manager.get_index_of_entity(self)
-        manager.distance_matricies
+        index = manager.get_entity_index(self)
+        manager.distance_matrices
 
         #check radius
         if len(self.parts) > 1:
