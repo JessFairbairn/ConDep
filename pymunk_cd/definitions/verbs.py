@@ -1,4 +1,4 @@
-from .cd_definitions import *
+from pymunk_cd.parsing.cd_definitions import *
 
 from pymunk_cd.action_event import EntityAttributes
 from pymunk_cd.action_event import EntityAttributeOutcomes

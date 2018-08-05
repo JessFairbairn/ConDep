@@ -2,7 +2,7 @@ from pymunk_cd.primitives import Primitives
 from pymunk_cd.action_event import EntityAttributes
 from pymunk_cd.action_event import EntityAttributeOutcomes
 
-from .cd_definitions import *
+from pymunk_cd.parsing.cd_definitions import *
 
 from typing import Dict
 

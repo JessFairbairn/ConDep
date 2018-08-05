@@ -11,8 +11,8 @@ from pymunk_cd.parsing.cd_definitions import CDDefinition
 from pymunk_cd.parsing.cd_definitions import EntityAttributes
 from pymunk_cd.action_event import EntityAttributeOutcomes
 
-from pymunk_cd.parsing import verbs
-from pymunk_cd.parsing import primitives
+from pymunk_cd.definitions import verbs
+from pymunk_cd.definitions import primitives
 
 
 class ReturnsCandidateVerbsForScenario(unittest.TestCase):

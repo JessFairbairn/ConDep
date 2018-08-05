@@ -10,15 +10,16 @@ from pymunk_cd.parsing.NLPParser import NLPParser, VerbLookup
 args = sys.argv
 
 if len(args) == 1:
-    print('Enter a sentence')
-    exit()
+    sentence = input('Enter a sentence: ')
+else:
+    sentence = args[1]
 
 verbLookup = VerbLookup()
 converter = CDConverter()
 
 parser = NLPParser(verbLookup, converter)
 
-event = parser.parse_sentence(args[1])
+event = parser.parse_sentence(sentence)
 
 
 print(event)

@@ -4,8 +4,8 @@ from pymunk_cd.primitives import Primitives
 from pymunk_cd.parsing.VerbSense import VerbSense
 from pymunk_cd.parsing.cd_definitions import CDDefinition
 
-from pymunk_cd.parsing import primitives
-from pymunk_cd.parsing import verbs
+from pymunk_cd.definitions import primitives
+from pymunk_cd.definitions import verbs
 
 class CDConverter:
 
@@ -18,13 +18,17 @@ class CDConverter:
 
         event = CDEvent(verb_definition.primitive)
         event.subject = subject.argument
-        event.event_object = verb_object.argument
+        try:
+            event.event_object = verb_object.argument
+        except AttributeError:
+            pass
         return event
 
-    def convert_cd_event_to_action_event(self, cd_event:CDEvent):
-        action_event = ActionEvent()
+    def convert_cd_event_to_action_event(self, cd_event:CDEvent):        
 
         prim_definition = primitives.dictionary[cd_event.primitive]
+
+        action_event = ActionEvent()
 
         action_event.affected_attribute = prim_definition.affected_attribute
         action_event.attribute_outcome = prim_definition.attribute_outcome

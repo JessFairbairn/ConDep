@@ -14,8 +14,8 @@ from pymunk_cd.parsing.VerbSense import VerbArgumentInstance
 from pymunk_cd.parsing.VerbSense import VerbSense
 from pymunk_cd.parsing.cd_definitions import CDDefinition
 
-from pymunk_cd.parsing import verbs
-from pymunk_cd.parsing import primitives
+from pymunk_cd.definitions import verbs
+from pymunk_cd.definitions import primitives
 
 
 class ConvertVerbToCdEvent(unittest.TestCase):

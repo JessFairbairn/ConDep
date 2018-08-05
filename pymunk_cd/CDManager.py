@@ -8,8 +8,8 @@ from .primitives import Primitives
 
 from .action_event import ActionEvent
 from .CompoundEntity import CompoundEntity
-from .parsing.primitives import dictionary as prim_dictionary
-from .parsing.verbs import dictionary as verb_dictionary
+from .definitions.primitives import dictionary as prim_dictionary
+from .definitions.verbs import dictionary as verb_dictionary
 
 import typing
 
