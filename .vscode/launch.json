@@ -4,24 +4,38 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Python: Current File",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}"
-        },
+        
         {
             "name": "Parse Text script", "type": "python", "request": "launch", 
             "stopOnEntry": false, 
             "pythonPath": "${config:python.pythonPath}", 
-            "program": "/home/furby/Documents/Project/pymunk/parse_text.py",
-            "cwd": "",
+            "program": "${workspaceFolder}/parse_text.py",
+            "cwd": "${workspaceFolder}",
             "console":"integratedTerminal",
             "env": {}, 
             "args": [ "Star emits particle" ], 
             "envFile": "${workspaceFolder}/.env", 
             "debugOptions": [], 
             "internalConsoleOptions": "neverOpen" 
+        },
+        {
+            "name": "Parse Text with input", "type": "python", "request": "launch", 
+            "stopOnEntry": false, 
+            "pythonPath": "${config:python.pythonPath}", 
+            "program": "${workspaceFolder}/parse_text.py",
+            "cwd": "${workspaceFolder}",
+            "console":"integratedTerminal",
+            "env": {}, 
+            "args": [ ], 
+            "envFile": "${workspaceFolder}/.env", 
+            "debugOptions": [], 
+            "internalConsoleOptions": "neverOpen" 
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}"
         },
         {
             "name": "Python: Attach",
@@ -32,13 +46,6 @@
             "port": 3000,
             "secret": "my_secret",
             "host": "localhost"
-        },
-        {
-            "name": "Python: Terminal (integrated)",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
         },
         {
             "name": "Python: Terminal (external)",
