@@ -11,11 +11,14 @@
             "program": "${file}"
         },
         {
-            "name": "Python: Terminal with arguments", "type": "python", "request": "launch", 
+            "name": "Parse Text script", "type": "python", "request": "launch", 
             "stopOnEntry": false, 
             "pythonPath": "${config:python.pythonPath}", 
-            "program": "${file}", "cwd": "", "console": "integratedTerminal", "env": {}, 
-            "args": [ "Star emits light" ], 
+            "program": "/home/furby/Documents/Project/pymunk/parse_text.py",
+            "cwd": "",
+            "console":"integratedTerminal",
+            "env": {}, 
+            "args": [ "Star emits particle" ], 
             "envFile": "${workspaceFolder}/.env", 
             "debugOptions": [], 
             "internalConsoleOptions": "neverOpen" 

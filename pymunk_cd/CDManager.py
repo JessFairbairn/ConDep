@@ -4,7 +4,7 @@ import pymunk
 
 from pymunk_cd import utilities
 
-from .EventType import EventType 
+from .primitives import Primitives 
 
 from .action_event import ActionEvent
 from .CompoundEntity import CompoundEntity
@@ -52,18 +52,30 @@ class CDManager:
             events = obj.tick(self)
             if events:
                 for event in events:
-
-                    candidate_verbs = self.detect_scenarios(event)
                     
-                    if len(candidate_verbs):
-                        print(stringify_entity(event.subject)
-                            + ' ' 
-                            + candidate_verbs[0].sense_id 
-                            + 's '
-                            + stringify_entity(event.event_object)
-                            )
+                    output_nl = False
+                    if output_nl == True:
+                        candidate_verbs = self.detect_scenarios(event)
+                        
+                        if len(candidate_verbs):
+                            print(stringify_entity(event.subject)
+                                + ' ' 
+                                + candidate_verbs[0].sense_id 
+                                + 's '
+                                + stringify_entity(event.event_object)
+                                )
+                        else:
+                            utilities.warn('No candiates verbs found for event!')
                     else:
-                        utilities.warn('No candiates verbs found for event!')
+                        primitive = self.find_primitive_for_action_event(event) 
+                        print(stringify_entity(event.subject)
+                                + ' <=> ' 
+                                + primitive.name + ' ' 
+                                + stringify_entity(event.event_object)
+                                + '\n'
+                                + '\t'+ event.affected_attribute.name                                 
+                                + ((' -> ' + event.attribute_outcome.name) if event.attribute_outcome else '')
+                                )
 
             if len(obj.parts) > 1:
                 inclusion_radius = obj.get_inclusion_radius(obj_cog)
@@ -78,11 +90,11 @@ class CDManager:
         return
 
     @staticmethod
-    def detect_scenarios(event:ActionEvent):
-        
+    def find_primitive_for_action_event(event:ActionEvent):
         # Eliminate incompatible primitives
         eliminated_primitives = []
-        for prim in EventType:
+        selected_primitive = None
+        for prim in Primitives:
             prim_def = prim_dictionary[prim]
             # for attr in ['affected_attribute', 'object_constraint', 'attribute_outcome']:
             
@@ -90,19 +102,35 @@ class CDManager:
             attr_2 = prim_def.affected_attribute
 
             if attr_1 and attr_2 and (attr_1 != attr_2):
-                outcome_1 = event.attribute_outcome
-                outcome_2 = prim_def.attribute_outcome
-                if outcome_1 and outcome_2 and (outcome_1 != outcome_2):
-                    eliminated_primitives.append(prim)
-        
+                eliminated_primitives.append(prim)
+                continue
+            
+            outcome_1 = event.attribute_outcome
+            outcome_2 = prim_def.attribute_outcome
+
+            if outcome_1 and outcome_2 and (outcome_1 != outcome_2):
+                eliminated_primitives.append(prim)
+            else:
+                assert selected_primitive == None, 'Shouldn\'t find multiple compatible primitives'
+                selected_primitive = prim
+
             # TODO: implement object_constraint properly
+        
+        assert selected_primitive != None, 'Should find a compatible primitives'
+        return selected_primitive
+
+    @staticmethod
+    def detect_scenarios(event:ActionEvent):
+        '''Takes action events in and outputs candidate verbs to describe them'''
+        
+        selected_primitive = CDManager.find_primitive_for_action_event(event)            
 
         # Look up a verb to describe what's happened
         candidate_verbs = []
  
         # remaining_verbs = [verb_def for verb_def in verb_dictionary if verb_def.primitive not in eliminated_primitives]
         for verb_def in verb_dictionary.values():
-            if (verb_def.primitive in eliminated_primitives):
+            if (verb_def.primitive != selected_primitive):
                 continue
 
             if (event.affected_attribute == verb_def.affected_attribute) and (event.attribute_outcome == verb_def.attribute_outcome):

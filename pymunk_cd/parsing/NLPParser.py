@@ -21,6 +21,8 @@ class NLPParser:
         self.cdConverter = cdConverter
 
     def parse_sentence(self, sentence:str):
+        '''Takes a sentence, does NLP stuff to get a verb event, and then
+        calls the converter to turn it into a CD event'''
         words = sentence.split()
         if " emit" in sentence:
             verb_info = self.verbLookup.get_verb('emit')
@@ -28,6 +30,6 @@ class NLPParser:
             verb_info.get_verb_subject().argument = words[0]
             verb_info.get_verb_object().argument = words[2]
 
-            return self.cdConverter.convert_verb_event_to_action_event(verb_info)
+            return self.cdConverter.convert_verb_event_to_cd_event(verb_info)
         else:
             raise NotImplementedError

@@ -1,4 +1,5 @@
 import pymunk
+from pymunk_cd.CompoundEntity import CompoundEntity
 
 def to_pygame(p:int):
     """Small hack to convert pymunk to pygame coordinates"""
@@ -27,3 +28,14 @@ def square_matrix(width:int):
         for j in range(width):
             distance_matrix[i].append(None)
     return distance_matrix
+
+def stringify_entity(entity):
+    '''Returns a sane string representation of a pymunk entity'''
+    if type(entity) == CompoundEntity:
+        return entity.__str__()
+    elif type(entity) == str:
+        return entity
+    elif entity is None:
+        return ''
+    else:
+        return type(entity).__name__

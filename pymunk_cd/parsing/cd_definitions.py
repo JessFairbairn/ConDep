@@ -1,11 +1,11 @@
-from pymunk_cd.EventType import EventType
+from pymunk_cd.primitives import Primitives
 from pymunk_cd.action_event import EntityAttributes
 from enum import Enum
 
 class CDDefinition:
     '''Describes a verb in terms of conceptual dependancies'''
 
-    def __init__(self, primitive:EventType=None):
+    def __init__(self, primitive:Primitives=None):
         self.primitive = primitive
 
     sense_id = None

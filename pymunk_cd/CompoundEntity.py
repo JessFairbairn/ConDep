@@ -3,7 +3,7 @@ import pymunk
 from .action_event import ActionEvent
 from .action_event import EntityAttributes
 from .action_event import EntityAttributeOutcomes
-import pymunk_cd.EventType as EventType
+import pymunk_cd.primitives as EventType
 # from .EventType import EventType
 from pymunk_cd import *
 

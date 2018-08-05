@@ -3,7 +3,7 @@ from unittest.mock import patch
 import unittest
 
 from pymunk_cd.action_event import ActionEvent
-from pymunk_cd.EventType import EventType
+from pymunk_cd.primitives import Primitives
 from pymunk_cd.CDManager import CDManager
 from pymunk_cd.CompoundEntity import CompoundEntity
 
