@@ -6,20 +6,20 @@
     "configurations": [
         
         {
-            "name": "Parse Text script", "type": "python", "request": "launch", 
+            "name": "Parse Text- fixed input", "type": "python", "request": "launch", 
             "stopOnEntry": false, 
             "pythonPath": "${config:python.pythonPath}", 
             "program": "${workspaceFolder}/parse_text.py",
             "cwd": "${workspaceFolder}",
             "console":"integratedTerminal",
             "env": {}, 
-            "args": [ "Star emits particle" ], 
+            "args": [ "Star contracts" ], 
             "envFile": "${workspaceFolder}/.env", 
             "debugOptions": [], 
             "internalConsoleOptions": "neverOpen" 
         },
         {
-            "name": "Parse Text with input", "type": "python", "request": "launch", 
+            "name": "Parse Text with prompt", "type": "python", "request": "launch", 
             "stopOnEntry": false, 
             "pythonPath": "${config:python.pythonPath}", 
             "program": "${workspaceFolder}/parse_text.py",
