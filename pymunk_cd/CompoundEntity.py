@@ -20,6 +20,8 @@ class CompoundEntity:
         self.cog_history = []
         self.cog_delta_history = []
 
+        self.attribute_changes = []
+
         self.name = None # Type: str
 
     def __str__(self):
@@ -54,9 +56,22 @@ class CompoundEntity:
                     new_events.append(emit_event)
 
                     #TODO: create a compound object for newly seperate obj
-
-
         
+        # Update changing attrbutes
+        if len(self.parts) == 1:
+            shape = self.parts[0]
+            for target in self.attribute_changes:
+                current_value = getattr(shape,target[0])
+                if target[0] == 'radius':
+                    if current_value > target[1]:
+                        shape.unsafe_set_radius(current_value - 1)
+                    else:
+                        shape.unsafe_set_radius(current_value + 1)
+                else:
+                    if current_value > target[1]:
+                        setattr(shape, target[0], current_value - 1)
+                    else:
+                        setattr(shape, target[0], current_value + 1)
 
         #Then log to histories
         cog = self.get_centre_of_gravity()

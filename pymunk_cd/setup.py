@@ -9,6 +9,7 @@ from pymunk_cd.action_event import EntityAttributes, EntityAttributeOutcomes
 from pymunk_cd.action_event import ActionEvent
 from pymunk_cd.cd_event import CDEvent
 from pymunk_cd.CDManager import CDManager
+from pymunk_cd.CDUtilities import CollisionTypes
 
 from pymunk_cd.definitions.primitives import dictionary as prim_definitions
 
@@ -18,23 +19,24 @@ from pymunk_cd import utilities
 
 from pymunk_cd import CDUtilities
 
-def setup_pymunk_environment(event:ActionEvent):
+def setup_pymunk_environment(event:ActionEvent, sentence:str=None):
     assert type(event) == ActionEvent
 
     #pylint: disable=no-member
     pygame.init()
     screen = pygame.display.set_mode((600, 600))
-    pygame.display.set_caption("Emit")
+    pygame.display.set_caption(sentence or 'Simulation')
     clock = pygame.time.Clock()
 
     space = pymunk.Space()
     space.gravity = (0.0, 0.0)
 
+    space.add_collision_handler(CollisionTypes.ABSORBABLE, CollisionTypes.ABSORBER).begin = CDUtilities.CollisionAbsorber
     
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
     manager = pymunk_cd.CDManager.CDManager(screen,space)
-    
+    manager.print_events = False
     balls = []
 
     # Add objects
@@ -80,8 +82,6 @@ def setup_pymunk_environment(event:ActionEvent):
         clock.tick(50) # argument is max framerate, which we'll probably never reach!
 
 def create_entities(manager:CDManager, event:ActionEvent):
-
-    
     
 
     #create entities
@@ -89,15 +89,15 @@ def create_entities(manager:CDManager, event:ActionEvent):
 
     if event.event_object:
         #work out relative starting position
-        start_inside = False
+        position_offset = 0
         if event.event_object:
             if event.affected_attribute == EntityAttributes.inside_subject:
                 if event.attribute_outcome == EntityAttributeOutcomes.inside:
-                    start_inside = False
+                    position_offset = -150
                 else:
-                    start_inside = True
+                    position_offset = 50
 
-        patient = spawn_entity(manager, event.event_object, start_inside)
+        patient = spawn_entity(manager, event.event_object, position_offset)
 
     attribute = event.affected_attribute
 
@@ -105,26 +105,29 @@ def create_entities(manager:CDManager, event:ActionEvent):
         for part in agent.parts:
             part.body.velocity += 5
     elif attribute == EntityAttributes.inside_subject or attribute == EntityAttributes.distance_from_subject:
-        #TODO: apply relative velocity
-        pass
+        for part in patient.parts:
+            part.body.velocity += 8
+    elif attribute == EntityAttributes.radius:
+        part = agent.parts[0]
+        target_radius = (0.5*agent.radius 
+            if event.attribute_outcome == EntityAttributeOutcomes.decrease
+            else 2*part.radius)
+        agent.attribute_changes.append(('radius',target_radius))
     else:
         raise NotImplementedError
         #TODO: fill in the rest
 
 
-def spawn_entity(manager:CDManager, kind:str, central:bool=True):
+def spawn_entity(manager:CDManager, kind:str, offset:int=0):
 
-    if central:
-        x = 200
-        y = 200
-    else:
-        x = 1
-        y = 1
+    
+    x = 200 + offset
+    y = 200 + offset    
 
     kind = kind.lower()
 
     factory_dict = {
-        'star' : lambda manager: CDUtilities.create_star(manager, x, y),
+        'star' : lambda manager: CDUtilities.create_big_particle(manager, x, y),
         'particle': lambda manager: CDUtilities.create_particle(manager, x, y),
     }
 

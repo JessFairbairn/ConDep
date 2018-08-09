@@ -21,6 +21,7 @@ class CDManager:
 
         self.objects = [] 
         self.distance_matrices = []
+        self.print_events = True
         return
 
     def get_entity_index(self, entity:CompoundEntity):
@@ -50,7 +51,7 @@ class CDManager:
             obj_cog = obj.get_centre_of_gravity()
 
             events = obj.tick(self)
-            if events:
+            if events and self.print_events:
                 for event in events:
                     
                     output_nl = False
@@ -84,6 +85,12 @@ class CDManager:
                     utilities.to_pygame(obj_cog),
                     int(inclusion_radius),
                     1
+                )
+            elif obj.name == 'Particle':
+                pygame.draw.circle(self.screen,
+                    (200,200,0),
+                    utilities.to_pygame(obj_cog),
+                    4
                 )
         
         

@@ -39,6 +39,13 @@ _move.affected_attribute = EntityAttributes.position
 dictionary['move'] = _move
 
 
+_escape = CDDefinition(Primitives.PTRANS)
+_escape.sense_id = 'escape'
+_escape.affected_attribute = EntityAttributes.position
+
+dictionary['escape'] = _escape
+
+
 ##MOVE
 _contract = CDDefinition(Primitives.MOVE)
 _contract.sense_id = 'contract'
