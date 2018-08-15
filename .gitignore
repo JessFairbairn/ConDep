@@ -1,8 +1,10 @@
 /demos/*
+/gifs/*
+/stanford/*
 profile.txt
 
 .~lock.*
-
+sys
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
