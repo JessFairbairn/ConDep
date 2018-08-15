@@ -1,5 +1,5 @@
 {
-    
+    "python.pythonPath": "python3.5",
     "python.unitTest.unittestArgs": [
         "-v",
         "-s",
