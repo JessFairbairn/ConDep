@@ -21,6 +21,7 @@
 
     An example of different verbs with the same primitive is `eject' and `emit'- both of these terms best correspond to the CD primitive ``EXPEL'', however they will generally be used for different kinds of materials. Eject will generally be used for solid structures being expelled from a larger one, whereas `emit' would generally be used for radiation or energy being expelled.
 
+    %TODO: is this relevant for this pathway?
     In this case, the system can be guided to using the more suitable verb by applying a type constraint to the object of the verb (object being used in the logical sense). Constraints in existing natural language libraries aren't generally specific enough for these purposes, so a crude list of physics-specific constraint rules was built as a proof of concept.
     
     \section{Actions to Natural Language}
@@ -33,7 +34,7 @@
 
     Converting an event to it's Conceptual Dependencies and then into natural language uses much of the same infrastructure in reverse, with the additional aspect of an underlying physical simulation. This simulation reports notable `events' to the Manager unit, in terms of what attribute on an object was changed, and in what way.
 
-    Primitives which contradict the information in the event are eliminated, thus restricting the candidate verbs to only those which are relevant. These are then filtered according to the remaining criteria (affected_attribute, attribute outcome, and any selectional restrictions).
+    Primitives which contradict the information in the event are eliminated, thus restricting the candidate verbs to only those which are relevant. These are then filtered according to the remaining criteria (affected\_attribute, attribute outcome, and any selectional restrictions).
 
     \section{Physics Simulation}
     \subsection{Recognition of physical events}
