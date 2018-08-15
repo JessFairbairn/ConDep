@@ -47,3 +47,7 @@ class PassesVerbDataToCDConverter(unittest.TestCase):
         parser.parse_sentence('Star absorbs raidiation.')
 
         mockCDConverter.convert_verb_event_to_cd_event.assert_called_once_with(mock_verb_data)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,4 +1,5 @@
-import sys, random
+import sys
+import random
 import pygame
 from pygame.locals import *
 import pymunk
@@ -19,10 +20,11 @@ from pymunk_cd import utilities
 
 from pymunk_cd import CDUtilities
 
-def setup_pymunk_environment(event:ActionEvent, sentence:str=None):
+
+def setup_pymunk_environment(event: ActionEvent, sentence: str=None):
     assert type(event) == ActionEvent
 
-    #pylint: disable=no-member
+    # pylint: disable=no-member
     pygame.init()
     screen = pygame.display.set_mode((600, 600))
     pygame.display.set_caption(sentence or 'Simulation')
@@ -31,11 +33,12 @@ def setup_pymunk_environment(event:ActionEvent, sentence:str=None):
     space = pymunk.Space()
     space.gravity = (0.0, 0.0)
 
-    space.add_collision_handler(CollisionTypes.ABSORBABLE, CollisionTypes.ABSORBER).begin = CDUtilities.CollisionAbsorber
-    
+    space.add_collision_handler(
+        CollisionTypes.ABSORBABLE, CollisionTypes.ABSORBER).begin = CDUtilities.CollisionAbsorber
+
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
-    manager = pymunk_cd.CDManager.CDManager(screen,space)
+    manager = pymunk_cd.CDManager.CDManager(screen, space)
     manager.print_events = False
     balls = []
 
@@ -58,43 +61,48 @@ def setup_pymunk_environment(event:ActionEvent, sentence:str=None):
         for ball in balls:
             grav_force = pymunk.Vec2d()
             for other_ball in balls:
-                grav_force = grav_force + utilities.calc_gravitational_force(other_ball.body, ball.body)
+                grav_force = grav_force + \
+                    utilities.calc_gravitational_force(
+                        other_ball.body, ball.body)
 
-            ball.body.apply_force_at_local_point(grav_force, (0,0))
+            ball.body.apply_force_at_local_point(grav_force, (0, 0))
 
         for ball in balls_to_remove:
-            space.remove(ball, ball.body) # 3
-            balls.remove(ball) # 4
+            space.remove(ball, ball.body)  # 3
+            balls.remove(ball)  # 4
 
-        steps_per_frame = 50 #larger value increases accuracy of simulation, but decreases speed
+        steps_per_frame = 50  # larger value increases accuracy of simulation, but decreases speed
         frames_per_tick = 1
 
         for x in range(steps_per_frame):
             space.step(1/(frames_per_tick*steps_per_frame))
 
-        screen.fill((255,255,255))
+        screen.fill((255, 255, 255))
 
         space.debug_draw(draw_options)
 
-        manager.tick() #processes changes in CDobjects
+        manager.tick()  # processes changes in CDobjects
 
         pygame.display.flip()
-        clock.tick(50) # argument is max framerate, which we'll probably never reach!
+        # argument is max framerate, which we'll probably never reach!
+        clock.tick(50)
 
-def create_entities(manager:CDManager, event:ActionEvent):    
 
-    #create entities
+def create_entities(manager: CDManager, event: ActionEvent):
+
+    # create entities
     subject_collision_type = None
     object_collision_type = None
     if (event.affected_attribute == EntityAttributes.inside_subject
-        and event.attribute_outcome == EntityAttributeOutcomes.inside):
+            and event.attribute_outcome == EntityAttributeOutcomes.inside):
         subject_collision_type = CollisionTypes.ABSORBER
         object_collision_type = CollisionTypes.ABSORBABLE
 
-    agent = spawn_entity(manager, event.subject, collision=subject_collision_type)
+    agent = spawn_entity(manager, event.subject,
+                         collision=subject_collision_type)
 
     if event.event_object:
-        #work out relative starting position
+        # work out relative starting position
         position_offset = 0
         if event.event_object:
             if event.affected_attribute == EntityAttributes.inside_subject:
@@ -103,7 +111,8 @@ def create_entities(manager:CDManager, event:ActionEvent):
                 else:
                     position_offset = 50
 
-        patient = spawn_entity(manager, event.event_object, position_offset,collision=object_collision_type)
+        patient = spawn_entity(manager, event.event_object,
+                               position_offset, collision=object_collision_type)
 
     attribute = event.affected_attribute
     assert attribute, 'Affected attribute should be set'
@@ -116,27 +125,27 @@ def create_entities(manager:CDManager, event:ActionEvent):
             part.body.velocity += 8
     elif attribute == EntityAttributes.radius:
         part = agent.parts[0]
-        target_radius = (0.5*part.radius 
-            if event.attribute_outcome == EntityAttributeOutcomes.decrease
-            else 2*part.radius)
-        agent.attribute_changes.append(('radius',target_radius))
+        target_radius = (0.5*part.radius
+                         if event.attribute_outcome == EntityAttributeOutcomes.decrease
+                         else 2*part.radius)
+        agent.attribute_changes.append(('radius', target_radius))
 
     elif attribute == None:
         pass
     else:
         raise NotImplementedError
-        #TODO: fill in the rest
+        # TODO: fill in the rest
 
 
-def spawn_entity(manager:CDManager, kind:str, offset:int=0, collision:CollisionTypes=None):
-    
+def spawn_entity(manager: CDManager, kind: str, offset: int=0, collision: CollisionTypes=None):
+
     x = 200 + offset
-    y = 200 + offset    
+    y = 200 + offset
 
     kind = kind.lower()
 
     factory_dict = {
-        'star' : lambda manager: CDUtilities.create_big_particle(manager, x, y),
+        'star': lambda manager: CDUtilities.create_big_particle(manager, x, y),
         'particle': lambda manager: CDUtilities.create_particle(manager, x, y, collision_type=collision),
         'radiation': lambda manager: CDUtilities.create_particle(manager, x, y, collision_type=collision),
     }
