@@ -8,4 +8,8 @@
 ### Actions to Natural Actions
 
 ##Results
-##Conclusion + Future Work
+
+##Discussion
+
+##Conclusion
+### Future Work
