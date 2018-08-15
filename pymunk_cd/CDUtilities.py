@@ -82,7 +82,7 @@ def create_spitting_star(manager:CDManager, num_particles = None):
 
     return star
 
-def create_particle(manager:CDManager, x:int, y:int):
+def create_particle(manager:CDManager, x:int, y:int, collision_type:CollisionTypes=None):
     'Creates a plain star, adds it to CD manager, pymunk and pygame'
 
     # setup CD stuff
@@ -90,7 +90,8 @@ def create_particle(manager:CDManager, x:int, y:int):
     particle.name = 'Particle'
 
     manager.objects.append(particle)
-    ball_shape = add_ball(manager.space, x, y, collision_type=CollisionTypes.ABSORBABLE)
+    
+    ball_shape = add_ball(manager.space, x, y, collision_type=collision_type)
     particle.parts.append(ball_shape)
 
     return particle

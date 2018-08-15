@@ -33,7 +33,7 @@ class SpawningEntities(unittest.TestCase):
 
         self.assertEqual(len(self.manager.objects), 2)
 
-    def test_sets_velocity_for_move_event(self):
+    def test_sets_velocity_for_ptrans_event(self):
         
         fake_event = CDEvent(Primitives.PTRANS)
         fake_event.subject = 'particle'

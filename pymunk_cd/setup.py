@@ -81,11 +81,17 @@ def setup_pymunk_environment(event:ActionEvent, sentence:str=None):
         pygame.display.flip()
         clock.tick(50) # argument is max framerate, which we'll probably never reach!
 
-def create_entities(manager:CDManager, event:ActionEvent):
-    
+def create_entities(manager:CDManager, event:ActionEvent):    
 
     #create entities
-    agent = spawn_entity(manager, event.subject)
+    subject_collision_type = None
+    object_collision_type = None
+    if (event.affected_attribute == EntityAttributes.inside_subject
+        and event.attribute_outcome == EntityAttributeOutcomes.inside):
+        subject_collision_type = CollisionTypes.ABSORBER
+        object_collision_type = CollisionTypes.ABSORBABLE
+
+    agent = spawn_entity(manager, event.subject, collision=subject_collision_type)
 
     if event.event_object:
         #work out relative starting position
@@ -97,9 +103,10 @@ def create_entities(manager:CDManager, event:ActionEvent):
                 else:
                     position_offset = 50
 
-        patient = spawn_entity(manager, event.event_object, position_offset)
+        patient = spawn_entity(manager, event.event_object, position_offset,collision=object_collision_type)
 
     attribute = event.affected_attribute
+    assert attribute, 'Affected attribute should be set'
 
     if attribute == EntityAttributes.position or attribute == EntityAttributes.velocity:
         for part in agent.parts:
@@ -109,17 +116,19 @@ def create_entities(manager:CDManager, event:ActionEvent):
             part.body.velocity += 8
     elif attribute == EntityAttributes.radius:
         part = agent.parts[0]
-        target_radius = (0.5*agent.radius 
+        target_radius = (0.5*part.radius 
             if event.attribute_outcome == EntityAttributeOutcomes.decrease
             else 2*part.radius)
         agent.attribute_changes.append(('radius',target_radius))
+
+    elif attribute == None:
+        pass
     else:
         raise NotImplementedError
         #TODO: fill in the rest
 
 
-def spawn_entity(manager:CDManager, kind:str, offset:int=0):
-
+def spawn_entity(manager:CDManager, kind:str, offset:int=0, collision:CollisionTypes=None):
     
     x = 200 + offset
     y = 200 + offset    
@@ -128,7 +137,8 @@ def spawn_entity(manager:CDManager, kind:str, offset:int=0):
 
     factory_dict = {
         'star' : lambda manager: CDUtilities.create_big_particle(manager, x, y),
-        'particle': lambda manager: CDUtilities.create_particle(manager, x, y),
+        'particle': lambda manager: CDUtilities.create_particle(manager, x, y, collision_type=collision),
+        'radiation': lambda manager: CDUtilities.create_particle(manager, x, y, collision_type=collision),
     }
 
     return factory_dict[kind](manager)

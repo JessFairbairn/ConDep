@@ -4,11 +4,17 @@ from .utilities import stringify_entity
 class CDEvent:
 
     def __init__(self, prim:Primitives):
-        self.primitive = prim
+        self.primitive = prim or None
 
-    subject = None #TODO: decide if this should be string or object
+    subject = None
     # 'Object' in logical sense
-    event_object = None #TODO: decide if this should be string or object
+    event_object = None
+
+    affected_attribute = None
+    attribute_outcome = None
+
+
+
 
     def __str__(self):
         string = (stringify_entity(self.subject)

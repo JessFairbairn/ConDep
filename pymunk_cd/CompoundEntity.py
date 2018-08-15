@@ -62,16 +62,19 @@ class CompoundEntity:
             shape = self.parts[0]
             for target in self.attribute_changes:
                 current_value = getattr(shape,target[0])
-                if target[0] == 'radius':
-                    if current_value > target[1]:
-                        shape.unsafe_set_radius(current_value - 1)
-                    else:
-                        shape.unsafe_set_radius(current_value + 1)
+                if target[1] == current_value:
+                    self.attribute_changes.remove(target)
                 else:
-                    if current_value > target[1]:
-                        setattr(shape, target[0], current_value - 1)
+                    if target[0] == 'radius':
+                        if current_value > target[1]:
+                            shape.unsafe_set_radius(current_value - 1)
+                        else:
+                            shape.unsafe_set_radius(current_value + 1)
                     else:
-                        setattr(shape, target[0], current_value + 1)
+                        if current_value > target[1]:
+                            setattr(shape, target[0], current_value - 1)
+                        else:
+                            setattr(shape, target[0], current_value + 1)
 
         #Then log to histories
         cog = self.get_centre_of_gravity()
