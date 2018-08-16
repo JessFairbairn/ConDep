@@ -1,30 +1,30 @@
 from .primitives import Primitives
 from .utilities import stringify_entity
 
+
 class CDEvent:
 
-    def __init__(self, prim:Primitives):
+    def __init__(self, prim: Primitives):
         self.primitive = prim or None
 
-    subject = None
-    # 'Object' in logical sense
-    event_object = None
+    subject = None # type: str
+    event_object = None # type: str
+    '''Object in logical sense'''
 
     affected_attribute = None
     attribute_outcome = None
 
-
-
+    preceding = None # type: CDEvent
 
     def __str__(self):
         string = (stringify_entity(self.subject)
-        + ' <=> ' 
-        + self.primitive.name)
+                  + ' <=> '
+                  + self.primitive.name)
 
         if self.event_object:
-            string = string  + ' ' + stringify_entity(self.event_object)
+            string = string + ' ' + stringify_entity(self.event_object)
             # + '\n'
-            # + '\t'+ event.affected_attribute.name                                 
+            # + '\t'+ event.affected_attribute.name
             # + ((' -> ' + event.attribute_outcome.name) if event.attribute_outcome else '')
 
-        return string
+        return

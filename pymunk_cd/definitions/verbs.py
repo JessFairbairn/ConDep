@@ -1,7 +1,9 @@
-from pymunk_cd.parsing.cd_definitions import *
+from pymunk_cd.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
 
 from pymunk_cd.action_event import EntityAttributes
 from pymunk_cd.action_event import EntityAttributeOutcomes
+
+from pymunk_cd.primitives import Primitives
 
 dictionary = dict() # type: Dict[str, object]
 
@@ -30,6 +32,14 @@ _absorb.attribute_outcome = EntityAttributeOutcomes.inside
 
 dictionary['absorb'] = _absorb
 
+_fall = CDDefinition(Primitives.INGEST)
+_fall.sense_id = 'fall'
+
+_fall.preceding = CDDefinitionPredecessorWrapper
+_fall.preceding.definition = CDDefinition(Primitives.PROPEL)
+_fall.preceding.definition.affected_attribute = EntityAttributes.distance_from_subject
+_fall.preceding.definition.attribute_outcome = EntityAttributeOutcomes.decrease
+dictionary['fall'] = _fall
 
 ##PTRANS
 _move = CDDefinition(Primitives.PTRANS)

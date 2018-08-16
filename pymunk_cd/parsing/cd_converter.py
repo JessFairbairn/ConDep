@@ -11,6 +11,8 @@ from pymunk_cd.definitions import verbs
 class CDConverter:
 
     def convert_verb_event_to_cd_event(self, verb_data:VerbSense):
+        '''Outputs a CDEvent'''
+        
         subject = [arg for arg in verb_data.arguments if arg.type == 'PAG'][0]
         verb_object = [arg for arg in verb_data.arguments if arg.type == 'PPT'][0]
 
@@ -18,12 +20,18 @@ class CDConverter:
         verb_definition = verbs.dictionary[verb_data.verb_sense_id or verb_data.verb_name]
         prim_def = primitive_definitions.dictionary[verb_definition.primitive]
 
-        event = CDConverter._check_compatible(verb_definition, prim_def)
+        event = CDConverter._merge_definitions(verb_definition, prim_def)
         event.subject = subject.argument
         try:
             event.event_object = verb_object.argument
         except AttributeError:
             pass
+        #TODO: handle more complex argument types
+
+        if verb_definition.preceding:
+            prec_verb_def = verb_definition.preceding.definition
+            prec_prim_def = primitive_definitions.dictionary[prec_verb_def.primitive]
+            event.preceding = CDConverter._merge_definitions(prec_verb_def, prec_prim_def)
 
         return event
 
@@ -42,7 +50,9 @@ class CDConverter:
         return action_event
 
     @staticmethod
-    def _check_compatible(verb_definition:CDDefinition, prim_defintition:CDDefinition):
+    def _merge_definitions(verb_definition:CDDefinition, prim_defintition:CDDefinition):
+        '''Merges a verb definition with a primitive definition, to output a CDEvent'''
+
         new_def = CDEvent
 
         for attr in ['primitive', 'sense_id', 'affected_attribute', 'attribute_outcome']:

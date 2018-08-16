@@ -12,7 +12,7 @@ from pymunk_cd.parsing import cd_converter
 from pymunk_cd.parsing.NLPParser import NLPParser
 from pymunk_cd.parsing.VerbSense import VerbArgumentInstance
 from pymunk_cd.parsing.VerbSense import VerbSense
-from pymunk_cd.parsing.cd_definitions import CDDefinition
+from pymunk_cd.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
 
 from pymunk_cd.definitions import verbs
 from pymunk_cd.definitions import primitives
@@ -34,7 +34,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
         self.assertEqual(result.event_object, arg1.argument,
                          'should set the correct object for the cd event')
 
-    @unittest.skip
+    #@unittest.skip
     def test_CallsVerbDictionary(self):
         converter = cd_converter.CDConverter()
 
@@ -49,14 +49,13 @@ class ConvertVerbToCdEvent(unittest.TestCase):
 
         mock_dictionary = mock.MagicMock()
         mock_dictionary.__getitem__.side_effect = getitem
-        with patch('verbs.dictionary', new=mock_dictionary):
-            # verbs.dictionary = mock_dictionary
+        with patch('pymunk_cd.definitions.verbs.dictionary', new=mock_dictionary):
 
             converter.convert_verb_event_to_cd_event(mock_verb_data)
 
             mock_dictionary.__getitem__.assert_any_call('spew')
 
-    @unittest.skip
+    #@unittest.skip
     def test_CallsPrimitiveDictionary(self):
 
         converter = cd_converter.CDConverter()
@@ -66,6 +65,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
         mock_verb_data = VerbSense("gobble", [arg0, arg1])
 
         fake_verb_def = CDDefinition(Primitives.INGEST)
+        fake_verb_def.sense_id = 'gobble'
         my_dict = {'gobble': fake_verb_def}
 
         def getitem(name):
@@ -73,8 +73,8 @@ class ConvertVerbToCdEvent(unittest.TestCase):
 
         mock_dictionary = mock.MagicMock()
         mock_dictionary.__getitem__.side_effect = getitem
-        # verbs.dictionary = mock_dictionary
-        with patch('verbs.dictionary', new=mock_dictionary):
+        
+        with patch('pymunk_cd.definitions.verbs.dictionary', new=mock_dictionary):
 
             prim_dict = {Primitives.INGEST: fake_verb_def}
 
@@ -83,13 +83,44 @@ class ConvertVerbToCdEvent(unittest.TestCase):
 
             mock_prim_dictionary = mock.MagicMock()
             mock_prim_dictionary.__getitem__.side_effect = getprim
-            # primitives.dictionary = mock_prim_dictionary
-            with patch('primitives.dictionary', new=mock_prim_dictionary):
+            
+            with patch('pymunk_cd.definitions.primitives.dictionary', new=mock_prim_dictionary):
 
                 converter.convert_verb_event_to_cd_event(mock_verb_data)
 
                 mock_prim_dictionary.__getitem__.assert_any_call(
                     Primitives.INGEST)
+
+    def test_SetsPrecedingEvents(self):
+
+        converter = cd_converter.CDConverter()
+
+        arg0 = VerbArgumentInstance('emitting entity', 'PAG', 'Barbara')
+        arg1 = VerbArgumentInstance('thing emitted', 'PPT', 'radiation')
+        mock_verb_data = VerbSense("nom", [arg0, arg1])
+
+        fake_verb_def = CDDefinition(Primitives.INGEST)
+        fake_verb_def.sense_id = 'nom'
+        fake_verb_def.preceding = CDDefinitionPredecessorWrapper
+
+        pred_def = CDDefinition(Primitives.PROPEL)
+        fake_verb_def.preceding.definition = pred_def
+
+
+        my_dict = {'nom': fake_verb_def}
+
+        def getitem(name):
+            return my_dict[name]
+
+        mock_dictionary = mock.MagicMock()
+        mock_dictionary.__getitem__.side_effect = getitem
+        
+        with patch('pymunk_cd.definitions.verbs.dictionary', new=mock_dictionary):
+
+            event = converter.convert_verb_event_to_cd_event(mock_verb_data)
+            self.assertEqual(event.preceding.primitive, Primitives.PROPEL)
+
+                
 
 
 class ConvertCDEventToActionEvent(unittest.TestCase):
