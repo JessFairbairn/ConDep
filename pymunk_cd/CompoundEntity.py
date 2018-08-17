@@ -58,23 +58,7 @@ class CompoundEntity:
                     #TODO: create a compound object for newly seperate obj
         
         # Update changing attrbutes
-        if len(self.parts) == 1:
-            shape = self.parts[0]
-            for target in self.attribute_changes:
-                current_value = getattr(shape,target[0])
-                if target[1] == current_value:
-                    self.attribute_changes.remove(target)
-                else:
-                    if target[0] == 'radius':
-                        if current_value > target[1]:
-                            shape.unsafe_set_radius(current_value - 1)
-                        else:
-                            shape.unsafe_set_radius(current_value + 1)
-                    else:
-                        if current_value > target[1]:
-                            setattr(shape, target[0], current_value - 1)
-                        else:
-                            setattr(shape, target[0], current_value + 1)
+        self._update_changing_attributes()
 
         #Then log to histories
         cog = self.get_centre_of_gravity()
@@ -88,60 +72,14 @@ class CompoundEntity:
         self.radius_history.append(self.get_max_radius(cog))
 
         #CHECK FOR EVENTS
-        min_event_span = 4
-        if len(self.radius_history) < min_event_span:
-            return new_events
+        new_events.extend(self._check_for_events())
         
-        first_index = len(self.radius_history) - min_event_span
+        return new_events
 
-        #check for whole object movements
-        recent_cog_history = self.cog_history[first_index:]
-        x_coords = list(map(lambda cog: cog.x, recent_cog_history))
-        y_coords = list(map(lambda cog: cog.y, recent_cog_history))
-
-        min_movement = 5
-        if (max(x_coords) - min(x_coords) > min_movement) or (max(y_coords) - min(y_coords) > min_movement):
-            event = ActionEvent()
-            event.affected_attribute = EntityAttributes.position
-            event.subject = self
-
-            new_events.append(event)
-            return new_events
-
-        recent_delta_history = self.cog_delta_history[first_index:]
-
-        
-        if (max(recent_delta_history) - min(recent_delta_history)) > 0.5:
-            event = ActionEvent()
-            event.affected_attribute = EntityAttributes.velocity
-            event.subject = self
-            #TODO: add increase/decrease outcome
-            new_events.append(event)
-            return new_events
-
-        #check distances from other objects
-        index = manager.get_entity_index(self)
-        manager.distance_matrices
-
-        #check radius
-        if len(self.parts) > 1:
-            radius_changes = list(zip(self.radius_history[first_index-1:], self.radius_history[first_index:]))
-            is_increase = radius_changes[0][1] > radius_changes[0][0]
-            for i, j in radius_changes:
-                if (j > i) != is_increase: #check the direction of radius change is consistent over 5 ticks
-                    return new_events
-
-            radius_change = ActionEvent()
-            radius_change.subject = self
-            radius_change.affected_attribute = EntityAttributes.radius
-            radius_change.attribute_outcome = (
-                EntityAttributeOutcomes.increase if is_increase else EntityAttributeOutcomes.decrease
-            )
-            new_events.append(radius_change)
-            return new_events
+    
 
 
-    # Get methods
+    ### Get methods ###
     def get_distances_from_cog(self, cog = None):
         'Returns the distance of each particle from the centre of gravity'
 
@@ -179,3 +117,85 @@ class CompoundEntity:
             weighted_vector_sum = weighted_vector_sum + body.mass * body.position
         
         return weighted_vector_sum/len(self.parts)
+
+
+    #### Private Methods ####
+    def _check_for_events(self):
+        min_event_span = 4
+        new_events = []
+
+        if len(self.radius_history) < min_event_span:
+            return new_events
+        
+        first_index = len(self.radius_history) - min_event_span
+
+        #check for whole object movements
+        recent_cog_history = self.cog_history[first_index:]
+        x_coords = list(map(lambda cog: cog.x, recent_cog_history))
+        y_coords = list(map(lambda cog: cog.y, recent_cog_history))
+
+        min_movement = 5
+        if (max(x_coords) - min(x_coords) > min_movement) or (max(y_coords) - min(y_coords) > min_movement):
+            event = ActionEvent()
+            event.affected_attribute = EntityAttributes.position
+            event.subject = self
+
+            new_events.append(event)
+            return new_events
+
+        recent_delta_history = self.cog_delta_history[first_index:]
+
+        
+        if (max(recent_delta_history) - min(recent_delta_history)) > 0.5:
+            event = ActionEvent()
+            event.affected_attribute = EntityAttributes.velocity
+            event.subject = self
+            #TODO: add increase/decrease outcome
+            new_events.append(event)
+
+        #check distances from other objects
+        # index = manager.get_entity_index(self)
+        # manager.distance_matrices
+        # TODO: implement this
+
+        #check radius
+        if len(self.parts) > 1:
+            radius_changes = list(zip(self.radius_history[first_index-1:], self.radius_history[first_index:]))
+            is_increase = radius_changes[0][1] > radius_changes[0][0]
+            for i, j in radius_changes:
+                if (j > i) != is_increase: #check the direction of radius change is consistent over 5 ticks
+                    return new_events
+
+            radius_change = ActionEvent()
+            radius_change.subject = self
+            radius_change.affected_attribute = EntityAttributes.radius
+            radius_change.attribute_outcome = (
+                EntityAttributeOutcomes.increase if is_increase else EntityAttributeOutcomes.decrease
+            )
+            new_events.append(radius_change)
+        
+        return new_events
+
+
+    def _update_changing_attributes(self):
+        if len(self.parts) == 1 and self.attribute_changes:
+            shape = self.parts[0]
+
+            for target in self.attribute_changes[0]:
+                current_value = getattr(shape,target[0])
+                if target[1] == current_value:
+                    self.attribute_changes[0].remove(target)
+                    if not self.attribute_changes[0]:
+                        self.attribute_changes = self.attribute_changes[1:]
+                        break
+                else:
+                    if target[0] == 'radius':
+                        if current_value > target[1]:
+                            shape.unsafe_set_radius(current_value - 1)
+                        else:
+                            shape.unsafe_set_radius(current_value + 1)
+                    else:
+                        if current_value > target[1]:
+                            setattr(shape, target[0], current_value - 1)
+                        else:
+                            setattr(shape, target[0], current_value + 1)

@@ -129,17 +129,18 @@ class ConvertCDEventToActionEvent(unittest.TestCase):
 
         fake_cd_event = CDEvent(Primitives.EXPEL)
 
-        result = converter.convert_cd_event_to_action_event(fake_cd_event)
-        self.assertIsInstance(result, ActionEvent)
+        result = converter.convert_cd_event_to_action_events(fake_cd_event)
+        self.assertIsInstance(result, list)
+        self.assertIsInstance(result[0], ActionEvent)
 
     def test_sets_attributes_correctly(self):
         converter = cd_converter.CDConverter()
 
         fake_cd_event = CDEvent(Primitives.EXPEL)
 
-        result = converter.convert_cd_event_to_action_event(fake_cd_event)
-        self.assertEqual(result.affected_attribute, EntityAttributes.inside_subject)
-        self.assertEqual(result.attribute_outcome, EntityAttributeOutcomes.outside)
+        result = converter.convert_cd_event_to_action_events(fake_cd_event)
+        self.assertEqual(result[0].affected_attribute, EntityAttributes.inside_subject)
+        self.assertEqual(result[0].attribute_outcome, EntityAttributeOutcomes.outside)
 
     def test_sets_subject_and_object_correctly(self):
         converter = cd_converter.CDConverter()
@@ -148,9 +149,30 @@ class ConvertCDEventToActionEvent(unittest.TestCase):
         fake_cd_event.subject = "Star"
         fake_cd_event.event_object = "particle"
 
-        result = converter.convert_cd_event_to_action_event(fake_cd_event)
-        self.assertEqual(result.subject, "Star")
-        self.assertEqual(result.event_object, "particle")
+        result = converter.convert_cd_event_to_action_events(fake_cd_event)
+        self.assertEqual(result[0].subject, "Star")
+        self.assertEqual(result[0].event_object, "particle")
+
+    def test_sets_order_of_action_events_correctly(self):
+        converter = cd_converter.CDConverter()
+
+        cd_event_1 = CDEvent(Primitives.EXPEL)
+        cd_event_2 = CDEvent(Primitives.PTRANS)
+        cd_event_3 = CDEvent(Primitives.INGEST)
+
+        cd_event_1.preceding = cd_event_2
+        cd_event_2.preceding = cd_event_3
+
+        results = converter.convert_cd_event_to_action_events(cd_event_1)
+        self.assertEqual(len(results), 3, 'Should return 3 action events from nested CD input')
+
+        self.assertEqual(results[0].affected_attribute, EntityAttributes.inside_subject)
+        self.assertEqual(results[0].attribute_outcome, EntityAttributeOutcomes.inside)
+
+        self.assertEqual(results[1].affected_attribute, EntityAttributes.position)
+
+        self.assertEqual(results[2].affected_attribute, EntityAttributes.inside_subject)
+        self.assertEqual(results[2].attribute_outcome, EntityAttributeOutcomes.outside)
         
 
 if __name__ == '__main__':

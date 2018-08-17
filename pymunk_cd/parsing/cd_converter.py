@@ -35,8 +35,24 @@ class CDConverter:
 
         return event
 
-    def convert_cd_event_to_action_event(self, cd_event:CDEvent):        
+    def convert_cd_event_to_action_events(self, cd_event:CDEvent):
 
+        action_array = []
+        fuse = 0
+        while cd_event:
+            action_array.append(
+                self._convert_single_cd_event(cd_event)
+            )
+            cd_event = cd_event.preceding
+
+            fuse +=1
+            assert fuse < 100
+
+        action_array.reverse()
+        return action_array
+
+    @staticmethod
+    def _convert_single_cd_event(cd_event):
         prim_definition = primitive_definitions.dictionary[cd_event.primitive]
 
         action_event = ActionEvent()
@@ -53,7 +69,7 @@ class CDConverter:
     def _merge_definitions(verb_definition:CDDefinition, prim_defintition:CDDefinition):
         '''Merges a verb definition with a primitive definition, to output a CDEvent'''
 
-        new_def = CDEvent
+        new_def = CDEvent(prim_defintition.preceding)
 
         for attr in ['primitive', 'sense_id', 'affected_attribute', 'attribute_outcome']:
 

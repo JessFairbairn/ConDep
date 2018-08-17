@@ -1,9 +1,13 @@
 from enum import Enum
+import typing
+
+#from pymunk_cd.CompoundEntity import CompoundEntity
 
 class ActionEvent:
-    subject = None #TODO: decide if this should be string or object
-    # 'Object' in logical sense
-    event_object = None #TODO: decide if this should be string or object
+    subject = None # type!: typing.Union[CompoundEntity, str]
+    
+    event_object = None # type!: typing.Union[CompoundEntity, str]
+    ''''Object' in logical sense'''
 
     affected_attribute = None # type: EntityAttributes
     attribute_outcome = None # type: EntityAttributeOutcomes

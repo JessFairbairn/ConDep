@@ -1,28 +1,25 @@
-import sys
 import random
+import sys
+from typing import List
+
 import pygame
-from pygame.locals import *
 import pymunk
 import pymunk.pygame_util
+from pygame.locals import *
 
-import pymunk_cd.CompoundEntity
-from pymunk_cd.action_event import EntityAttributes, EntityAttributeOutcomes
-from pymunk_cd.action_event import ActionEvent
+import pymunk_cd.CompoundEntity as CompoundEntity
+from pymunk_cd import CDUtilities, utilities
+from pymunk_cd.action_event import (ActionEvent, EntityAttributeOutcomes,
+                                    EntityAttributes)
 from pymunk_cd.cd_event import CDEvent
 from pymunk_cd.CDManager import CDManager
 from pymunk_cd.CDUtilities import CollisionTypes
-
 from pymunk_cd.definitions.primitives import dictionary as prim_definitions
-
 from pymunk_cd.parsing.cd_converter import CDConverter
 
-from pymunk_cd import utilities
 
-from pymunk_cd import CDUtilities
-
-
-def setup_pymunk_environment(event: ActionEvent, sentence: str=None):
-    assert type(event) == ActionEvent
+def setup_pymunk_environment(events: List[ActionEvent], sentence: str=None):
+    assert type(events) == list
 
     # pylint: disable=no-member
     pygame.init()
@@ -38,12 +35,12 @@ def setup_pymunk_environment(event: ActionEvent, sentence: str=None):
 
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
-    manager = pymunk_cd.CDManager.CDManager(screen, space)
+    manager = CDManager(screen, space)
     manager.print_events = False
     balls = []
 
     # Add objects
-    create_entities(manager, event)
+    _create_entities(manager, events)
 
     for entity in manager.objects:
         for particle in entity.parts:
@@ -51,10 +48,10 @@ def setup_pymunk_environment(event: ActionEvent, sentence: str=None):
 
     # Begin simulation
     while True:
-        for event in pygame.event.get():
-            if event.type == QUIT:
+        for keyboard_events in pygame.event.get():
+            if keyboard_events.type == QUIT:
                 sys.exit(0)
-            elif event.type == KEYDOWN and event.key == K_ESCAPE:
+            elif keyboard_events.type == KEYDOWN and events.key == K_ESCAPE:
                 sys.exit(0)
 
         balls_to_remove = []
@@ -88,7 +85,9 @@ def setup_pymunk_environment(event: ActionEvent, sentence: str=None):
         clock.tick(50)
 
 
-def create_entities(manager: CDManager, event: ActionEvent):
+#### PRIVATE METHODS ####
+def _create_entities(manager: CDManager, events: List[ActionEvent]):
+    event = events[0]
 
     # create entities
     subject_collision_type = None
@@ -98,8 +97,8 @@ def create_entities(manager: CDManager, event: ActionEvent):
         subject_collision_type = CollisionTypes.ABSORBER
         object_collision_type = CollisionTypes.ABSORBABLE
 
-    agent = spawn_entity(manager, event.subject,
-                         collision=subject_collision_type)
+    agent = _spawn_entity(manager, event.subject,
+                          collision=subject_collision_type)
 
     if event.event_object:
         # work out relative starting position
@@ -111,33 +110,19 @@ def create_entities(manager: CDManager, event: ActionEvent):
                 else:
                     position_offset = 50
 
-        patient = spawn_entity(manager, event.event_object,
-                               position_offset, collision=object_collision_type)
-
-    attribute = event.affected_attribute
-    assert attribute, 'Affected attribute should be set'
-
-    if attribute == EntityAttributes.position or attribute == EntityAttributes.velocity:
-        for part in agent.parts:
-            part.body.velocity += 5
-    elif attribute == EntityAttributes.inside_subject or attribute == EntityAttributes.distance_from_subject:
-        for part in patient.parts:
-            part.body.velocity += 8
-    elif attribute == EntityAttributes.radius:
-        part = agent.parts[0]
-        target_radius = (0.5*part.radius
-                         if event.attribute_outcome == EntityAttributeOutcomes.decrease
-                         else 2*part.radius)
-        agent.attribute_changes.append(('radius', target_radius))
-
-    elif attribute == None:
-        pass
+        patient = _spawn_entity(manager, event.event_object,
+                                position_offset, collision=object_collision_type)
     else:
-        raise NotImplementedError
-        # TODO: fill in the rest
+        patient = None
+
+    _apply_attributes(event, agent, patient)
+    for future_event in events[1:]:
+        _queue_future_event(future_event, agent, patient)
 
 
-def spawn_entity(manager: CDManager, kind: str, offset: int=0, collision: CollisionTypes=None):
+def _spawn_entity(manager: CDManager, kind: str, offset: int=0, collision: CollisionTypes=None):
+    '''Adds an entity of the specified kind to the space, with the optional 
+    ability to set position and collision type'''
 
     x = 200 + offset
     y = 200 + offset
@@ -151,3 +136,59 @@ def spawn_entity(manager: CDManager, kind: str, offset: int=0, collision: Collis
     }
 
     return factory_dict[kind](manager)
+
+
+def _apply_attributes(event: ActionEvent, agent: CompoundEntity, patient: CompoundEntity):
+    '''Takes 'affected_attrbiute' info from ActionEvent and actually applies it to the entities'''
+
+    attribute = event.affected_attribute
+    assert attribute, 'Affected attribute should be set'
+
+    if attribute == EntityAttributes.position or attribute == EntityAttributes.velocity:
+        for part in agent.parts:
+            part.body.velocity += 5
+
+    elif attribute == EntityAttributes.inside_subject or attribute == EntityAttributes.distance_from_subject:
+        for part in patient.parts:
+            part.body.velocity += 8
+
+    elif attribute == EntityAttributes.radius:
+        part = agent.parts[0]
+        target_radius = (0.5*part.radius
+                         if event.attribute_outcome == EntityAttributeOutcomes.decrease
+                         else 2*part.radius)
+        agent.attribute_changes.append([('radius', target_radius)])
+
+    elif attribute == None:
+        pass
+
+    else:
+        raise NotImplementedError
+        # TODO: fill in the rest
+
+def _queue_future_event(event: ActionEvent, agent: CompoundEntity, patient: CompoundEntity):
+    '''Takes 'affected_attrbiute' info from ActionEvent and actually applies it to the entities'''
+
+    attribute = event.affected_attribute
+    assert attribute, 'Affected attribute should be set'
+
+    if attribute == EntityAttributes.position or attribute == EntityAttributes.velocity:
+        for part in agent.parts:
+            #part.body.velocity += 5
+            raise NotImplementedError('queued velocity changes not yet done')
+
+    elif attribute == EntityAttributes.inside_subject or attribute == EntityAttributes.distance_from_subject:
+        for part in patient.parts:
+            #part.body.velocity += 8
+            raise NotImplementedError('queued velocity changes not yet done')
+
+    elif attribute == EntityAttributes.radius:
+        part = agent.parts[0]
+        target_radius = (0.5*part.radius
+                         if event.attribute_outcome == EntityAttributeOutcomes.decrease
+                         else 2*part.radius)
+        agent.attribute_changes.append([('radius', target_radius)])
+
+    else:
+        raise NotImplementedError
+        # TODO: fill in the rest

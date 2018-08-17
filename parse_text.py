@@ -24,8 +24,8 @@ converter = CDConverter()
 
 parser = NLPParser(verbLookup, converter)
 
-event = parser.parse_sentence(sentence)
+cd_event = parser.parse_sentence(sentence)
 
-action_event = converter.convert_cd_event_to_action_event(event)
+action_events = converter.convert_cd_event_to_action_events(cd_event)
 
-setup_pymunk_environment(action_event)
+setup_pymunk_environment(action_events, sentence)
