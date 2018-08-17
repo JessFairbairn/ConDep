@@ -28,7 +28,7 @@ class CDManager:
         return self.objects.index(entity)
 
     def tick(self):
-        #create distance matrix
+        # create distance matrix
         distance_matrix = utilities.square_matrix(len(self.objects))
 
         for i in range(len(self.objects)):

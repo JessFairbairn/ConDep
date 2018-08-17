@@ -45,7 +45,7 @@ class NLPParser:
         else:
             raise NotImplementedError('Multiple verbs found')
 
-        
+        # stem verb
         if verb.endswith('s'):
             verb = verb[:-1]
         
