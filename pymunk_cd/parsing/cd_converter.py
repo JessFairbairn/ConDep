@@ -29,19 +29,22 @@ class CDConverter:
         #TODO: handle more complex argument types
 
         if verb_definition.preceding:
-            prec_verb_def = verb_definition.preceding.definition
+            prec_verb_def = verb_definition.preceding
             prec_prim_def = primitive_definitions.dictionary[prec_verb_def.primitive]
             event.preceding = CDConverter._merge_definitions(prec_verb_def, prec_prim_def)
 
         return event
 
     def convert_cd_event_to_action_events(self, cd_event:CDEvent):
+        
+        subject = cd_event.subject
+        event_object = cd_event.event_object
 
         action_array = []
         fuse = 0
         while cd_event:
             action_array.append(
-                self._convert_single_cd_event(cd_event)
+                self._convert_single_cd_event(cd_event, subject, event_object)
             )
             cd_event = cd_event.preceding
 
@@ -52,7 +55,7 @@ class CDConverter:
         return action_array
 
     @staticmethod
-    def _convert_single_cd_event(cd_event):
+    def _convert_single_cd_event(cd_event, subject, event_object):
         prim_definition = primitive_definitions.dictionary[cd_event.primitive]
 
         action_event = ActionEvent()
@@ -60,8 +63,8 @@ class CDConverter:
         action_event.affected_attribute = cd_event.affected_attribute or prim_definition.affected_attribute
         action_event.attribute_outcome = cd_event.attribute_outcome or prim_definition.attribute_outcome
 
-        action_event.subject = cd_event.subject
-        action_event.event_object = cd_event.event_object
+        action_event.subject = subject
+        action_event.event_object = event_object
 
         return action_event
 

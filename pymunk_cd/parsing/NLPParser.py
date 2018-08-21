@@ -64,8 +64,11 @@ class NLPParser:
             index = words.index(prepositions[0])
             location = words[index + 1]
 
-            propbank_tag = self.preposition_to_propbank[prepositions[0]]
-
+            try:
+                propbank_tag = self.preposition_to_propbank[prepositions[0]]
+            except KeyError:
+                propbank_tag = 'PPT'
+                
             verb_info.set_argument_by_type(propbank_tag, location)
             
 

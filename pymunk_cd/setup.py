@@ -51,7 +51,7 @@ def setup_pymunk_environment(events: List[ActionEvent], sentence: str=None):
         for keyboard_events in pygame.event.get():
             if keyboard_events.type == QUIT:
                 sys.exit(0)
-            elif keyboard_events.type == KEYDOWN and events.key == K_ESCAPE:
+            elif keyboard_events.type == KEYDOWN and keyboard_events.key == K_ESCAPE:
                 sys.exit(0)
 
         balls_to_remove = []
