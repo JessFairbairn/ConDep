@@ -33,10 +33,12 @@ class CDManager:
 
         for i in range(len(self.objects)):
             obj = self.objects[i]
+            if obj == None:
+                continue
             obj_cog = obj.get_centre_of_gravity()
 
             for j in range(len(self.objects)):
-                if i == j or distance_matrix[i][j]:
+                if i == j or distance_matrix[i][j] or self.objects[j] == None:
                     continue
                 other_obj_cog = self.objects[j].get_centre_of_gravity()
                 distance = (other_obj_cog - obj_cog).get_length()
@@ -48,6 +50,9 @@ class CDManager:
 
         # objects to do regular tasks, and return any events
         for obj in self.objects:
+            if obj == None:
+                continue
+
             obj_cog = obj.get_centre_of_gravity()
 
             events = obj.tick(self)

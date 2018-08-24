@@ -13,7 +13,7 @@
             "cwd": "${workspaceFolder}",
             "console":"integratedTerminal",
             "env": {}, 
-            "args": [ "particle falls into star" ], 
+            "args": [ "star accretes a particle" ], 
             "envFile": "${workspaceFolder}/.env", 
             "debugOptions": [], 
             "internalConsoleOptions": "neverOpen" 

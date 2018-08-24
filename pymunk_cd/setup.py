@@ -147,10 +147,16 @@ def _apply_attributes(event: ActionEvent, agent: CompoundEntity, patient: Compou
     if attribute == EntityAttributes.position or attribute == EntityAttributes.velocity:
         for part in agent.parts:
             part.body.velocity += 5
+        agent.attribute_changes.append(
+            [('event', event)]
+            )
 
     elif attribute == EntityAttributes.inside_subject or attribute == EntityAttributes.distance_from_subject:
         for part in patient.parts:
             part.body.velocity += 8
+        agent.attribute_changes.append(
+            [('event', event)]
+            )
 
     elif attribute == EntityAttributes.radius:
         part = agent.parts[0]

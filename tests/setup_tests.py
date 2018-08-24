@@ -3,9 +3,10 @@ import unittest
 
 import pymunk_cd.setup
 
-from pymunk_cd.action_event import ActionEvent, EntityAttributes
+from pymunk_cd.action_event import ActionEvent, EntityAttributes, EntityAttributeOutcomes
 from pymunk_cd.CDManager import CDManager
 from pymunk_cd.primitives import Primitives
+from pymunk_cd.CompoundEntity import CompoundEntity
 
 class SpawningEntities(unittest.TestCase):
 
@@ -47,3 +48,30 @@ class SpawningEntities(unittest.TestCase):
         particle = self.manager.objects[0].parts[0].body
 
         self.assertGreater(particle.velocity.get_length_sqrd(), 0)
+
+class ApplyAttributes(unittest.TestCase):
+    def test_adds_attribute_change_for_inside_subject_event(self):
+        event = ActionEvent()
+        event.affected_attribute = EntityAttributes.inside_subject
+        event.attribute_outcome = EntityAttributeOutcomes.inside
+
+        agent = CompoundEntity()
+        patient = CompoundEntity()
+
+        pymunk_cd.setup._apply_attributes(event, agent, patient)
+
+
+        self.assertIn(('event',event), agent.attribute_changes[0])
+
+    def test_adds_attribute_change_for_distance_from_subject_event(self):
+        event = ActionEvent()
+        event.affected_attribute = EntityAttributes.distance_from_subject
+        event.attribute_outcome = EntityAttributeOutcomes.increase
+
+        agent = CompoundEntity()
+        patient = CompoundEntity()
+
+        pymunk_cd.setup._apply_attributes(event, agent, patient)
+
+
+        self.assertIn(('event',event), agent.attribute_changes[0])

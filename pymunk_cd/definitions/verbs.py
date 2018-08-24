@@ -82,6 +82,13 @@ _GORGE.attribute_outcome = EntityAttributeOutcomes.increase
 _GORGE.preceding = CDDefinition(Primitives.INGEST)
 dictionary['gorge'] = _GORGE
 
+_ACCRETE = CDDefinition(Primitives.MOVE)
+_ACCRETE.sense_id = 'accrete'
+_ACCRETE.affected_attribute = EntityAttributes.radius
+_ACCRETE.attribute_outcome = EntityAttributeOutcomes.increase
+_ACCRETE.preceding = CDDefinition(Primitives.INGEST)
+dictionary['accrete'] = _ACCRETE
+
 ##PROPEL
 _ACCELERATE = CDDefinition(Primitives.PROPEL)
 _ACCELERATE.sense_id = 'accelerate'

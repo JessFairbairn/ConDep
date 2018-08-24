@@ -35,6 +35,22 @@ class UpdateChangingAttributes(unittest.TestCase):
         # assert
         self.assertGreater(entity.parts[0].radius, original_radius, 'Should increase the radius')
 
+    def test_handles_queued_event_target(self):
+        # arrange
+        entity = CDUtilities.create_big_particle(self.manager, 10, 10)
+        
+        target_event = ActionEvent()
+        actual_event = ActionEvent()
+
+        entity.event_history.append([actual_event])
+        entity.attribute_changes = [[('event', target_event)]]
+
+        # act
+        entity._update_changing_attributes()
+
+        # assert
+        self.assertEqual(len(entity.attribute_changes), 0, 'Should have no more queued changes')
+
     def test_removes_fulfilled_targets(self):
         # arrange
         entity = CDUtilities.create_big_particle(self.manager, 10, 10)
@@ -92,7 +108,82 @@ class CheckForEvents(unittest.TestCase):
 
         self.assertIsInstance(found_events, list)
         self.assertListEqual(found_events,[])
+
+class GetInclusionRadius(unittest.TestCase):
+    @mock.patch('pygame.surface.Surface')
+    @mock.patch('pymunk.Space')
+    def setUp(self, mockSurface, mockSpace):
+        self.manager = CDManager(mockSurface, mockSpace)
+
+    def test_handles_single_particle(self):
+        entity = CDUtilities.create_big_particle(self.manager, 10, 10)
+        output = entity.get_inclusion_radius()
+
+        self.assertEqual(output, 40)
+
+    def test_handles_multiple_particles(self):
+        entity = CDUtilities.create_star(self.manager, 10, 10)
+        entity.get_inclusion_radius()
+
+    def test_at_least_radius_of_biggest_particle(self):
+        entity = CDUtilities.create_big_particle(self.manager, 10, 10)
+        new_particle = CDUtilities.add_ball(self.manager.space, 11, 11)
+        entity.parts.append(new_particle)
+
+        output = entity.get_inclusion_radius()
+
+        self.assertEqual(output, 40)
+
+
+class GetCentreOfGravity(unittest.TestCase):
+    @mock.patch('pygame.surface.Surface')
+    @mock.patch('pymunk.Space')
+    def setUp(self, mockSurface, mockSpace):
+        self.manager = CDManager(mockSurface, mockSpace)
+
+    def test_correct_for_large_particles(self):
+        entity = CDUtilities.create_big_particle(self.manager, 10, 10)
+        body = entity.parts[0].body
         
+        self.assertEqual(entity.get_centre_of_gravity(), body.position)
+
+class CheckForEmitOrInject(unittest.TestCase):
+    @mock.patch('pygame.surface.Surface')
+    @mock.patch('pymunk.Space')
+    def setUp(self, mockSurface, mockSpace):
+        self.manager = CDManager(mockSurface, mockSpace)
+
+    def test_recognises_expell_for_compound_entity(self):
+        entity = CDUtilities.create_star(self.manager,0,0)
+        entity.parts[0].body.position = Vec2d(200,200)
+        entity.parts[0].mark = 'Outlier'
+
+        events = entity._check_for_injest_or_emit(self.manager, Vec2d(0,0))
+
+        self.assertGreater(len(events), 0, 'Should return an event')
+        event = events[0]
+        self.assertEqual(event.affected_attribute, EntityAttributes.inside_subject)
+        self.assertEqual(event.attribute_outcome, EntityAttributeOutcomes.outside)
+        self.assertEqual(event.event_object.mark, 'Outlier')
+
+    def test_recognises_absorb_for_simple_entity(self):
+        # arrange
+        entity = CDUtilities.create_big_particle(self.manager,0,0)
+        particle = CDUtilities.create_particle(self.manager,1,1)
+        self.manager.distance_matrices = [[
+            [None, 20], 
+            [20, None]
+            ]]
+
+        # act
+        events = entity._check_for_injest_or_emit(self.manager, Vec2d(0,0))
+
+        # assert
+        self.assertEqual(len(events), 1, 'Should return a single event')
+        event = events[0]
+        self.assertEqual(event.affected_attribute, EntityAttributes.inside_subject)
+        self.assertEqual(event.attribute_outcome, EntityAttributeOutcomes.inside)
+        # self.assertEqual(event.event_object.mark, 'Outlier')
 
 if __name__ == '__main__':
     unittest.main()
