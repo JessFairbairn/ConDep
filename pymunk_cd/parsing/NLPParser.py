@@ -53,9 +53,11 @@ class NLPParser:
         
         verb_info.get_verb_subject().argument = words[0]
 
-        if len(words) == 3:
-            verb_info.get_verb_object().argument = words[2]
-        elif len(words) > 3:
+        pos_tags = list(filter(lambda tuple: tuple, filter(lambda tuple: tuple[1] != 'DT', pos_tags)))
+
+        if len(pos_tags) == 3:
+            verb_info.get_verb_object().argument = pos_tags[2][0]
+        elif len(pos_tags) > 3:
             prepositions = list(map(lambda tuple: tuple[0], filter(lambda tuple: tuple[1] == 'IN', pos_tags)))
             if len(prepositions) > 1:
                 raise NotImplementedError('Too many prepositions')

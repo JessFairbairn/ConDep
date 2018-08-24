@@ -41,9 +41,8 @@ def create_big_particle(manager, x_loc:int=300, y_loc:int=300):
 
     return star
 
-def create_star(manager, x_loc:int=300, y_loc:int=300, num_particles = None):
+def create_star(manager, x_loc:int=300, y_loc:int=300, num_particles:int = 40):
     'Creates a plain star, adds it to CD manager, pymunk and pygame'
-    num_particles = num_particles or 40
 
     # setup CD stuff
     star = CompoundEntity()

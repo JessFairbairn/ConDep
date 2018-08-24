@@ -22,6 +22,7 @@ def warn(message:str):
     print('\033[93m' + message + '\033[0m') 
 
 def square_matrix(width:int):
+    '''Creates a square matrix with each cell initialised to None'''
     distance_matrix = []
     for i in range(width):
         distance_matrix.append([])
