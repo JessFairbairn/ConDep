@@ -30,8 +30,8 @@ class CDConverter:
 
         if verb_definition.preceding:
             prec_verb_def = verb_definition.preceding
-            prec_prim_def = primitive_definitions.dictionary[prec_verb_def.primitive]
-            event.preceding = CDConverter._merge_definitions(prec_verb_def, prec_prim_def)
+            prec_prim_def = primitive_definitions.dictionary[prec_verb_def.definition.primitive]
+            event.preceding = CDConverter._merge_definitions(prec_verb_def.definition, prec_prim_def)
 
         return event
 

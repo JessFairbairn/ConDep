@@ -35,7 +35,7 @@ dictionary['absorb'] = _absorb
 _fall = CDDefinition(Primitives.INGEST)
 _fall.sense_id = 'fall'
 
-_fall.preceding = CDDefinitionPredecessorWrapper
+_fall.preceding = CDDefinitionPredecessorWrapper()
 _fall.preceding.definition = CDDefinition(Primitives.PROPEL)
 _fall.preceding.definition.affected_attribute = EntityAttributes.distance_from_subject
 _fall.preceding.definition.attribute_outcome = EntityAttributeOutcomes.decrease
@@ -79,14 +79,16 @@ _GORGE = CDDefinition(Primitives.MOVE)
 _GORGE.sense_id = 'gorge'
 _GORGE.affected_attribute = EntityAttributes.radius
 _GORGE.attribute_outcome = EntityAttributeOutcomes.increase
-_GORGE.preceding = CDDefinition(Primitives.INGEST)
+_GORGE.preceding = CDDefinitionPredecessorWrapper()
+_GORGE.preceding.definition = CDDefinition(Primitives.INGEST)
 dictionary['gorge'] = _GORGE
 
 _ACCRETE = CDDefinition(Primitives.MOVE)
 _ACCRETE.sense_id = 'accrete'
 _ACCRETE.affected_attribute = EntityAttributes.radius
 _ACCRETE.attribute_outcome = EntityAttributeOutcomes.increase
-_ACCRETE.preceding = CDDefinition(Primitives.INGEST)
+_ACCRETE.preceding = CDDefinitionPredecessorWrapper()
+_ACCRETE.preceding.definition = CDDefinition(Primitives.INGEST)
 dictionary['accrete'] = _ACCRETE
 
 ##PROPEL

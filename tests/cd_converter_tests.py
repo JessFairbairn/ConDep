@@ -101,7 +101,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
 
         fake_verb_def = CDDefinition(Primitives.INGEST)
         fake_verb_def.sense_id = 'nom'
-        fake_verb_def.preceding = CDDefinitionPredecessorWrapper
+        fake_verb_def.preceding = CDDefinitionPredecessorWrapper()
 
         pred_def = CDDefinition(Primitives.PROPEL)
         fake_verb_def.preceding.definition = pred_def
@@ -115,7 +115,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
         mock_dictionary = mock.MagicMock()
         mock_dictionary.__getitem__.side_effect = getitem
         
-        with patch('pymunk_cd.definitions.verbs.dictionary', new=mock_dictionary):
+        with patch('pymunk_cd.definitions.verbs.dictionary', new = mock_dictionary):
 
             event = converter.convert_verb_event_to_cd_event(mock_verb_data)
             self.assertEqual(event.preceding.primitive, Primitives.PROPEL)

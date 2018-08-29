@@ -62,64 +62,9 @@ class CompoundEntity:
 
         return new_events
 
-    def _check_for_injest_or_emit(self, manager, cog:pymunk.Vec2d):
-        new_events = []
-        inclusion_radius = self.get_inclusion_radius(cog)
-
-        # Check for expel events
-        if len(self.parts) > 1:
-            # check for parts of the object seperating/leaving
-            distances_from_centre = self.get_distances_from_cog(cog)
-
-            has_exited = list(map(lambda part_dist: part_dist >
-                                  inclusion_radius, distances_from_centre))
-
-            for idx in range(len(has_exited) - 1, -1, -1):
-                if has_exited[idx]:
-                    # remove from parts
-                    removed_object = self.parts[idx]
-                    del self.parts[idx]
-
-                    # add event
-                    emit_event = ActionEvent()
-                    emit_event.event_object = removed_object
-                    emit_event.subject = self
-                    emit_event.affected_attribute = EntityAttributes.inside_subject
-                    emit_event.attribute_outcome = EntityAttributeOutcomes.outside
-                    new_events.append(emit_event)
-
-                    # TODO: create a compound object for newly seperate obj
-
-        # Check for ingest events
-        distance_matrix = manager.distance_matrices[-1]
-        entity_index = manager.get_entity_index(self)
-
-        distances_from_entity = distance_matrix[entity_index]
-
-        for idx in range(len(distances_from_entity) - 1, -1, -1):
-            if distances_from_entity[idx] and distances_from_entity[idx] < inclusion_radius:
-                swallowed_entity = manager.objects[idx]
-
-                # add to parts
-                self.parts.extend(swallowed_entity.parts)
-
-                # add event
-                emit_event = ActionEvent()
-                emit_event.event_object = swallowed_entity
-                emit_event.subject = self
-                emit_event.affected_attribute = EntityAttributes.inside_subject
-                emit_event.attribute_outcome = EntityAttributeOutcomes.inside
-                new_events.append(emit_event)
-
-                # remove swallowed object from manager
-                manager.objects[idx]= None
-
-                
-
-        return new_events
+    
 
     ### Get methods ###
-
     def get_distances_from_cog(self, cog=None):
         'Returns the distance of each particle from the centre of gravity'
 
@@ -167,6 +112,61 @@ class CompoundEntity:
         return weighted_vector_sum/total_mass
 
     #### Private Methods ####
+    def _check_for_injest_or_emit(self, manager, cog:pymunk.Vec2d):
+        new_events = []
+        inclusion_radius = self.get_inclusion_radius(cog)
+
+        # Check for expel events
+        if len(self.parts) > 1:
+            # check for parts of the object seperating/leaving
+            distances_from_centre = self.get_distances_from_cog(cog)
+
+            has_exited = list(map(lambda part_dist: part_dist >
+                                  inclusion_radius, distances_from_centre))
+
+            for idx in range(len(has_exited) - 1, -1, -1):
+                if has_exited[idx]:
+                    # remove from parts
+                    removed_object = self.parts[idx]
+                    del self.parts[idx]
+
+                    # add event
+                    emit_event = ActionEvent()
+                    emit_event.event_object = removed_object
+                    emit_event.subject = self
+                    emit_event.affected_attribute = EntityAttributes.inside_subject
+                    emit_event.attribute_outcome = EntityAttributeOutcomes.outside
+                    new_events.append(emit_event)
+
+                    # TODO: create a compound object for newly seperate obj
+
+        # Check for ingest events
+        distance_matrix = manager.distance_matrices[-1]
+        entity_index = manager.get_entity_index(self)
+
+        distances_from_entity = distance_matrix[entity_index]
+
+        for idx in range(len(distances_from_entity) - 1, -1, -1):
+            if distances_from_entity[idx] and distances_from_entity[idx] < inclusion_radius:
+                swallowed_entity = manager.objects[idx]
+
+                # add to parts
+                self.parts.extend(swallowed_entity.parts)
+
+                # add event
+                injest_event = ActionEvent()
+                injest_event.event_object = swallowed_entity
+                injest_event.subject = self
+                injest_event.affected_attribute = EntityAttributes.inside_subject
+                injest_event.attribute_outcome = EntityAttributeOutcomes.inside
+                new_events.append(injest_event)
+
+                # remove swallowed object from manager
+                manager.objects[idx]= None
+
+                
+
+        return new_events
 
     def _check_for_events(self):
         min_event_span = 4
@@ -225,8 +225,7 @@ class CompoundEntity:
         return new_events
 
     def _update_changing_attributes(self):
-        if len(self.parts) == 1 and self.attribute_changes:
-            shape = self.parts[0]
+        if self.attribute_changes:
 
             for target in self.attribute_changes[0]:
                 if target[0] == 'event':
@@ -240,6 +239,7 @@ class CompoundEntity:
                         if self._are_events_equivalent(actual_event, target_event):
                             self.attribute_changes[0].remove(target)
                 else:
+                    shape = self.parts[0]
                     current_value = getattr(shape, target[0])
                     if target[1] == current_value:
                         self.attribute_changes[0].remove(target)

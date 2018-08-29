@@ -96,6 +96,23 @@ class UpdateChangingAttributes(unittest.TestCase):
         # act
         entity._update_changing_attributes()
 
+    def test_handles_compound_entities(self):
+        # arrange
+        entity = CDUtilities.create_big_particle(self.manager, 10, 10)
+        new_particle = CDUtilities.add_ball(self.manager.space, 11, 11)
+        entity.parts.append(new_particle)
+        
+        target_event = ActionEvent()
+        actual_event = ActionEvent()
+
+        entity.event_history.append([actual_event])
+        entity.attribute_changes = [[('event', target_event)]]
+
+        # act
+        entity._update_changing_attributes()
+
+        # assert
+        self.assertEqual(len(entity.attribute_changes), 0)
 
 class CheckForEvents(unittest.TestCase):
     def test_returns_empty_list_when_no_changes_but_above_min_length(self):
@@ -157,6 +174,9 @@ class CheckForEmitOrInject(unittest.TestCase):
         entity = CDUtilities.create_star(self.manager,0,0)
         entity.parts[0].body.position = Vec2d(200,200)
         entity.parts[0].mark = 'Outlier'
+        self.manager.distance_matrices = [
+            [[None]]
+        ]
 
         events = entity._check_for_injest_or_emit(self.manager, Vec2d(0,0))
 
@@ -165,6 +185,7 @@ class CheckForEmitOrInject(unittest.TestCase):
         self.assertEqual(event.affected_attribute, EntityAttributes.inside_subject)
         self.assertEqual(event.attribute_outcome, EntityAttributeOutcomes.outside)
         self.assertEqual(event.event_object.mark, 'Outlier')
+
 
     def test_recognises_absorb_for_simple_entity(self):
         # arrange
