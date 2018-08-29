@@ -1,13 +1,13 @@
-\documentclass{article}
-\usepackage{graphicx}
+% \documentclass{article}
+% \usepackage{graphicx}
 
-\title{Implementation}
-\begin{document}
-    \maketitle
+% \title{Implementation}
+% \begin{document}
+    % \maketitle
 
     A system was developed to perform two way conversion from natural language to actions, and from actions to natural language. The system uses Conceptual Dependancy representations of scenarios as intermediaries between natural language and physics situations.
 
-    \section{Natural language to Actions}
+    \subsection{Natural language to Actions}
     \begin{figure}[h]
         \begin{center}
             \includegraphics[width=300pt]{diagrams/verb-to-action-workflow.png}
@@ -24,7 +24,7 @@
     %TODO: is this relevant for this pathway?
     In this case, the system can be guided to using the more suitable verb by applying a type constraint to the object of the verb (object being used in the logical sense). Constraints in existing natural language libraries aren't generally specific enough for these purposes, so a crude list of physics-specific constraint rules was built as a proof of concept.
     
-    \section{Actions to Natural Language}
+    \subsection{Actions to Natural Language}
     \begin{figure}[h]
         \begin{center}        
             \includegraphics[width=300pt]{diagrams/action-to-verb-workflow.png}
@@ -40,4 +40,4 @@
     \subsection{Recognition of physical events}
 
 
-\end{document}
+% \end{document}
