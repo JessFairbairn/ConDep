@@ -5,10 +5,15 @@
 * [ ] NLP -> FOs, using argument roles
 
 ### Conceptual Dependencies
-- [ ] Introduce general concept
-- [ ] Strengths
+- [x] Introduce general concept
+- Explain primitives
+- Strengths
+    - [X] Syntax independent
+    - [x] Metaphor- fits with our 'metaphor' based understanding of the world
 - [ ] Possibility of applying ML
-- [ ] Comments on possibly redundant primitives
+- Criticisms
+    - [ ] Comments on possibly redundant primitives
+    - [ ] Abandoning primitives altogether
 
 ## Implementation
 ### Natural language to Actions

@@ -13,6 +13,7 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "cSpell.words": [
-        "schank"
+        "schank",
+        "schank's"
     ]
 }

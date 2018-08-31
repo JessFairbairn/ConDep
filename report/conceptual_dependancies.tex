@@ -1,11 +1,11 @@
-% \documentclass{article}
+\documentclass[dissertation.tex]{subfiles}
 % \usepackage{graphicx}
 
-% \title{Conceptual Dependencies}
-% \begin{document}
-    % \maketitle
+\title{Conceptual Dependencies}
+\begin{document}
+    \subsection{Conceptual Dependencies}
 
-    Conceptual Dependency (CD) theory~\cite{SCHANK1972552} is a method of expressing meaning, rather than syntax. It is based on the notion of expressing concepts in terms of basic physical notions- either literally, when describing physical events, or metaphorically, when describing abstract exchanges (of value or information). As CD is syntax independent, it can be applied to any language or similar information encoding.
+    Conceptual Dependency (CD) theory~\cite{SCHANK1972552} is a method of expressing meaning, rather than syntax. It expresses concepts in terms of basic physical notions- either literally, when describing physical events, or metaphorically, when describing abstract exchanges (of value or information). 
 
     CD expresses events in terms of a number of predefined primitives. Some of the physical primitives defined by Schank are:
     \begin{itemize}
@@ -13,7 +13,7 @@
         \item \textbf{MOVE}- a object moving a part of itself (e.g.~a person moving their arm)
         \item \textbf{PROPEL}- an entity applying a force to another object
         \item \textbf{EMIT}- an entity ejecting another object from inside itself
-        \item \textbf{INJECT}- an entity taking another object into itself
+        \item \textbf{INJEST}- an entity taking another object into itself
     \end{itemize}
 
     The more abstract primitives include:
@@ -35,11 +35,23 @@
         \centerline{
             \includegraphics[height=200pt]{diagrams/emit-cd.png}
         }
-        \caption{A CD diagram of the verb `emit'. As something is being taken from inside the subject and forced out, it corresponds to the `Expel' primitive in CD.\@The `object' of this verb is radiation of some sort.}
-        \label{fig:emit-cd}
+        \caption{A CD diagram of the verb `emit'. As something is being taken from inside the subject and forced out, it corresponds to the `Expel' primitive in CD.\@The `object' of this verb is radiation of some sort.}\label{fig:emit-cd}
     \end{figure}
 
+    \subsubsection{Strengths}
+    As CD is syntax independent, it can be applied to any language or similar information encoding. There is significant evidence that concept learning is independent from language acquisition, in pre-verbal children~\cite{mandler-canovas2014imageschemas} and even in chimpanzees~\cite{Dahl-Adachi2013chimpanzees}. As such, it is valid to separate the semantics of concepts from the associated labels here.
+
+    The use of metaphor is also supported by how we experience learning. Humans cannot intuitively grasp high dimensional structures or relativistic physics, nor can we understand quantum physics beyond it's mathematical form- we simplify our mental model of the atom to rings and `balls' despite this being inaccurate. Our understanding of physical concepts seems to always be in terms of objects on an everyday scale.
+
+    This use of metaphor is exemplified by CD's abstract primitives- information is `transported' between people in a conversation.
+    % TODO: but better for physical stuff?
+
+    The fact that discrete actions or scenarios can be broken down into primitives offers the possibility of describing them in a way which computers can easily process- in a recognition problem, the system would be able to recognise a complex action by detecting a series of simple actions. In a simulation or re-enactment problem, the system would only have to be programmed to perform each of the primitives, from a dictionary of verb definitions.
+
+    By reducing events to a series of well known sub-events, it opens up the possibility of creating algorithms for learning. One possible algorithm which works with `primitives' is Bayesian Program Learning, which will be explored later in this dissertation. % TODO: add reference
+
+    \subsubsection{Criticisms}
 
     \bibliographystyle{plain}
     \bibliography{refs}
-% \end{document}
+\end{document}
