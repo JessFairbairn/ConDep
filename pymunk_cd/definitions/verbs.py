@@ -87,6 +87,7 @@ _ACCRETE = CDDefinition(Primitives.MOVE)
 _ACCRETE.sense_id = 'accrete'
 _ACCRETE.affected_attribute = EntityAttributes.radius
 _ACCRETE.attribute_outcome = EntityAttributeOutcomes.increase
+
 _ACCRETE.preceding = CDDefinitionPredecessorWrapper()
 _ACCRETE.preceding.definition = CDDefinition(Primitives.INGEST)
 dictionary['accrete'] = _ACCRETE
