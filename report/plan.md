@@ -10,12 +10,15 @@
 - Strengths
     - [X] Syntax independent
     - [x] Metaphor- fits with our 'metaphor' based understanding of the world
-- [ ] Possibility of applying ML
+    - [ ] Possibility of applying ML
 - Criticisms
     - [ ] Comments on possibly redundant primitives
     - [ ] Abandoning primitives altogether
 
 ## Implementation
+### Primitives
+- [X] Only using subset
+    - [X] Redundent primitives? 
 ### Natural language to Actions
 - event into predicate argument
     - identify verb sense
@@ -34,6 +37,7 @@
 - Simulation reports events
 
 - filtering primitives first then filtering verbs
+  
 ### Physics Simulation
 - [ ] Compound Entity
 - [ ] Details about tracking various properties

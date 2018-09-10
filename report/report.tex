@@ -7,7 +7,20 @@
 
     A system was developed to perform two way conversion from natural language to actions, and from actions to natural language. The system uses Conceptual Dependency representations of scenarios as intermediaries between natural language and physics situations.
 
+    \subsection{Primitives}
+    As the system being built only related to physical events, a subset of physical primitives were used, interpreted in a way which is relevant to the field of astrophysics. The following specific definitions were used:
+    \begin{itemize}
+        \item \textbf{PTRANS}- an object's whole body moving (defined as it's centre of gravity moving significantly)
+        \item \textbf{MOVE}- part of an object moving. In an astrophysics scenario, this would mean an object's size or shape moving, while the object itself remains static % TODO: does 'move' only apply to agents in og CD?
+        % \item \textbf{PROPEL}- an entity applying a force to another object
+        \item \textbf{EMIT}- an entity ejecting another object from inside itself
+        \item \textbf{INJEST}- an entity taking another object into itself
+    \end{itemize}
+
+    Some have argued for the PTRANS and MOVE primitives to be merged in a redesign on CD~\cite{macbethimage}- this was not attempted, as it was beyond the scope of this project, and because the distinction seems to reflect the differences between an object's translation and it's deformation intuitively in the astrophysics domain.
+
     \subsection{Natural language to Actions}
+
     \begin{figure}[h]
         \begin{center}
             \includegraphics[width=300pt]{diagrams/verb-to-action-workflow.png}
@@ -15,14 +28,18 @@
         \caption{The workflow for parsing an event expressed in natural lanuage into it's physical representation}
     \end{figure}
 
-    The first step is parsing a natural language event into a predicate-argument structure relating subject and object. Each verb sense will have a definition in terms of conceptual dependencies- which CD primitive it corresponds to, which physical attribute it affects (e.g.~the `eject' verb indicates the object has been removed from inside the subject, meaning an `inside\_subject' attribute is assigned to that verb), and \emph{how} that attribute changes.
+    The first step is parsing a natural language event into a predicate-argument structure relating subject and object. Each verb sense will have a definition in terms of conceptual dependencies- which CD primitive it corresponds to, and if applicable, extra attributes implied by the verb which are contingent to the primitive (e.g.~direction or polarity). This parsing process used a simple position-based system, augmented with the NLTK natural language toolkit~\cite{bird2009nltk} to assist.
+    
+    Primitive definitions contain information about which physical attribute it affects (e.g.~the `expel' primitive indicates the object has been removed from inside the subject, meaning an `inside\_subject' attribute is assigned to that verb), and \emph{how} that attribute changes. These attributes are used for the simulation.
+    
+    The verb definition is then merged with it's primitive definition (there should be no contradictory fields). This merging allows sparser verb definitions, with some information already implicit in the primitive.
 
-    Each verb definition will have a CD primitive assigned to it- each of these primitives will have it's own properties such as the attribute it affects, and any constraints on the subject/ object type. The verb definition is then merged with the primitive definition (there should be no contradictory fields). This merging allows sparser verb definitions, with some information already implicit in the primitive.
+    \subsubsection{Example: Expand and Contract}
+    The verbs `Expand' and `Contract' both use the MOVE primitive, as it indicates a part of the subject moving while the absolute position doesn't change. Additionally, they both have the same \emph{affected\_attribute} value of `radius'. However they clearly mean the exact opposite, so their \emph{attribute\_outcome} values differ (`increase' and `decrease' respectively).
 
-    An example of different verbs with the same primitive is `eject' and `emit'- both of these terms best correspond to the CD primitive ``EXPEL'', however they will generally be used for different kinds of materials. Eject will generally be used for solid structures being expelled from a larger one, whereas `emit' would generally be used for radiation or energy being expelled.
+    % TODO: an example with a primitive which contains some data?
 
-    %TODO: is this relevant for this pathway?
-    In this case, the system can be guided to using the more suitable verb by applying a type constraint to the object of the verb (object being used in the logical sense). Constraints in existing natural language libraries aren't generally specific enough for these purposes, so a crude list of physics-specific constraint rules was built as a proof of concept.
+    % TODO: something on verb sense disambiguation (less of an issue when domain is known?)
     
     \subsection{Actions to Natural Language}
     \begin{figure}[h]
@@ -36,8 +53,13 @@
 
     Primitives which contradict the information in the event are eliminated, thus restricting the candidate verbs to only those which are relevant. These are then filtered according to the remaining criteria (affected\_attribute, attribute outcome, and any selectional restrictions).
 
+    An example of different verbs with the same primitive is `eject' and `emit'- both of these terms best correspond to the CD primitive ``EXPEL''. In a situation where a star spits out a smaller object, both of these terms will be listed as candidate verbs (and would make sense if used). However in natural language they will generally be used for different kinds of materials- `eject' will generally be used for solid structures being expelled from a larger one, whereas `emit' would generally be used for radiation or energy being expelled. This kind of constraint data can guide a system to a more appropriate choice of word.
+
+    In this case, the system can be guided to using the more suitable verb by applying a type constraint to the object of the verb (object being used in the logical sense). Constraints in existing natural language libraries aren't generally specific enough for these purposes, so a crude list of physics-specific constraint rules was built as a proof of concept.
+
     \section{Physics Simulation}
     \subsection{Recognition of physical events}
 
-
+    \bibliographystyle{plain}
+    \bibliography{refs}
 \end{document}
