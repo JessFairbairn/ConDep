@@ -1,8 +1,9 @@
 # Dissertation Plan
 
 ## Introduction
+
 ## Background
-* [ ] NLP -> FOs, using argument roles
+- [ ] NLP -> FOs, using argument roles
 
 ### Conceptual Dependencies
 - [x] Introduce general concept
@@ -16,6 +17,7 @@
     - [ ] Abandoning primitives altogether
 
 ## Implementation
+
 ### Primitives
 - [X] Only using subset
     - [X] Redundent primitives? 
@@ -43,10 +45,15 @@
 - [ ] Details about tracking various properties
 - [ ] Spawning action events
 
+### Predicate Argument Conclusions from CD
+* [ ] Theory/ templates for events
+* [ ] Code
+
 ## Results
 
 ## Discussion
 
 ## Conclusion
+
 ### Future Work
 - ML

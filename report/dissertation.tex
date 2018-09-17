@@ -1,6 +1,9 @@
 \documentclass{article}
+    \usepackage{booktabs}
     \usepackage{graphicx}
     \usepackage{subfiles}
+
+    \providecommand{\cdpred}{./cd-pred-arg} % relative path to master.tex
 
     \author{Jess Fairbairn}
     \title{Dissertation}
@@ -14,7 +17,8 @@
         \subfile{conceptual_dependancies}
     
         \section{Implementation}
-        \subfile{report} 
+        \subfile{report}
+        \subfile{cd-pred-arg/cd-propositional}
 
         \bibliographystyle{plain}
         \bibliography{refs}
