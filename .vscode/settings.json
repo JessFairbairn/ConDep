@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "python3.5",
+    "python.pythonPath": "/usr/bin/python3",
     "python.unitTest.unittestArgs": [
         "-v",
         "-s",
@@ -13,6 +13,9 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "cSpell.words": [
+        "Propbank",
+        "nltk",
+        "ptrans",
         "schank",
         "schank's"
     ]

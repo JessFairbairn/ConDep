@@ -1,25 +1,40 @@
 \documentclass{article}
-    \usepackage{booktabs}
-    \usepackage{graphicx}
-    \usepackage{subfiles}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subfiles}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{rotating}
+\usepackage{pifont}
+\usepackage{svg}
+\usepackage{float}
 
-    \providecommand{\cdpred}{./cd-pred-arg} % relative path to master.tex
+\providecommand{\cdpred}{./cd-pred-arg} % relative path to master.tex
+\providecommand{\repsfolder}{./reps}
 
-    \author{Jess Fairbairn}
-    \title{Dissertation}
+\author{Jess Fairbairn}
+\title{Dissertation}
 
-    \begin{document}
-        \maketitle
-        \section{Introduction}
+\begin{document}
+    \maketitle
+    \tableofcontents
+    \section{Introduction}
+    This dissertation will begin by looking at conceptual dependency theory, a schema for expressing the semantics of natural language originally put forward by Roger Schank~\cite{SCHANK1972552}. This will then be compared to a number of other forms of information representation, with the aim of identifying what aspects of meaning each is able to capture.
 
-        \section{Background}
-        
-        \subfile{conceptual_dependancies}
-    
-        \section{Implementation}
-        \subfile{report}
-        \subfile{cd-pred-arg/cd-propositional}
+    The code developed for this project will then be discussed, explaining how simulated events were ran in terms of conceptual dependencies. 
 
-        \bibliographystyle{plain}
-        \bibliography{refs}
-    \end{document}
+    \section{Background}
+    \subfile{reps/paper.tex}
+    \subfile{conceptual_dependancies}
+
+    \section{Implementation}
+    \subfile{report}
+    \subfile{cd-pred-arg/cd-propositional}
+
+    \bibliographystyle{plain}
+    \bibliography{refs}
+\end{document}
