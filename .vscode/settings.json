@@ -18,5 +18,9 @@
         "ptrans",
         "schank",
         "schank's"
+    ],
+    "cSpell.enabledLanguageIds": [
+        "latex",
+        "markdown"
     ]
 }

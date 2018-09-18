@@ -26,7 +26,7 @@
 ### Primitives
 
 - [X] Only using subset
-  - [X] Redundent primitives?
+  - [X] Redundant primitives?
 
 ### Natural language to Actions
 
@@ -63,8 +63,15 @@
 
 ## Discussion
 
+- [X] Expressing verbs as CDs- success
+  - [X] Recognition- end conditions for experiments
+- [ ] Extracting predicate-arg info from CDs- success?!
+
 ## Conclusion
 
 ### Future Work
 
 - ML
+  - Come up with an example ML may struggle with- e.g. where a scenario necessarily implies another event, but which isn't part of the definition
+- Verify if the primitives are necessary and sufficient
+- Testing in other domains
