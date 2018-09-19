@@ -46,7 +46,25 @@
 
     \section{Conclusion}
     \subsection{Future Work}
-    This work required the creation of a library of verbs expressed as a sequence of CD events.
+    % ML
+    By breaking down verbs into a sequence of finite events, we open the possibility of reducing machine learning tasks regarding verbs to a question of learning and recognising patterns. Hierarchical Bayesian Program learning (BPL)~\cite{one-shot-learning} is built around combinations of primitives, and so offers a promising Machine learning regimes for a CD based system.
+    
+    This work required the creation of a library of verbs expressed as a sequence of CD events. These were manually input, a task which would be impractical for any system with a large dictionary. BPL offers `one shot' approaches to learning, promising a system to quickly learn from few examples.
+    
+    The recognition of primitives could be achieved in a variety of ways- here we have demonstrated a system which tracks entities in a simulation, thus having access to detailed mathematical information, but a visual recognition system to track objects and detect, say, an EMIT event seems perfectly feasible as well.
+
+    % Necessary and sufficient
+    This work took the initial CD primitives developed by Schank as a given, but there are other researchers who have questioned whether this set of primitives is necessary and sufficient to describe events~\cite{macbethimage}. We have already limited the set of primitives to physical ones, so the idea of altering the set isn't unreasonable. Situations which may imply the current set is inaccurate include:
+    \begin{itemize}
+        \item A physical scenario which can't be described by the current set of primitives (implying a new one is necessary)
+        \item A physical scenario which can be expressed by multiple sets of primitives (potentially implying primitives can be combined, or there is overlapping meanings between the primitives which should be better demarcated)
+    \end{itemize}
+
+    Within the astrophysics domain, quantum and relativistic phenomena seem likely candidates for scenarios which can't be accurately represented by the present set of primitives.
+
+    % More domains
+    
+    
 
     \bibliographystyle{plain}
     \bibliography{refs}
