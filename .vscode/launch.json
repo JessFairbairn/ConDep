@@ -38,47 +38,32 @@
             "program": "${file}"
         },
         {
-            "name": "Python: Attach",
-            "type": "python",
-            "request": "attach",
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "${workspaceFolder}",
-            "port": 3000,
-            "secret": "my_secret",
-            "host": "localhost"
-        },
-        {
-            "name": "Python: Terminal (external)",
-            "type": "python",
+            "name":"Prolog",
+            "type": "prolog",
             "request": "launch",
             "program": "${file}",
-            "console": "externalTerminal"
-        },
-        {
-            "name": "Python: Module",
-            "type": "python",
-            "request": "launch",
-            "module": "module.name"
-        },
-        {
-            "name": "Python: All debug Options",
-            "type": "python",
-            "request": "launch",
-            "pythonPath": "${config:python.pythonPath}",
-            "program": "${file}",
-            "module": "module.name",
-            "env": {
-                "VAR1": "1",
-                "VAR2": "2"
-            },
-            "envFile": "${workspaceFolder}/.env",
-            "args": [
-                "arg1",
-                "arg2"
-            ],
-            "debugOptions": [
-                "RedirectOutput"
-            ]
+            "startupQuery": "start",
+            "cwd": "${workspaceRoot}/prolog",
+            "runtimeExecutable": "/usr/bin/prolog",
+            "runtimeArgs": [],
+            "traceCmds": {
+                "continue": [
+                    "leap",
+                    "l"
+                ],
+                "stepover": [
+                    "skip",
+                    "s"
+                ],
+                "stepinto": [
+                    "creep",
+                    "c"
+                ],
+                "stepout": [
+                    "up",
+                    "u"
+                ]
+            }
         }
     ]
 }

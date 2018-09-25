@@ -1,0 +1,20 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Prolog",
+            "type": "shell",
+            "command": "prolog -s emit_test.pl -g 'inside(barbara, blackHole, timeAfterEvent).' -t halt.",
+            "args": [
+                
+            ],
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceRoot}/prolog"
+            }
+            
+        }
+    ]
+}
