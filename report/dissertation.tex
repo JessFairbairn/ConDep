@@ -31,6 +31,11 @@
     \subfile{reps/paper.tex}
     \subfile{conceptual_dependancies}
 
+    \section{Aims}
+    To plug the gap between some of the above knowledge representation systems, we aimed to build a system with the abilities of a numerical simulation, while maintaining the knowledge representation abilities of discrete events. To do this, Conceptual Dependencies were used as an intermediary between numerical data, natural language and visual representations.
+
+    Visual representation was processed by the Python library Pymunk, a two dimensional simulation library for rigid objects. Input events could be translated from natural language, into sequences of conceptual dependency events, then recreated in Pymunk. Alternatively, a Pymunk simulation can be launched without any pre-planned events, with changes in the objects expressed in terms of conceptual dependencies, which are then described in natural language. By describing physical events in terms of a small set of physical primitives we can make much more meaningful queries. 
+
     \section{Implementation}
     \subfile{report}
     \subfile{cd-pred-arg/cd-propositional}
