@@ -34,6 +34,14 @@
     
     The verb definition is then merged with it's primitive definition (there should be no contradictory fields). This merging allows sparser verb definitions, with some information already implicit in the primitive.
 
+    While as much of the simulation was left to the `natural' laws as possible, to ensure the actions took place as determined by the input command some intervention was needed:
+
+    \begin{itemize}
+        \item For EXPEL events, the object was placed inside the actor, the given outwards momentum
+        \item For INGEST events, the object was placed outside the actor, and given momentum towards the actor. The object of the action was made a `sensor' object in Pymunk, as Pymunk objects usually can't overlap. On entering the actor, the small object becomes attached to it via a Slide Joint, allowing the object to move freely within the radius of the absorbing object but no further
+        \item 
+    \end{itemize}
+
     \subsubsection{Example: Expand and Contract}
     The verbs `Expand' and `Contract' both use the MOVE primitive, as it indicates a part of the subject moving while the absolute position doesn't change. Additionally, they both have the same \emph{affected\_attribute} value of `radius'. However they clearly mean the exact opposite, so their \emph{attribute\_outcome} values differ (`increase' and `decrease' respectively).
 
@@ -50,6 +58,8 @@
     \end{figure}
 
     Converting an event to it's Conceptual Dependencies and then into natural language uses much of the same infrastructure in reverse, with the additional aspect of an underlying physical simulation. This simulation reports notable `events' to the Manager unit, in terms of what attribute on an object was changed, and in what way.
+
+    % TODO: explain how events are detected
 
     Primitives which contradict the information in the event are eliminated, thus restricting the candidate verbs to only those which are relevant. These are then filtered according to the remaining criteria (affected\_attribute, attribute outcome, and any selectional restrictions).
 
