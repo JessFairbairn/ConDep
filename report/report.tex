@@ -47,8 +47,64 @@
 
     % TODO: an example with a primitive which contains some data?
 
-    % TODO: something on verb sense disambiguation (less of an issue when domain is known?)
+    \subsubsection{Example: Star collapses}
+    \begin{enumerate}
+    \item Natural language parsing. NLTK identifies and stems the verb, in this case ``collapse''. The Subject and Object of the sentence are identified, and stored as arguments in a VerbInfo object along with the verb name. (The system also is built to handle verb sense IDs for use in larger corpora which may contain multiple definitions for the same verb- given the current system is built for a set domain, the problem of ambiguous word senses is reduced)
+
+    \item Create CDEvent: The verb definition is looked up according to the verb name or verb sense, returning a CDDefinition object:
     
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{CDDefinition}\\
+        \midrule
+        affected\_attribute & EntityAttributes.radius\\
+        attribute\_outcome & EntityAttributeOutcomes.decrease\\
+        preceding & None\\
+        primitive & Primitives.MOVE\\
+        sense\_id & `collapse'\\
+        \bottomrule
+    \end{tabular}
+
+    The corresponding primitive definition is looked up, returning another CDDefinition object.
+
+    The two objects are merged into a CDEvent object, thus maintaining any keeping any data implicit in the Primitive definition. The Subject and Object items from the input sentence are set as the actor and object.
+    % TODO: pick a better example?
+
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{CDEvent}\\
+        \midrule
+        affected\_attribute & EntityAttributes.radius \\
+        attribute\_outcome & EntityAttributeOutcomes.decrease \\
+        event\_object & None\\
+        preceding & None\\
+        primitive & Primitives.MOVE \\
+        sense\_id & `collapse'\\
+        subject & `star'\\
+        \bottomrule
+    \end{tabular}
+
+    \item Convert to ActionEvent: The CD event is converted to an array of Action events- for a compound verb definition, there will several items in the array but for many events there will only one action event. 
+
+    Action events differ from CDEvents in that they describe exactly which physical changes need to take place for the CDEvent to be enacted, with no reference to primitives.
+
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{ActionEvent}\\
+        \midrule
+        affected\_attribute & EntityAttributes.radius\\
+        attribute\_outcome & EntityAttributeOutcomes.decrease\\
+        event\_object & None\\
+        subject & `star'\\
+        \bottomrule
+    \end{tabular}
+
+    \item Setup environment
+
+    The Pymunk/Pygame instance is created, and the entities involved in the scenario are spawned (either a single entity or an actor and the object of that action). In the collapse example, a single Star object is created. The events which need to be simulated are `queued'- in this case, a decrease in the entity's radius. For a quantitative variable like Radius, the attribute in question is increased/decreased each frame until the target is reached. The change is halving or doubling by default.
+    \end{enumerate}
+
+
     \subsection{Actions to Natural Language}
     \begin{figure}[h]
         \begin{center}        
