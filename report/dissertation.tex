@@ -34,11 +34,13 @@
     \section{Aims}
     To plug the gap between some of the above knowledge representation systems, we aimed to build a system with the abilities of a numerical simulation, while maintaining the knowledge representation abilities of discrete events. To do this, Conceptual Dependencies were used as an intermediary between numerical data, natural language and visual representations.
 
-    Visual representation was processed by the Python library Pymunk, a two dimensional simulation library for rigid objects. Input events could be translated from natural language, into sequences of conceptual dependency events, then recreated in Pymunk. Alternatively, a Pymunk simulation can be launched without any pre-planned events, with changes in the objects expressed in terms of conceptual dependencies, which are then described in natural language. By describing physical events in terms of a small set of physical primitives we can make much more meaningful queries. 
+    Visual representation was processed by the Python library Pymunk, a two dimensional simulation library for rigid objects. Input events could be translated from natural language, into sequences of conceptual dependency events, then recreated in Pymunk. Alternatively, a Pymunk simulation can be launched without any pre-planned events, with changes in the objects expressed in terms of conceptual dependencies, which are then described in natural language. By describing physical events in terms of a small set of physical primitives we can make much more meaningful queries.
+
+    By bridging the gap between quantitative simulations and qualitative descriptions, we aim to ease both interpretation of results (especially the detection of certain events) and the setup of experiments.
 
     \section{Implementation}
     \subfile{report}
-    \subfile{cd-pred-arg/cd-propositional}
+    % \subfile{cd-pred-arg/cd-propositional}
 
     % \section{results}
 
@@ -70,7 +72,10 @@
     % More domains
     The use of conceptual dependencies shown in this dissertation could be used as a general purpose basis for describing physical actions, and is not restricted to the astrophysics domain used here. Different domains will pose different challenges though- for a micro-scale biological domain, chemical reactions would have to be taken into effect. These may be beyond the scope of the primitives described here, or may need to work on different levels of abstraction simultaneously.
 
-    One potential field where action primitives may be useful is embodied robotics- if only the set of primitive actions need be hardcoded, complex verb definitions could be learnt in terms of sequences of primitives.
+    One potential field where action primitives may be useful is embodied robotics- if only the set of primitive actions need be hard-coded, complex verb definitions could be learnt in terms of sequences of primitives. Schank's original set of conceptual dependencies included GRASP for grabbing an object, as well as many abstract primitives for describing interactions with other people.
+
+    % Extra work on aid for scientists
+    While the work done here offers a promising proof of concept, it is limited in the kind of queries it can answer. One potentially useful approach would be for the system to automatically determine search spaces for a given question. Take the example question, `What is the maximum mass of a white dwarf before it collapses under gravity?'. It would have to infer that mass is the independent variable, and that there is an upper limit after which the described events occur. It would then need to run a series of simulations with different initial states (the mass of the white dwarf), possible using a bisecting algorithm or a similar appropriate mathematical approach. This kind of functionality would require greater question parsing abilities.
 
     \bibliographystyle{plain}
     \bibliography{refs}
