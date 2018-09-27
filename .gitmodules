@@ -1,6 +1,3 @@
-[submodule "report/cd-pred-arg"]
-	path = report/cd-pred-arg
-	url = https://git.overleaf.com/19462866jxzxbwtffzhf
 [submodule "report/reps"]
 	path = report/reps
 	url = https://mchirdf2@gitlab.cs.man.ac.uk/mchirdf2/information-representation.git
