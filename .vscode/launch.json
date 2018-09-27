@@ -45,7 +45,10 @@
             "startupQuery": "start",
             "cwd": "${workspaceRoot}/prolog",
             "runtimeExecutable": "/usr/bin/prolog",
-            "runtimeArgs": [],
+            "args": [{
+                "-s":"general.pl",
+                "-s":"general.pl"
+            }],
             "traceCmds": {
                 "continue": [
                     "leap",

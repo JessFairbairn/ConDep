@@ -1,4 +1,5 @@
-:- include(general).
+ensure_loaded('general.pl').
+
 % :- discontiguous(subject).
 % :- discontiguous(object).
 
@@ -9,3 +10,4 @@ object(myEvent, barbara).
 
 % isTime(timeAfterEvent).
 justAfter(timeAfterEvent, myEvent).
+

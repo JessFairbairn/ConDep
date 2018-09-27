@@ -16,6 +16,7 @@
         "Propbank",
         "nltk",
         "ptrans",
+        "pygame",
         "schank",
         "schank's"
     ],

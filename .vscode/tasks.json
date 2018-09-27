@@ -6,7 +6,7 @@
         {
             "label": "Prolog",
             "type": "shell",
-            "command": "prolog -s emit_test.pl -g 'inside(barbara, blackHole, timeAfterEvent).' -t halt.",
+            "command": "prolog -s emit_test.pl -g 'outside(barbara, blackHole, timeAfterEvent).' -t halt.",
             "args": [
                 
             ],

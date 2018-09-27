@@ -1,6 +1,11 @@
+% :- module(general,
+%     [expelEvent/1,
+%     injestEvent/1]
+% ).
+
 % Event defintions
 % event(_).
-injestEvent(_).
+% injestEvent(_).
 event(B) :- expelEvent(B).
 event(B) :- injestEvent(B).
 
@@ -21,11 +26,16 @@ inside(Food,Eater,T) :-
     object(InjEvent, Food).
 
 
-% outside(_innerThing, _container, _time).
-assert(not(
-    inside(A,B,T),
-    outside(A,B,T)
-)).
+outside(Food,Container,T) :-
+    isTime(T),
+    expelEvent(InjEvent),
+    justAfter(T,InjEvent),
+    subject(InjEvent, Container),
+    object(InjEvent, Food).
+
+% throw :- 
+%     inside(A,B,T),
+%     outside(A,B,T).
 
 % partOf(_Part,_Thing).
 % ptrans(_).
