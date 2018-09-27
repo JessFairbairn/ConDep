@@ -1,0 +1,314 @@
+
+
+\IfFileExists{../dissertation.tex}{
+  \providecommand{\mainfile}{../dissertation}
+  \providecommand{\cdpred}{../cd-pred-arg}
+}{
+  \providecommand{\mainfile}{./dummymain}
+  \providecommand{\cdpred}{.}
+}
+\providecommand{\mainfile}{../dissertation}
+
+
+\documentclass[\mainfile]{subfiles}
+\begin{document}
+\subsection{Conceptual Dependencies and Predicate-Argument structures}
+\subsubsection{Primitives}
+
+\textbf{PTRANS}
+Required Arguments:
+
+\begin{itemize}
+\item Actor
+\item Object \textit{Should default to Actor if unset}
+\item Direction
+\end{itemize}
+
+Before event:
+\[Location(Object) = \textit{Direction.Before}\]
+
+After event:
+\[Location(Object) = \textit{Direction.After}\]
+
+
+\textbf{MOVE}
+Required Arguments
+\begin{itemize}
+\item Actor
+\item Object \textit{Must be part of actor}
+\end{itemize}
+
+Before event:
+\[Location(Object) = \textit{Direction.Before}\]
+
+After event:
+\[Location(Object) = \textit{Direction.After}\]
+
+\textbf{PROPEL}
+Required Arguments
+\begin{itemize}
+	\item Actor
+    \item Object
+    \item Direction
+    \begin{itemize}
+    	\item Before
+        \item After
+    \end{itemize}
+\end{itemize}
+
+Before event:
+\[Location(Object) = \textit{Direction.Before}\]
+
+After event:
+\[Velocity(Object) \propto \textit{Direction.After} - \textit{Direction.Before}\]
+
+\textbf{EXPEL}
+Required Arguments
+\begin{itemize}
+	\item Actor
+    \item Object
+\end{itemize}
+
+Before event:
+\[inside(Object, Actor)\]
+
+After event:
+\[NOT(inside(Object, Actor))\]
+
+\textbf{INJEST}
+Required Arguments
+\begin{itemize}
+	\item Actor
+    \item Object
+\end{itemize}
+
+
+Before event:
+\[NOT(inside(Object, Actor))\]
+
+After event:
+\[inside(Object, Actor)\]
+
+
+\subsubsection{Verbs}
+\textbf{Emit}
+\begin{center}
+	\includegraphics[height=200pt]{\cdpred/emit-cd.png}
+    
+	\bigskip
+%     \subtextbf{CD Definition}
+
+\end{center}
+
+\textbf{Event Sequence}
+\begin{center}
+
+    \begin{tabular}{l l}
+      \toprule
+      \multicolumn{2}{l}{\textbf{EXPEL event}}\\
+      \hline
+      \textbf{Actor:} & \textit{Subject}\\
+      \textbf{Object:} & \textit{Object}\\
+      \bottomrule
+    \end{tabular}
+\end{center}
+
+\textbf{Natural Language example}
+
+\textit{The star emits radiation}
+
+\textit{Subject:} Star
+
+\textit{Object:} Radiation
+
+\bigskip
+\textbf{Predicate/Argument inferences}
+
+Before event:
+\[inside(Radiation, Star)\]
+
+After event:
+\[NOT(inside(Radiation, Star))\]
+
+\newpage
+
+\textbf{Collapse}
+\begin{center}
+	\includegraphics[height=200pt]{\cdpred/collapse-cd.png}
+\end{center}
+	\bigskip
+    
+\textbf{Event Sequence}
+\begin{center}
+    \begin{tabular}{l l}
+      \toprule
+      \multicolumn{2}{l}{\textbf{MOVE event}}\\
+      \hline
+      \textbf{Actor:} & \textit{Subject}\\
+      \textbf{Object:} & Parts(\textit{Subject})\\
+      
+      \multicolumn{2}{l}{\textbf{Direction:}} \\
+      Before: & \(A\) \\
+      After: & \(Source of force\) \\
+      \bottomrule
+    \end{tabular}
+    
+\end{center}
+
+\textbf{Natural Language Example}
+
+\textit{The white dwarf collapses.}
+
+\textit{Subject:} white dwarf
+
+\textit{Object:} Parts of white dwarf \textit{from verb definition}
+
+\bigskip
+
+\textbf{Predicate/Argument Inferences}
+
+% \begin{tabular}{p{5cm} p{5cm}}
+%   \toprule
+%   Before & After \\
+%   \midrule
+%    Each part of white dwarf is at location \(A\)
+%    & Each part of white dwarf is at the source of the collapsing force\\
+%   \bottomrule
+% \end{tabular}
+
+Before event:
+\[Location(Parts(Subject)) = A\]
+
+After event:
+\[Location(Parts(Subject)) = Source of force\]
+\newpage
+
+\textbf{Fall}
+\includegraphics[width=\linewidth]{\cdpred/fall-cd.png}
+\bigskip
+
+\textbf{Event Sequence}
+
+\begin{center}
+  \begin{tabular}{l l}
+  \toprule
+  \multicolumn{2}{l}{\textbf{PROPEL event}}\\
+  \hline
+  \textbf{Actor:} & Mass\\
+  \textbf{Object:} & \textit{Subject}\\
+	\bottomrule
+  \end{tabular}
+  
+  \smallskip
+  results in
+  \smallskip
+  
+  \begin{tabular}{l l}
+    \toprule
+    \multicolumn{2}{l}{\textbf{PTRANS event}}\\
+    \hline
+    \textbf{Actor:} & \textit{Subject}\\
+    \multicolumn{2}{l}{\textbf{Direction:}} \\
+    Before: & \(A\)\\
+    After: & \(B = LOC(Below A)\)\\
+    \bottomrule
+  \end{tabular}
+  
+\end{center}
+
+The ship fell into the black hole
+
+\textit{Subject:} The ship
+
+\textit{Object:} \textit{None}
+\smallskip
+
+\textbf{Predicate/Argument inferences}
+
+Event 1:
+
+Before event:
+\[Location(Ship) = A\]
+
+After event:
+\[Velocity(Ship) \propto Location(Mass) - A\]
+
+Event 2:
+
+Before event:
+\[Location(Object) = A\]
+
+After event:
+\[Location(Object) = B\]
+\bigskip
+
+\textbf{Notes:} While it is obvious the `mass' here is the black hole, this isn't captured by the logic presented here. If the sentence was `Jim fell into the pond', the pond isn't the gravity source- the planet he's standing on is!
+
+The second half of the sentence, `\textit{into the black hole}' is a modifier for the verb phrase `\textit{The ship fell}'. To extend the logic presented here, the preposition `into' indicates the following location noun phrase takes the place of the `After' attribute of the PTRANS event's `Direction' attribute. This could be used to replace the variable \(B\) in the above diagrams.
+
+In Propbank, this argument or modifier for the verb is labelled with a \textbf{GOL} role, which can be mapped to the Direction-After attribute in CD. This is further examined in Section~\ref{roles-to-slots}.
+\newpage
+
+\textbf{Reflect}
+\textbf{Constraints}
+\textit{Object} is some form of Radiation moving towards \textit{Subject}
+\bigskip
+
+\begin{center}
+	\includegraphics[height=200pt]{\cdpred/reflects-cd.png}
+\end{center}
+
+\textbf{Event Sequence}
+
+\begin{center}
+	
+	\bigskip
+    
+    \begin{tabular}{l l}
+      \toprule
+      \multicolumn{2}{l}{\textbf{PROPEL event}}\\
+      \hline
+      \textbf{Actor:} & \textit{Subject}\\
+      \textbf{Object:} & Radiation\\
+      
+      \multicolumn{2}{l}{\textbf{Direction:}} \\
+      Before: & \textit{Subject}\\
+      After: & Source\\
+      \bottomrule
+    \end{tabular}
+    
+\end{center}
+
+\textbf{Natural Language Example}
+
+\textit{The field reflects light}
+
+\textit{Subject:} The field
+
+\textit{Object:} light
+
+\bigskip
+
+\textbf{Predicate-Argument Inferences}
+
+Before event:
+\[Location(light) = field\]
+
+After event:
+\[Velocity(light) \propto Location(source) - Location(field)\]
+
+\subsubsection{Mapping Verb argument and modifier roles to CD slots}
+\label{roles-to-slots}
+
+\begin{tabular}{l l l}
+  \toprule
+  CD Slot & Propbank Role & VerbNet Role \\
+  \midrule
+  Actor & Agent (PAG) & Agent\\
+  Object & Patient (PTT) & Patient\\
+  Direction: Before & ? & Source \\
+  Direction: After &  Goal (GOL) & Destination \\
+  \bottomrule
+\end{tabular}
+
+\end{document}
