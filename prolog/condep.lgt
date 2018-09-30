@@ -29,38 +29,38 @@ isTime(Time) :-
     ::justBefore(Time,Event),
     ::isEvent(Event).
 
-actorOfEvent(_Event, _ActorOfEvent).
-objectOfEvent(_Event,_ActorOfEvent).
+actorOfEvent(_ActorOfEvent,_Event).
+objectOfEvent(_ObjectOfEvent, _Event).
 
 % Physical definitions
 inside(Food,Eater,T) :-
     ::isTime(T),
     ::injestEvent(InjEvent),
     ::justAfter(T,InjEvent),
-    ::actorOfEvent(InjEvent, Eater),
-    ::objectOfEvent(InjEvent, Food).
+    ::actorOfEvent(Eater, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
 
 inside(Food,Eater,T) :-
     ::isTime(T),
     ::expelEvent(InjEvent),
     ::justBefore(T,InjEvent),
-    ::actorOfEvent(InjEvent, Eater),
-    ::objectOfEvent(InjEvent, Food).
+    ::actorOfEvent(Eater, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
 
 
 outside(Food,Container,T) :-
     ::isTime(T),
     ::expelEvent(InjEvent),
     ::justAfter(T,InjEvent),
-    ::actorOfEvent(InjEvent, Container),
-    ::objectOfEvent(InjEvent, Food).
+    ::actorOfEvent(Container, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
 
 outside(Food,Container,T) :-
     ::isTime(T),
     ::injestEvent(InjEvent),
     ::justBefore(T,InjEvent),
-    ::actorOfEvent(InjEvent, Container),
-    ::objectOfEvent(InjEvent, Food).
+    ::actorOfEvent(Container, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
  
 % partOf(_Part,_Thing).
 % ptrans(_).

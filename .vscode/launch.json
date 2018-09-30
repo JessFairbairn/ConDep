@@ -38,6 +38,19 @@
             "program": "${file}"
         },
         {
+            "name": "Query Mode- fixed input", "type": "python", "request": "launch", 
+            "stopOnEntry": false, 
+            "pythonPath": "${config:python.pythonPath}", 
+            "program": "${workspaceFolder}/parse_and_query.py",
+            "cwd": "${workspaceFolder}",
+            "console":"integratedTerminal",
+            "env": {}, 
+            "args": [ "star emits a particle" ], 
+            "envFile": "${workspaceFolder}/.env", 
+            "debugOptions": [], 
+            "internalConsoleOptions": "neverOpen" 
+        },
+        {
             "name":"Prolog",
             "type": "prolog",
             "request": "launch",
