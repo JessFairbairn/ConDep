@@ -1,5 +1,5 @@
 \documentclass[dissertation.tex]{subfiles}
-% \usepackage{graphicx}
+\usepackage{listings}
 
 % \title{Implementation}
 \begin{document}
@@ -125,6 +125,93 @@
 
     \subsection{Physics Simulation}
     \subsubsection{Recognition of physical events}
+    To identify discrete events in the physics simulation, objects were tracked by an object called a \textit{CDManager}. The top level script processes the effects of physical forces between the objects\footnote{At this time that is just gravity, but could be extended to include phenomena like electrostatic pressure or heat.} once per frame in the Pygame animations, then calls a `tick' method on the CDManager. \textit{CDManager.Tick} then calls the tick methods on every individual CDEntity in the simulation.
+
+\lstset{language=Python,basicstyle=\footnotesize,}
+
+\begin{lstlisting}[frame=single,caption={CDEntity.tick method}]
+def tick(self, manager):
+    "Updates history of properties and returns any events"
+
+    cog = self.get_centre_of_gravity()
+
+    new_events = []
+
+    # Check for particles joining or leaving
+    new_events.extend(
+        self._check_for_injest_or_emit(manager, cog)
+    )
+
+    # Update changing attributes
+    self._update_changing_attributes()
+
+    # Then log to histories
+    cog = self.get_centre_of_gravity()
+    self.cog_history.append(cog)
+
+    history_length = len(self.cog_history)
+    if history_length > 1:
+        cog_delta =
+            self.cog_history[history_length - 1]
+            - self.cog_history[history_length - 2]
+        self.cog_delta_history.append(cog_delta.get_length())
+
+    self.radius_history.append(self.get_max_radius(cog))
+
+    # CHECK FOR EVENTS
+    new_events.extend(self._check_for_events())
+
+    self.event_history.append(new_events)
+
+    return new_events
+\end{lstlisting}
+    The CDManager object keeps track of the distances between each object in the simulation. If an entity is a `Compound' entity, it will be a cloud of small objects and it's tick method will calculate an `inclusion radius', which is determined by the standard deviation of the parts of that compound entity from it's centre of gravity. If a foreign object in the simulation has come within that inclusion radius, it will be combined into the compound entity. If one of the parts of the entity has gone outside that radius, it will be removed and the CDManager will begin tracking it as a separate CDEntity.
+
+    The CDEntity.tick method will return a list of ActionEvent objects which have occurred. For each CD event detected, the manager will call the DetectScenarios method to try and find a matching verb to describe it:
+
+\begin{lstlisting}[frame=single,caption={CDManager.detect\_scenarios method}]
+def detect_scenarios(event:ActionEvent):
+    '''Takes action events in and outputs
+    candidate verbs to describe them'''
+    
+    selected_primitive =
+        CDManager.find_primitive_for_action_event(event)            
+
+    # Look up a verb to describe what's happened
+    candidate_verbs = []
+
+    for verb_def in verb_dictionary.values():
+        if (verb_def.primitive != selected_primitive):
+            continue
+
+        if (event.affected_attribute ==
+            verb_def.affected_attribute)
+        and
+            (event.attribute_outcome ==
+            verb_def.attribute_outcome):
+            candidate_verbs.append(verb_def)
+    
+    return candidate_verbs
+\end{lstlisting}
+
+    \subsubsection{Scripted events and queueing}
+    For `scripted' events under the simulation mode, events have to be queued. The CDDefinition class has a `preceding' field, for CD events which must come before the final one in compound verbs. In the case of compound verbs such as `accrete', the first stage is set up as normal by the simulation setup script. The list of events which needs to occur is listed in the attribute\_changes property of the CDEntity- these will either take the form of a value an attribute of the entity should equal, or a CDEvent having just occurred in the entity's history. For gradual changes such as radius changes, a target value for that attribute is set, and each time the tick method is called the attribute is changed in the specified direction (increase or decrease).
+
+    After the first `target' in attribute\_changes is met, that first cell is removed from the list so the next one can begin. This way events can take place in a set order.
+
+    Example: Star accretes particle
+
+    The `accrete' verb has two parts: the actor ingests a smaller item, then expands its radius. The setup script for the simulation will position the particle so it is moving towards the star, and set their collision handlers so the particle will attach when it enters the star, making sure it is captured. This will register a CD event which will correspond to the first target in the `attribute\_changes' list, causing the tick method to remove the first target from the list and move onto the next one. The radius will then increase by 1 pixel per tick until the target value is met.
+
+    \begin{figure}[h]
+        \begin{center}        
+            \includegraphics[width=300pt]{diagrams/accrete-cd.png}
+        \end{center}
+        \caption{A conceptual dependency diagram for the verb `Accrete'}
+    \end{figure}
+
+
+
 
     % \bibliographystyle{plain}
     % \bibliography{refs}
