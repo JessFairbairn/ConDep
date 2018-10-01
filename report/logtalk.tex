@@ -1,0 +1,105 @@
+\documentclass[report]{subfiles}
+    
+
+\begin{document}
+
+\subsection{Logical Programming}
+I chose to write the logical programming parts of the system in Prolog, due to it's relative simplicity and common usage. The Logtalk extension language was also used due to it's object orientation features- this transpiles into pure Prolog, and primarily uses Prolog syntax.
+
+The object orientated nature of Logtalk allowed universal domain rules be written in one file and reused. 
+
+
+\lstset{language=Prolog,basicstyle=\footnotesize,
+deletekeywords={time},
+morekeywords={':-',public,object,end_object},
+frame=single,}
+
+\begin{lstlisting}[
+    caption={The `condep' object, which can be extended for individual simulations, maintaining the universal domain rules},]
+
+:- object(condep).
+
+:- public(
+    [
+    inside/3, outside/3,
+    isTime/1, injestEvent/1, expelEvent/1, isEvent/1,
+    justBefore/2, justAfter/2,
+    actorOfEvent/2, objectOfEvent/2
+    ]
+).
+% Event definitions
+
+% Different kinds of event are still instances of an event
+isEvent(B) :- ::expelEvent(B).
+isEvent(B) :- ::ingestEvent(B).
+
+
+isTime(Time) :-
+    ::justAfter(Time,Event),
+    ::isEvent(Event).
+
+isTime(Time) :-
+    ::justBefore(Time,Event),
+    ::isEvent(Event).
+
+actorOfEvent(_ActorOfEvent,_Event).
+objectOfEvent(_ObjectOfEvent, _Event).
+
+% Physical definitions
+
+% Establishing common sense facts about the ingest
+% and expel events, and the relation of being `inside'
+inside(Food,Eater,T) :-
+    ::isTime(T),
+    ::injestEvent(InjEvent),
+    ::justAfter(T,InjEvent),
+    ::actorOfEvent(Eater, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
+
+inside(Food,Eater,T) :-
+    ::isTime(T),
+    ::expelEvent(InjEvent),
+    ::justBefore(T,InjEvent),
+    ::actorOfEvent(Eater, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
+
+
+outside(Food,Container,T) :-
+    ::isTime(T),
+    ::expelEvent(InjEvent),
+    ::justAfter(T,InjEvent),
+    ::actorOfEvent(Container, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
+
+outside(Food,Container,T) :-
+    ::isTime(T),
+    ::injestEvent(InjEvent),
+    ::justBefore(T,InjEvent),
+    ::actorOfEvent(Container, InjEvent),
+    ::objectOfEvent(Food, InjEvent).
+
+:- end_object
+    
+\end{lstlisting}
+
+\begin{lstlisting}[caption={An example `state', inhereitting from the `condep' Logtalk object},]
+:- object(state, extends(condep)).
+
+expelEvent(myEvent).
+
+actorOfEvent(myEvent, blackHole).
+objectOfEvent(myEvent, barbara).
+
+justBefore(timeBeforeEvent, myEvent).
+justAfter(timeAfterEvent, myEvent).		
+
+:- end_object.
+\end{lstlisting}
+
+A query which could be asked about this state is:
+\begin{lstlisting}
+:? state::outside(barbara, blackHole, timeBeforeEvent).
+\end{lstlisting}
+to which Logtalk would answer ``no'' (or ``false'')- as this is an EXPEL event, it's logical that Barbara is inside the blackHole before she can be expelled.
+
+\end{document}
