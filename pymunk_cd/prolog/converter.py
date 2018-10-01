@@ -22,9 +22,20 @@ def convert_to_prolog(event:CDEvent):
     return predicates
 
 def output_logtalk_file(predicates: list):
-    header = ':- object(state, extends(condep)).'
+    header = ''':- object(state, extends(condep)).
+:- discontiguous(actorOfEvent/2).
+:- discontiguous(objectOfEvent/2).
+:- discontiguous(justBefore/2).
+:- discontiguous(justAfter/2).
 
-    footer = ':- end_object.'
+actorOfEvent(A,B) :- ^^actorOfEvent(A,B).
+objectOfEvent(A,B) :- ^^objectOfEvent(A,B).
+justBefore(A,B) :- ^^justBefore(A,B).
+justAfter(A,B) :- ^^justAfter(A,B).
+
+'''
+
+    footer = '\n:- end_object.'
 
     output = header + '\n' + '\n'.join(predicates) + '\n'+footer
     return output
