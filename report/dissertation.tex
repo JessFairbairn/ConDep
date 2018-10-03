@@ -78,6 +78,15 @@
     % Extra work on aid for scientists
     While the work done here offers a promising proof of concept, it is limited in the kind of queries it can answer. One potentially useful approach would be for the system to automatically determine search spaces for a given question. Take the example question, `What is the maximum mass of a white dwarf before it collapses under gravity?'. It would have to infer that mass is the independent variable, and that there is an upper limit after which the described events occur. It would then need to run a series of simulations with different initial states (the mass of the white dwarf), possible using a bisecting algorithm or a similar appropriate mathematical approach. This kind of functionality would require greater question parsing abilities.
 
+    A natural language parser which can construct Prolog queries would be a good asset for this project- at the moment, when using `Question Mode', the query must be written in Prolog, obviously a barrier for most users. Translating natural language questions into Prolog could end up being a complex task.
+
+    % Object constraints
+    The addition of object constraints for verbs could benefit both generation of natural language, and the parsing of input information. In his work on the BABEL natural language engine, \citeauthor{GOLDMAN1975289} used the example of `drink' and `eat'- two verbs which correspond to the same CD primitive (INGEST), but which are incorrect if used with the wrong object. This can be language dependent: Malay and Tagalog don't have gender distinctions for third person pronouns like English.
+
+    As a more relevant example, the verbs `emit' and `eject' both correspond to the EXPEL primitive, but are used for different objects (you wouldn't say `it ejected radiation').
+
+    These kinds of object constraints could also be useful for inferring information about unknown terms In the sentence `The star emits quaduool', we have the unfamiliar (nonsense, as it happens) term `quaduool'. But using the definition of the emit verb, we can infer it's some sort of radiation, and can animate it appropriately or extrapolate it's movements correctly.
+
     \bibliographystyle{plain}
     \bibliography{refs}
 \end{document}

@@ -6,17 +6,18 @@
 \subsection{Logical Programming}
 I chose to write the logical programming parts of the system in Prolog, due to it's relative simplicity and common usage. The Logtalk extension language was also used due to it's object orientation features- this transpiles into pure Prolog, and primarily uses Prolog syntax.
 
-The object orientated nature of Logtalk allowed universal domain rules be written in one file and reused. 
+The object orientated nature of Logtalk allowed universal domain rules be written in one file and reused for different scenarios. 
+
 
 
 \lstset{language=Prolog,basicstyle=\footnotesize,
 deletekeywords={time},
-morekeywords={':-',public,object,end_object},
-frame=single,}
+morekeywords={public,object,end_object},
+frame=single,
+label=lst:condep}
 
 \begin{lstlisting}[
     caption={The `condep' object, which can be extended for individual simulations, maintaining the universal domain rules},]
-
 :- object(condep).
 
 :- public(
@@ -82,9 +83,23 @@ outside(Food,Container,T) :-
     
 \end{lstlisting}
 
-\begin{lstlisting}[caption={An example `state', inhereitting from the `condep' Logtalk object},]
+    To express the state of an input scenario, a Python module is called which expresses a CD Event in terms of Prolog, saving this into a logtalk file which inherits from the universal conceptual dependency logic. This had to include `super calls' in Logtalk logic in the header, ensuring that predicates added to the state file didn't overwrite the logic of the `condep' class. The predicates were also tagged with discontiguous statements, to avoid complications in the automated generation of predicates out of order. 
+
+\begin{lstlisting}[caption={An example `state', inhereiting from the `condep' Logtalk object},]
 :- object(state, extends(condep)).
 
+% defining predicates as discontiguous, and inherited
+:- discontiguous(actorOfEvent/2).
+:- discontiguous(objectOfEvent/2).
+:- discontiguous(justBefore/2).
+:- discontiguous(justAfter/2).
+
+actorOfEvent(A,B) :- ^^actorOfEvent(A,B).
+objectOfEvent(A,B) :- ^^objectOfEvent(A,B).
+justBefore(A,B) :- ^^justBefore(A,B).
+justAfter(A,B) :- ^^justAfter(A,B).
+
+% Generated Prolog predicates
 expelEvent(myEvent).
 
 actorOfEvent(myEvent, blackHole).
@@ -96,10 +111,12 @@ justAfter(timeAfterEvent, myEvent).
 :- end_object.
 \end{lstlisting}
 
-A query which could be asked about this state is:
+After a Logtalk file is generated, a Logtalk instance is run which allows the user to query the scenario- at this time these must be expressed in Prolog. A query which could be asked about the above state is:
 \begin{lstlisting}
 :? state::outside(barbara, blackHole, timeBeforeEvent).
 \end{lstlisting}
 to which Logtalk would answer ``no'' (or ``false'')- as this is an EXPEL event, it's logical that Barbara is inside the blackHole before she can be expelled.
 
+
+Due to the inhereted nature of predicates in this system, there may be multiple `definitions' of a predicate (the general definition of the predicate, and then a statement that it applies to an instance in the scenario). By default, Prolog's behaviour here is to list the possible outcomes- for a question asking `Is X true?', it will list `true' then `false' for each different definition. To avoided this problem the \textit{once/1} predicate can be used to check if at least one of the definitions is satisfied.
 \end{document}

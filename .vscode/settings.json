@@ -13,12 +13,15 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "cSpell.words": [
+        "FLEs",
         "Propbank",
+        "logtalk",
         "nltk",
         "ptrans",
         "pygame",
         "schank",
-        "schank's"
+        "schank's",
+        "synsets"
     ],
     "cSpell.enabledLanguageIds": [
         "latex",
