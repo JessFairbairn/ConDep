@@ -8,6 +8,16 @@
     \subsection{Pymunk}
     Pymunk is a rigid body simulation library for Python. It is effectively a wrapper for the Chipmunk library for C, which allows rigid shapes to be defined, and joints between them set to allow restrictions upon movement.
 
+    There are four fundemental elements of a Pymunk simulation~\cite{pymunk}:
+    \begin{itemize}
+        \item \textbf{Spaces:} The space in which the objects of the simulation exist and can move.
+        \item \textbf{Rigid Bodies:} The body object defines physics qualities such as mass, momentum, moment of inertia, and other quantities needed for a Kinematic simulation. Interestingly, they have no volume as such- this is provided by a separate Shape object
+        \item \textbf{Collision Shape:} This defines the shape and extension in space of an object in Pymunk, and is associated with an attached body object. In our simulations so far, these have been circular, representing astronomical bodies- as such the main variable has been the radius. Shapes have the ability to be marked as `Sensors', which allow them to overlap with other object- this functionality was used for scenarios where a larger object had to absorb a smaller one
+        \item \textbf{Joints:} Joints allow two bodies and their associated shape objects to be attached. There are a number of joints supported by Pymunk natively: `pin joints', which keep bodies at a fixed distance apart, `slide joints', which allow you to set a maximum and minimum distance between two bodies, and other joints which simulate spring-like connections. Slide joins were used for simulations of absorption events. 
+    \end{itemize}
+
+    Pymunk allows you apply custom `Collision Handler' functions to objects, which will activate when two objects of certain collision types interact. For simulating absorption events, the shapes involved were given `ABSORBER' and `ABSORBABLE' collision types- when the object's shapes collided, a slide joint was created between them as described above, ensuring the smaller object doesn't move beyond the radius of the larger one. The smaller object also had it's `sensor' boolean property set to true.
+
     \subsection{Primitives}
     As the system being built only related to physical events, a subset of physical primitives were used, interpreted in a way which is relevant to the field of astrophysics. The following specific definitions were used:
     \begin{itemize}
