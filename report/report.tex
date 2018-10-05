@@ -1,14 +1,16 @@
 \documentclass[dissertation.tex]{subfiles}
-
+\lstset{language=Python,basicstyle=\footnotesize}
 
 \begin{document}
 
     A system was developed to perform two way conversion from natural language to actions, and from actions to natural language. The system uses Conceptual Dependency representations of scenarios as intermediaries between natural language and physics situations.
 
+    In addition, a program was built which expressed the events from a natural language sentence in Prolog, and allowed users to enter Prolog queries about the events.
+
     \subsection{Pymunk}
     Pymunk is a rigid body simulation library for Python. It is effectively a wrapper for the Chipmunk library for C, which allows rigid shapes to be defined, and joints between them set to allow restrictions upon movement.
 
-    There are four fundemental elements of a Pymunk simulation~\cite{pymunk}:
+    There are four fundamental elements of a Pymunk simulation~\cite{pymunk}:
     \begin{itemize}
         \item \textbf{Spaces:} The space in which the objects of the simulation exist and can move.
         \item \textbf{Rigid Bodies:} The body object defines physics qualities such as mass, momentum, moment of inertia, and other quantities needed for a Kinematic simulation. Interestingly, they have no volume as such- this is provided by a separate Shape object
@@ -17,6 +19,11 @@
     \end{itemize}
 
     Pymunk allows you apply custom `Collision Handler' functions to objects, which will activate when two objects of certain collision types interact. For simulating absorption events, the shapes involved were given `ABSORBER' and `ABSORBABLE' collision types- when the object's shapes collided, a slide joint was created between them as described above, ensuring the smaller object doesn't move beyond the radius of the larger one. The smaller object also had it's `sensor' boolean property set to true.
+
+    \subsection{pygame}
+    pygame is a Python wrapper for the `Simple DirectMedia Library' (SDL)\cite{pygame}- Pymunk doesn't come with any sort of graphics engine built in, so requires an external library for these purposes. However, it does contain some built in support for the pygame library (in \textit{pymunk.pygame\_util}).
+    
+    SDL manages low level access to graphics, sound and control events in a machine.\cite{SDL}
 
     \subsection{Primitives}
     As the system being built only related to physical events, a subset of physical primitives were used, interpreted in a way which is relevant to the field of astrophysics. The following specific definitions were used:
@@ -34,7 +41,7 @@
 
     \begin{figure}[h]
         \begin{center}
-            \includegraphics[width=300pt]{diagrams/verb-to-action-workflow.png}
+            \includegraphics[width=\linewidth]{diagrams/verb-to-action-workflow.png}
         \end{center}
         \caption{The workflow for parsing an event expressed in natural lanuage into it's physical representation}
     \end{figure}
@@ -48,13 +55,15 @@
     While as much of the simulation was left to the `natural' laws as possible, to ensure the actions took place as determined by the input command some intervention was needed:
 
     \begin{itemize}
-        \item For EXPEL events, the object was placed inside the actor, the given outwards momentum
+        \item For EXPEL events, the object was placed inside the actor, then given outwards momentum
         \item For INGEST events, the object was placed outside the actor, and given momentum towards the actor. The object of the action was made a `sensor' object in Pymunk, as Pymunk objects usually can't overlap. On entering the actor, the small object becomes attached to it via a Slide Joint, allowing the object to move freely within the radius of the absorbing object but no further
-        \item 
+        \item For MOVE events, no specific positioning was required, but a target was queued for the radius to change as specified by the `attribute\_outcome' property
+        \item For PTRANS events, a momentum was applied to the object
     \end{itemize}
 
-    \subsubsection{Example: Expand and Contract}
-    The verbs `Expand' and `Contract' both use the MOVE primitive, as it indicates a part of the subject moving while the absolute position doesn't change. Additionally, they both have the same \emph{affected\_attribute} value of `radius'. However they clearly mean the exact opposite, so their \emph{attribute\_outcome} values differ (`increase' and `decrease' respectively).
+    To take a more detailed example: the verbs `Expand' and `Contract' both use the MOVE primitive, as it indicates a part of the subject moving while the absolute position doesn't change. Additionally, they both have the same \emph{affected\_attribute} value of `radius'. However they clearly mean the exact opposite, so their \emph{attribute\_outcome} values differ (`increase' and `decrease' respectively).
+
+    At this time, the MOVE attribute only applies to the radius of an object, however it would also apply to a change in shape.
 
     % TODO: an example with a primitive which contains some data?
 
@@ -133,11 +142,73 @@
 
     In this case, the system can be guided to using the more suitable verb by applying a type constraint to the object of the verb (object being used in the logical sense). Constraints in existing natural language libraries aren't generally specific enough for these purposes, so a crude list of physics-specific constraint rules was built as a proof of concept.
 
+    \subsubsection{Example: Star emitting a particle}
+    \begin{enumerate}
+        \item A `spitting star' is created- this will have (by default) 40 particles with no initial momentum, grouped into a single CompoundEntity, which is registered with CDManager object. A single extra particle is created, with a momentum in the \(x\) direction, which is also added  as a part of the CompoundEntity.
+        
+        Each particle is given a random initial position in the Pymunk space, within a 200 by 200 pixel area.
+
+
+\begin{lstlisting}[frame=single,caption={CDUtilities.create\_spitting\_star}]
+
+def create_spitting_star(manager:CDManager, num_particles = None):
+'Creates a star which spits out some of it\'s parts, adds it to CD manager, pymunk and pygame'
+num_particles = num_particles or 40
+
+# setup CD stuff
+star = CompoundEntity()
+star.name = 'Star1'
+
+manager.objects.append(star)
+
+for n in range(num_particles):
+    x = random.randint(200, 400)
+    y = random.randint(200, 400)
+    ball_shape = add_ball(manager.space, x, y)
+    star.parts.append(ball_shape)
+
+ball_with_momentum = add_ball(manager.space, 300,300)
+star.parts.append(ball_with_momentum)
+ball_with_momentum.body.velocity = pymunk.Vec2d(80,0)
+
+
+return star
+    \end{lstlisting}
+
+    \item The simulation begins, with the particles of the star attracting each other and moving towards the centre of the star. However there is enough time for the particle with initial momentum to escape the other particles, before it is enclosed.
+
+    \item The CompoundEntity's tick method checks if any of it's component particles have strayed outside it's inclusion radius\footnote{The inclusion radius is currently defined as the mean distance of each particle from the object's centre of gravity, plus two standard deviations}.
+
+    The tick method returns an ActionEvent object:
+
+    \begin{tabular}{l l}
+        \toprule
+        \textbf{ActionEvent}\\
+        \midrule
+        affected\_attribute & EntityAttributes.inside\_subject\\
+        attribute\_outcome & EntityAttributeOutcomes.outside\\
+        event\_object & pymunk.shapes.Circle\\
+        subject & CompoundEntity\\
+        \bottomrule
+    \end{tabular}
+
+    \item If the system is set to print raw CD events, it will choose the appropriate primitive for the event, and print out an ASCII version of a CD diagram:
+    \begin{lstlisting}
+Star1 <=> EXPEL Circle
+ inside_subject -> outside
+    \end{lstlisting}
+
+    \item Alternatively, if the system is set to describe events in natural language, the system looks up an appropriate verb to describe the ActionEvent. It does this by first picking the appropriate Conceptual Dependency primitive- it first eliminates any primitives which correspond to a different affected\_attribute, and then eliminates the primitive if it specifies an attribute\_outcome which doesn't match the event.
+
+    \item Once the appropriate CD primitive has been identified, the dictionary of verbs is looped through, adding any verbs with the correct primitive and attribute\_outcome to a list of candidate verbs. One of these verbs is used to form a sentence. In this case, the verb `emit' is first on the list, so the system prints the sentence ``Star1 emits particle''
+
+    \end{enumerate}
+
     \subsection{Physics Simulation}
     \subsubsection{Recognition of physical events}
     To identify discrete events in the physics simulation, objects were tracked by an object called a \textit{CDManager}. The top level script processes the effects of physical forces between the objects\footnote{At this time that is just gravity, but could be extended to include phenomena like electrostatic pressure or heat.} once per frame in the Pygame animations, then calls a `tick' method on the CDManager. \textit{CDManager.Tick} then calls the tick methods on every individual CDEntity in the simulation.
 
-\lstset{language=Python,basicstyle=\footnotesize,}
+
 
 \begin{lstlisting}[frame=single,caption={CDEntity.tick method}]
 def tick(self, manager):
@@ -209,7 +280,7 @@ def detect_scenarios(event:ActionEvent):
 
     After the first `target' in attribute\_changes is met, that first cell is removed from the list so the next one can begin. This way events can take place in a set order.
 
-    Example: Star accretes particle
+    \textbf{Example: Star accretes particle}
 
     The `accrete' verb has two parts: the actor ingests a smaller item, then expands its radius. The setup script for the simulation will position the particle so it is moving towards the star, and set their collision handlers so the particle will attach when it enters the star, making sure it is captured. This will register a CD event which will correspond to the first target in the `attribute\_changes' list, causing the tick method to remove the first target from the list and move onto the next one. The radius will then increase by 1 pixel per tick until the target value is met.
 
