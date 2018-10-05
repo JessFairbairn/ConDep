@@ -33,11 +33,14 @@
     % \subfile{conceptual_dependancies}
 
     \section{Aims}
-    To plug the gap between some of the above knowledge representation systems, we aimed to build a system with the abilities of a numerical simulation, while maintaining the knowledge representation abilities of discrete events. To do this, Conceptual Dependencies were used as an intermediary between numerical data, natural language and visual representations.
+    To plug the gap between some of the above knowledge representation systems, we aimed to build a system with the abilities of a numerical simulation, while maintaining the knowledge representation abilities of discrete events. To do this, Conceptual Dependencies were used as an intermediary between numerical data, natural language and visual representations- given how CD theory reduces actions to a small number of primitives, it simplifies the problem of simulations CD theory also has the advantage of having being developed with natural language in mind from day one, making this a natural stepping stone between the different knowledge representation regimes.
+
+    It was also decided to explore the query answering capabilities of conceptual dependencies, using a logical programming module which could support querying about an input scenario.
+
+    By bridging the gap between quantitative simulations and qualitative descriptions, we aim to ease both interpretation of results (especially the detection of certain events) and the setup of experiments. While this dissertation will discuss a simplistic implementation, it serves as a proof of concept for applying CD theory in a way which could interact with more realistic and powerful scientific models.
 
     Visual representation was processed by the Python library Pymunk, a two dimensional simulation library for rigid objects. Input events could be translated from natural language, into sequences of conceptual dependency events, then recreated in Pymunk. Alternatively, a Pymunk simulation can be launched without any pre-planned events, with changes in the objects expressed in terms of conceptual dependencies, which are then described in natural language. By describing physical events in terms of a small set of physical primitives we can make much more meaningful queries.
 
-    By bridging the gap between quantitative simulations and qualitative descriptions, we aim to ease both interpretation of results (especially the detection of certain events) and the setup of experiments.
 
     \section{Implementation}
     \subfile{report}
