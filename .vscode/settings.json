@@ -13,8 +13,11 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "cSpell.words": [
+        "DOLCE",
         "FLEs",
+        "Laconicity",
         "Propbank",
+        "endurants",
         "logtalk",
         "nltk",
         "ptrans",

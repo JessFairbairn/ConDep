@@ -20,6 +20,8 @@
 
     Pymunk allows you apply custom `Collision Handler' functions to objects, which will activate when two objects of certain collision types interact. For simulating absorption events, the shapes involved were given `ABSORBER' and `ABSORBABLE' collision types- when the object's shapes collided, a slide joint was created between them as described above, ensuring the smaller object doesn't move beyond the radius of the larger one. The smaller object also had it's `sensor' boolean property set to true.
 
+    Pymunk has the option of including a built in gravity force in a uniform downwards direction. Obviously this was not appropriate for an astrophysics simulation. A custom function was built to attract all objects towards each other once per `tick', according to the inverse square law of gravitational attraction.
+
     \subsection{pygame}
     pygame is a Python wrapper for the `Simple DirectMedia Library' (SDL)\cite{pygame}- Pymunk doesn't come with any sort of graphics engine built in, so requires an external library for these purposes. However, it does contain some built in support for the pygame library (in \textit{pymunk.pygame\_util}).
     
@@ -209,7 +211,6 @@ Star1 <=> EXPEL Circle
     To identify discrete events in the physics simulation, objects were tracked by an object called a \textit{CDManager}. The top level script processes the effects of physical forces between the objects\footnote{At this time that is just gravity, but could be extended to include phenomena like electrostatic pressure or heat.} once per frame in the Pygame animations, then calls a `tick' method on the CDManager. \textit{CDManager.Tick} then calls the tick methods on every individual CDEntity in the simulation.
 
 
-
 \begin{lstlisting}[frame=single,caption={CDEntity.tick method}]
 def tick(self, manager):
     "Updates history of properties and returns any events"
@@ -274,6 +275,12 @@ def detect_scenarios(event:ActionEvent):
     
     return candidate_verbs
 \end{lstlisting}
+
+
+    % TODO: talk about how we ignore small movements
+    % * ptrans
+
+    To avoid small fluctuations in the centre of gravity being registered as a PTRANS event, the tick method on the CDEntity only raises a PTRANS event if the centre of gravity has moved at least 5 pixels in one dimension within the past 4 ticks. The neccetates storing the centre of gravity of the object at each time slice.
 
     \subsubsection{Scripted events and queueing}
     For `scripted' events under the simulation mode, events have to be queued. The CDDefinition class has a `preceding' field, for CD events which must come before the final one in compound verbs. In the case of compound verbs such as `accrete', the first stage is set up as normal by the simulation setup script. The list of events which needs to occur is listed in the attribute\_changes property of the CDEntity- these will either take the form of a value an attribute of the entity should equal, or a CDEvent having just occurred in the entity's history. For gradual changes such as radius changes, a target value for that attribute is set, and each time the tick method is called the attribute is changed in the specified direction (increase or decrease).
