@@ -39,6 +39,20 @@
 
     Some have argued for the PTRANS and MOVE primitives to be merged in a redesign on CD~\cite{macbethimage}- this was not attempted, as it was beyond the scope of this project, and because the distinction seems to reflect the differences between an object's translation and it's deformation intuitively in the astrophysics domain.
 
+    \subsection{Verbs}
+    A small library of verbs was manually created to allow natural language facilitation.
+    
+    \begin{lstlisting}[caption={The verb `absorb' being added to the dictionary}]
+_absorb = CDDefinition(Primitives.INGEST)
+_absorb.sense_id = 'absorb'
+_absorb.affected_attribute = EntityAttributes.inside_subject
+_absorb.attribute_outcome = EntityAttributeOutcomes.inside
+
+dictionary['absorb'] = _absorb
+    \end{lstlisting}
+    
+    These were mostly 1:1 correlations between a verb an event, but the system had the capacity to simulate `compound' verb definitions, which required two or more CD primitives to occur in order. Verbs which have this kind of complex definition include `accrete'.
+
     \subsection{Natural language to Actions}
 
     \begin{figure}[h]
