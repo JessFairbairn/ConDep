@@ -3,6 +3,8 @@
 /stanford/*
 profile.txt
 
+*/.flora_aux_files/*
+
 .~lock.*
 sys
 

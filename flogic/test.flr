@@ -1,0 +1,21 @@
+Remnant[
+    mass => \integer,
+    state => \string
+].
+
+
+?p[state -> 'NeutronStar'] :-
+    ?p:Remnant,
+    ?p[mass -> ?M],
+    ?M > 5.
+
+?p[state -> 'WhiteDwarf'] :-
+    ?p:Remnant,
+    ?p[mass -> ?M],
+    ?M < 6.
+
+bigStar:Remnant.
+littleStar:Remnant.
+
+bigStar[mass -> 8].
+littleStar[mass -> 2].
