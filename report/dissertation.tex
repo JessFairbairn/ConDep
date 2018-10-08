@@ -24,9 +24,11 @@
     \maketitle
     \tableofcontents
     \section{Introduction}
-    This dissertation will begin by looking at conceptual dependency theory, a schema for expressing the semantics of natural language originally put forward by Roger Schank~\cite{SCHANK1972552}. This will then be compared to a number of other forms of information representation, with the aim of identifying what aspects of meaning each is able to capture.
+    Knowledge representation is the area of computer science which looks at how best to capture and express information in a systematic way, so as to be used in automated applications.~\cite{brachman1992knowledge} It also ties into more fundamental questions about the nature of intelligence, whether that is artificial intelligence, or understanding how humans learn and think.
 
-    The code developed for this project will then be discussed, explaining how simulated events were ran in terms of conceptual dependencies. 
+    This dissertation will begin by qualitatively comparing a number of forms of knowledge representation, with the aim of identifying what aspects of meaning each is able to capture. It will look in greater detail at conceptual dependency theory, a schema for expressing the semantics of natural language originally put forward by Roger Schank~\cite{SCHANK1972552}, as we explored it's use as a scientific aid and for representing concepts in code.
+
+    The code developed for this project will then be discussed, explaining how simulated events were modelled in terms of conceptual dependencies. 
 
     \section{Background}
     \subfile{reps/paper.tex}
@@ -59,8 +61,10 @@
     \subsection{Future Work}
     % ML
     By breaking down verbs into a sequence of finite events, we open the possibility of reducing machine learning tasks regarding verbs to a question of learning and recognising patterns. Hierarchical Bayesian Program learning (BPL)~\cite{one-shot-learning} is built around combinations of primitives, and so offers a promising Machine learning regimes for a CD based system.
+
+    \citealt{one-shot-learning} uses the problem of handwriting recognition to demonstrate their technique- alphabetical symbols are split into character types (e.g.~specific letters) and character tokens (instances of a letter drawn by a single person). The types are defined in terms of their strokes (individual lines, separated by the pen leaving the page), sub-strokes (instances where the pen stops, but does not leave the page), and the relative spatial positions of strokes. In our compound verb definitions, the tokens would be analogous to a verb, strokes analogous to the primitive CD events which make up that verb (varying in number), and the relative positions of the strokes analogous to the order of the CD primitive events which are expressed in a verb.
     
-    This work required the creation of a library of verbs expressed as a sequence of CD events. These were manually input, a task which would be impractical for any system with a large dictionary. BPL offers `one shot' approaches to learning, promising a system to quickly learn from few examples.
+    The work in this dissertation required the creation of a library of verbs expressed as a sequence of CD events. These were manually input, a task which would be impractical for any system with a large dictionary. BPL offers `one shot' approaches to learning, promising a system to quickly learn from few examples.
     
     The recognition of primitives could be achieved in a variety of ways- here we have demonstrated a system which tracks entities in a simulation, thus having access to detailed mathematical information, but a visual recognition system to track objects and detect, say, an EMIT event seems perfectly feasible as well.
 
