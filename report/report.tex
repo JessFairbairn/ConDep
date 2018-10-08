@@ -54,7 +54,7 @@
     
     The verb definition is then merged with it's primitive definition (there should be no contradictory fields). This merging allows sparser verb definitions, with some information already implicit in the primitive.
 
-    While as much of the simulation was left to the `natural' laws as possible, to ensure the actions took place as determined by the input command some intervention was needed:
+    While as much of the simulation was left to unfold `naturally' as possible, to ensure the actions took place as determined by the input command some intervention was needed:
 
     \begin{itemize}
         \item For EXPEL events, the object was placed inside the actor, then given outwards momentum
@@ -90,7 +90,7 @@
     The corresponding primitive definition is looked up, returning another CDDefinition object.
 
     The two objects are merged into a CDEvent object, thus maintaining any keeping any data implicit in the Primitive definition. The Subject and Object items from the input sentence are set as the actor and object.
-    % TODO: pick a better example?
+    
 
     \begin{tabular}{l l}
         \toprule
@@ -277,10 +277,7 @@ def detect_scenarios(event:ActionEvent):
 \end{lstlisting}
 
 
-    % TODO: talk about how we ignore small movements
-    % * ptrans
-
-    To avoid small fluctuations in the centre of gravity being registered as a PTRANS event, the tick method on the CDEntity only raises a PTRANS event if the centre of gravity has moved at least 5 pixels in one dimension within the past 4 ticks. The neccetates storing the centre of gravity of the object at each time slice.
+    To avoid small fluctuations in the centre of gravity being registered as a PTRANS event, the tick method on the CDEntity only raises a PTRANS event if the centre of gravity has moved at least 5 pixels in one dimension within the past 4 ticks. The necessitates storing the centre of gravity of the object at each time slice.
 
     \subsubsection{Scripted events and queueing}
     For `scripted' events under the simulation mode, events have to be queued. The CDDefinition class has a `preceding' field, for CD events which must come before the final one in compound verbs. In the case of compound verbs such as `accrete', the first stage is set up as normal by the simulation setup script. The list of events which needs to occur is listed in the attribute\_changes property of the CDEntity- these will either take the form of a value an attribute of the entity should equal, or a CDEvent having just occurred in the entity's history. For gradual changes such as radius changes, a target value for that attribute is set, and each time the tick method is called the attribute is changed in the specified direction (increase or decrease).
