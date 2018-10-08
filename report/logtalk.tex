@@ -4,6 +4,7 @@
 \begin{document}
 
 \subsection{Logical Programming}
+
 I chose to write the logical programming parts of the system in Prolog, due to it's relative simplicity and common usage. The Logtalk extension language was also used due to it's object orientation features- this transpiles into pure Prolog, and primarily uses Prolog syntax.
 
 The object orientated nature of Logtalk allowed universal domain rules be written in one file and reused for different scenarios. 
@@ -13,8 +14,7 @@ The object orientated nature of Logtalk allowed universal domain rules be writte
 \lstset{language=Prolog,basicstyle=\footnotesize,
 deletekeywords={time},
 morekeywords={public,object,end_object},
-frame=single,
-label=lst:condep}
+frame=single}
 
 \begin{lstlisting}[
     caption={The `condep' object, which can be extended for individual simulations, maintaining the universal domain rules},]
@@ -118,5 +118,38 @@ After a Logtalk file is generated, a Logtalk instance is run which allows the us
 to which Logtalk would answer ``no'' (or ``false'')- as this is an EXPEL event, it's logical that Barbara is inside the blackHole before she can be expelled.
 
 
-Due to the inhereted nature of predicates in this system, there may be multiple `definitions' of a predicate (the general definition of the predicate, and then a statement that it applies to an instance in the scenario). By default, Prolog's behaviour here is to list the possible outcomes- for a question asking `Is X true?', it will list `true' then `false' for each different definition. To avoided this problem the \textit{once/1} predicate can be used to check if at least one of the definitions is satisfied.
+Due to the inherited nature of predicates in this system, there may be multiple `definitions' of a predicate (the general definition of the predicate, and then a statement that it applies to an instance in the scenario). By default, Prolog's behaviour here is to list the possible outcomes- for a question asking `Is X true?', it will list `true' then `false' for each different definition. To avoided this problem the \textit{once/1} predicate can be used to check if at least one of the definitions is satisfied.
+
+\subsubsection{Example: Inference of missing events}
+\label{logtalkinference}
+
+Here we will demonstrate an inference made in our logtalk implementation. It states that:
+\begin{itemize}
+    \item If an object is moving away from a mass at one point in time
+    \item and if it is absorbed by that mass at a later point in time
+    \item \ldots then it follows a PROPEL event occurred between those two events to change the object's direction of movement
+\end{itemize}
+This is a consequence of Newton's First law of motion, which states that an object will continue to move in the same direction at the same speed indefinitely until another force acts upon it. The following code checks if there should be an event between two specified events:
+
+\begin{lstlisting}
+missingEventBetween(FirstEvent, InjEvent) :-
+
+    ::injestEvent(InjEvent),
+    ::actorOfEvent(Mass, InjEvent),
+    ::objectOfEvent(Obj, InjEvent),
+
+    ::justAfter(T1, FirstEvent),
+    ::movingAwayFrom(Obj, Mass, T1),
+    ::beforeEvent(T1,InjEvent) ; ::afterEvent(InjEvent, T1).
+\end{lstlisting}
+
+The steps for this predicate ensure:
+\begin{itemize}
+    \item The mass INGESTs the object 
+    \item At a time just after the first event, the object is moving away from the mass
+    \item The events occur in the correct order
+\end{itemize}
+
+This predicate doesn't require that there isn't already an event between the two.
+
 \end{document}
