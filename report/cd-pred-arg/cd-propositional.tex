@@ -1,10 +1,15 @@
 \documentclass[../dissertation]{subfiles}
 
 \begin{document}
-\subsection{Conceptual Dependencies and Predicate-Argument structures}
-\subsubsection{Primitives}
+\subsubsection{Conceptual Dependencies and Predicate-Argument structures}
 
-\textbf{PTRANS}
+\textbf{Primitives}
+
+For each Conceptual Dependency primitive we will now list logical conclusions which can be drawn from the slots in the event.
+
+\begin{description}
+\item[PTRANS]\hfill
+
 Required Arguments:
 
 \begin{itemize}
@@ -20,7 +25,8 @@ After event:
 \[Location(Object) = \textit{Direction.After}\]
 
 
-\textbf{MOVE}
+\item[MOVE]\hfill
+
 Required Arguments
 \begin{itemize}
 \item Actor
@@ -33,7 +39,8 @@ Before event:
 After event:
 \[Location(Object) = \textit{Direction.After}\]
 
-\textbf{PROPEL}
+\item[PROPEL]\hfill
+
 Required Arguments
 \begin{itemize}
 	\item Actor
@@ -51,7 +58,8 @@ Before event:
 After event:
 \[Velocity(Object) \propto \textit{Direction.After} - \textit{Direction.Before}\]
 
-\textbf{EXPEL}
+\item[EXPEL]\hfill
+
 Required Arguments
 \begin{itemize}
 	\item Actor
@@ -64,7 +72,8 @@ Before event:
 After event:
 \[NOT(inside(Object, Actor))\]
 
-\textbf{INJEST}
+\item[INJEST]\hfill
+
 Required Arguments
 \begin{itemize}
 	\item Actor
@@ -77,19 +86,23 @@ Before event:
 
 After event:
 \[inside(Object, Actor)\]
+\end{description}
 
+\newpage
 
-\subsubsection{Verbs}
+\textbf{Verbs}
+
+We will now list a series of example verbs in terms of their CD primitives, with some slots filled in.
+
 \textbf{Emit}
+
+\smallskip
+
 \begin{center}
 	\includegraphics[height=200pt]{emit-cd.png}
-    
-	\bigskip
-%     \subtextbf{CD Definition}
-
 \end{center}
 
-\textbf{Event Sequence}
+Event Sequence
 \begin{center}
 
     \begin{tabular}{l l}
@@ -102,7 +115,7 @@ After event:
     \end{tabular}
 \end{center}
 
-\textbf{Natural Language example}
+Natural Language Example
 
 \textit{The star emits radiation}
 
@@ -111,7 +124,7 @@ After event:
 \textit{Object:} Radiation
 
 \bigskip
-\textbf{Predicate/Argument inferences}
+\textit{Predicate/Argument inferences}
 
 Before event:
 \[inside(Radiation, Star)\]
@@ -119,7 +132,7 @@ Before event:
 After event:
 \[NOT(inside(Radiation, Star))\]
 
-\newpage
+\newpage %CHECK: NEW PAGE?
 
 \textbf{Collapse}
 \begin{center}
@@ -127,7 +140,7 @@ After event:
 \end{center}
 	\bigskip
     
-\textbf{Event Sequence}
+Event Sequence
 \begin{center}
     \begin{tabular}{l l}
       \toprule
@@ -144,7 +157,7 @@ After event:
     
 \end{center}
 
-\textbf{Natural Language Example}
+Natural Language Example
 
 \textit{The white dwarf collapses.}
 
@@ -154,7 +167,7 @@ After event:
 
 \bigskip
 
-\textbf{Predicate/Argument Inferences}
+\textit{Predicate/Argument Inferences}
 
 % \begin{tabular}{p{5cm} p{5cm}}
 %   \toprule
@@ -173,10 +186,12 @@ After event:
 \newpage
 
 \textbf{Fall}
-\includegraphics[width=\linewidth]{fall-cd.png}
-\bigskip
 
-\textbf{Event Sequence}
+\bigskip
+\includegraphics[width=\linewidth]{fall-cd.png}
+
+
+Event Sequence
 
 \begin{center}
   \begin{tabular}{l l}
@@ -212,7 +227,7 @@ The ship fell into the black hole
 \textit{Object:} \textit{None}
 \smallskip
 
-\textbf{Predicate/Argument inferences}
+\textit{Predicate/Argument inferences}
 
 Event 1:
 
@@ -231,7 +246,7 @@ After event:
 \[Location(Object) = B\]
 \bigskip
 
-\textbf{Notes:} While it is obvious the `mass' here is the black hole, this isn't captured by the logic presented here. If the sentence was `Jim fell into the pond', the pond isn't the gravity source- the planet he's standing on is!
+\textit{Notes:} While it is obvious the `mass' here is the black hole, this isn't captured by the logic presented here. If the sentence was `Jim fell into the pond', the pond isn't the gravity source- the planet he's standing on is!
 
 The second half of the sentence, `\textit{into the black hole}' is a modifier for the verb phrase `\textit{The ship fell}'. To extend the logic presented here, the preposition `into' indicates the following location noun phrase takes the place of the `After' attribute of the PTRANS event's `Direction' attribute. This could be used to replace the variable \(B\) in the above diagrams.
 
@@ -239,7 +254,8 @@ In Propbank, this argument or modifier for the verb is labelled with a \textbf{G
 \newpage
 
 \textbf{Reflect}
-\textbf{Constraints}
+
+\textit{Constraints}
 \textit{Object} is some form of Radiation moving towards \textit{Subject}
 \bigskip
 
@@ -247,7 +263,7 @@ In Propbank, this argument or modifier for the verb is labelled with a \textbf{G
 	\includegraphics[height=200pt]{reflects-cd.png}
 \end{center}
 
-\textbf{Event Sequence}
+Event Sequence
 
 \begin{center}
 	
@@ -268,7 +284,7 @@ In Propbank, this argument or modifier for the verb is labelled with a \textbf{G
     
 \end{center}
 
-\textbf{Natural Language Example}
+Natural Language Example
 
 \textit{The field reflects light}
 
@@ -278,7 +294,7 @@ In Propbank, this argument or modifier for the verb is labelled with a \textbf{G
 
 \bigskip
 
-\textbf{Predicate-Argument Inferences}
+Predicate-Argument Inferences
 
 Before event:
 \[Location(light) = field\]
@@ -286,18 +302,26 @@ Before event:
 After event:
 \[Velocity(light) \propto Location(source) - Location(field)\]
 
-\subsubsection{Mapping Verb argument and modifier roles to CD slots}
+
+
+% ========================
+\textbf{Mapping Verb argument and modifier roles to CD slots}
 \label{roles-to-slots}
 
+Propbank and VerbNet are two online database of English verbs, which also list the semantic roles for 
+
+\bigskip
+\begin{table}
 \begin{tabular}{l l l}
   \toprule
   CD Slot & Propbank Role & VerbNet Role \\
   \midrule
   Actor & Agent (PAG) & Agent\\
   Object & Patient (PTT) & Patient\\
-  Direction: Before & ? & Source \\
+  Direction: Before & Direction (DIR) & Source \\
   Direction: After &  Goal (GOL) & Destination \\
   \bottomrule
 \end{tabular}
-
+\caption{Alligning CD slots to semantic roles for verb arguments}
+\end{table}
 \end{document}

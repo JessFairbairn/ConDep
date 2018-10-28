@@ -7,7 +7,7 @@
 
     In addition, a program was built which expressed the events from a natural language sentence in Prolog, and allowed users to enter Prolog queries about the events.
 
-    \subsection{Pymunk}
+    \section{Pymunk}
     Pymunk is a rigid body simulation library for Python. It is effectively a wrapper for the Chipmunk library for C, which allows rigid shapes to be defined, and joints between them set to allow restrictions upon movement.
 
     There are four fundamental elements of a Pymunk simulation~\cite{pymunk}:
@@ -22,12 +22,12 @@
 
     Pymunk has the option of including a built in gravity force in a uniform downwards direction. Obviously this was not appropriate for an astrophysics simulation. A custom function was built to attract all objects towards each other once per `tick', according to the inverse square law of gravitational attraction.
 
-    \subsection{pygame}
+    \section{pygame}
     pygame is a Python wrapper for the `Simple DirectMedia Library' (SDL)\cite{pygame}- Pymunk doesn't come with any sort of graphics engine built in, so requires an external library for these purposes. However, it does contain some built in support for the pygame library (in \textit{pymunk.pygame\_util}).
     
     SDL manages low level access to graphics, sound and control events in a machine.\cite{SDL}
 
-    \subsection{Primitives}
+    \section{Primitives}
     As the system being built only related to physical events, a subset of physical primitives were used, interpreted in a way which is relevant to the field of astrophysics. The following specific definitions were used:
     \begin{itemize}
         \item \textbf{PTRANS}- an object's whole body moving (defined as it's centre of gravity moving significantly)
@@ -39,7 +39,7 @@
 
     Some have argued for the PTRANS and MOVE primitives to be merged in a redesign on CD~\cite{macbethimage}- this was not attempted, as it was beyond the scope of this project, and because the distinction seems to reflect the differences between an object's translation and it's deformation intuitively in the astrophysics domain.
 
-    \subsection{Verbs}
+    \section{Verbs}
     A small library of verbs was manually created to allow natural language facilitation.
     
     \begin{lstlisting}[caption={The verb `absorb' being added to the dictionary}]
@@ -53,7 +53,7 @@ dictionary['absorb'] = _absorb
     
     These were mostly 1:1 correlations between a verb an event, but the system had the capacity to simulate `compound' verb definitions, which required two or more CD primitives to occur in order. Verbs which have this kind of complex definition include `accrete'.
 
-    \subsection{Natural language to Actions}
+    \section{Natural language to Actions}
 
     \begin{figure}[h]
         \begin{center}
@@ -83,7 +83,7 @@ dictionary['absorb'] = _absorb
 
     % TODO: an example with a primitive which contains some data?
 
-    \subsubsection{Example: Star collapses}
+    \subsection{Example: Star collapses}
     \begin{enumerate}
     \item Natural language parsing. NLTK identifies and stems the verb, in this case ``collapse''. The Subject and Object of the sentence are identified, and stored as arguments in a VerbInfo object along with the verb name. (The system also is built to handle verb sense IDs for use in larger corpora which may contain multiple definitions for the same verb- given the current system is built for a set domain, the problem of ambiguous word senses is reduced)
 
@@ -141,7 +141,7 @@ dictionary['absorb'] = _absorb
     \end{enumerate}
 
 
-    \subsection{Actions to Natural Language}
+    \section{Actions to Natural Language}
     \begin{figure}[h]
         \begin{center}        
             \includegraphics[width=300pt]{diagrams/action-to-verb-workflow.png}
@@ -158,7 +158,7 @@ dictionary['absorb'] = _absorb
 
     In this case, the system can be guided to using the more suitable verb by applying a type constraint to the object of the verb (object being used in the logical sense). Constraints in existing natural language libraries aren't generally specific enough for these purposes, so a crude list of physics-specific constraint rules was built as a proof of concept.
 
-    \subsubsection{Example: Star emitting a particle}
+    \subsection{Example: Star emitting a particle}
     \begin{enumerate}
         \item A `spitting star' is created- this will have (by default) 40 particles with no initial momentum, grouped into a single CompoundEntity, which is registered with CDManager object. A single extra particle is created, with a momentum in the \(x\) direction, which is also added  as a part of the CompoundEntity.
         
@@ -220,8 +220,8 @@ Star1 <=> EXPEL Circle
 
     \end{enumerate}
 
-    \subsection{Physics Simulation}
-    \subsubsection{Recognition of physical events}
+    \section{Physics Simulation}
+    \subsection{Recognition of physical events}
     To identify discrete events in the physics simulation, objects were tracked by an object called a \textit{CDManager}. The top level script processes the effects of physical forces between the objects\footnote{At this time that is just gravity, but could be extended to include phenomena like electrostatic pressure or heat.} once per frame in the Pygame animations, then calls a `tick' method on the CDManager. \textit{CDManager.Tick} then calls the tick methods on every individual CDEntity in the simulation.
 
 
@@ -293,7 +293,7 @@ def detect_scenarios(event:ActionEvent):
 
     To avoid small fluctuations in the centre of gravity being registered as a PTRANS event, the tick method on the CDEntity only raises a PTRANS event if the centre of gravity has moved at least 5 pixels in one dimension within the past 4 ticks. The necessitates storing the centre of gravity of the object at each time slice.
 
-    \subsubsection{Scripted events and queueing}
+    \subsection{Scripted events and queueing}
     For `scripted' events under the simulation mode, events have to be queued. The CDDefinition class has a `preceding' field, for CD events which must come before the final one in compound verbs. In the case of compound verbs such as `accrete', the first stage is set up as normal by the simulation setup script. The list of events which needs to occur is listed in the attribute\_changes property of the CDEntity- these will either take the form of a value an attribute of the entity should equal, or a CDEvent having just occurred in the entity's history. For gradual changes such as radius changes, a target value for that attribute is set, and each time the tick method is called the attribute is changed in the specified direction (increase or decrease).
 
     After the first `target' in attribute\_changes is met, that first cell is removed from the list so the next one can begin. This way events can take place in a set order.

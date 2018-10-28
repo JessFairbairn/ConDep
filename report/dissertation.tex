@@ -2,7 +2,7 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{subfiles}
-\usepackage{natbib}
+\usepackage[numbers]{natbib}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{mathtools}
@@ -19,8 +19,8 @@
 
 
 \begin{document}
-    \title{Dissertation}
-    \author{Jess Fairbairn}
+    \title{Using conceptual dependency primitives to mediate between different forms of knowledge representation}
+    \author{Jessica Fairbairn}
     \principaladviser{Andr{\'e} Freitas}
         
     \beforeabstract
@@ -31,51 +31,51 @@
     \afterabstract
     
     \prefacesection{Acknowledgements}
-    I would like to my supervisor Andr{\'e} for guiding me through a project which has given me a chance to be creative and taught me about a wide range of computer science.
+    I would like to my supervisor Andr{\'e} for guiding me through a project which has given me a chance to be creative, excited me about science again, and taught me about a wide range of topics.
 
     Additionally, thank you to my parents for feeding me when I turn up at short notice, my friends Will, Ashleigh, Becka, Jenny and too many others to name who've helped me through a challenging year, Abbey and Angle the cats, Oliver the rabbit, and Our Lady Eris who never lets things get dull.
     \afterpreface
     
-
-    \tableofcontents
-    \section{Introduction}
+    \chapter{Introduction}
     Knowledge representation is the area of computer science which looks at how best to capture and express information in a systematic way, so as to be used in automated applications.~\cite{brachman1992knowledge} It also ties into more fundamental questions about the nature of intelligence, whether that is artificial intelligence, or understanding how humans learn and think.
 
-    This dissertation will begin by qualitatively comparing a number of forms of knowledge representation, with the aim of identifying what aspects of meaning each is able to capture. It will look in greater detail at conceptual dependency theory, a schema for expressing the semantics of natural language originally put forward by Roger Schank~\cite{SCHANK1972552}, as we explored it's use as a scientific aid and for representing concepts in code.
+    This dissertation will begin by qualitatively comparing a number of forms of knowledge representation, with the aim of identifying what aspects of meaning each is able to capture. It will look in greater detail at conceptual dependency theory, a schema for expressing the semantics of natural language originally put forward by Roger Schank~\cite{SCHANK1972552}, as we explored it's use as a scientific aid and for representing concepts in code. We list a number of predicate argument and natural language extensions for conceptual dependency events.
+
+    We then explore theories and experiments around concept learning and how this relates to various knowledge representation systems.
 
     The code developed for this project will then be discussed, explaining how simulated events were modelled in terms of conceptual dependencies. 
 
-    \section{Background}
+    \chapter{Background}
     \subfile{reps/paper.tex}
     % \subfile{conceptual_dependancies}
 
 
-    \subsection{Comparing human concept learning to computer knowledge representation}
+    \section{Comparing human concept learning to computer knowledge representation}
     There are interesting analogies between some of the schemas described above and theories about human cognition. We will now briefly discuss some theories about human concept learning, and relate them to computer knowledge representation methods. 
 
-    \citealt{gardenfors2004conceptual} defined conceptual space as one or more domains expressing difference between concepts. Domains are a set of inseparable quantities which are needed together to understand a value. Researchers have tried to express the concept of `similarity' mathematically in terms of the conceptual distance between them- \citeauthor{shepard1987toward} estimated `similarity' to exponentually decay as concepts increased in difference: \(S_{ij}=e^{-Cd_{ij}}\).
+    G{\"a}rdenfors \cite{gardenfors2004conceptual} defined conceptual space as one or more domains expressing difference between concepts. Domains are a set of inseparable quantities which are needed together to understand a value. Researchers have tried to express the concept of `similarity' mathematically in terms of the conceptual distance between them- Shepard 1987 \cite{shepard1987toward} estimated `similarity' to exponentially decay as concepts increased in difference: \(S_{ij}=e^{-Cd_{ij}}\).
 
-    \subsubsection{Theories of concept learning}
+    \subsection{Theories of concept learning}
     \begin{description}
         \item[Rule based concept learning] Rule based theories of concept learning assume humans develop knowledge about conceptual theories by constructing a series of rules to determine whether an instance belongs to a category or not. These will specify which criteria are necessary and/or sufficient to satisfy a categorisation.\cite{rouder2006comparing}
         \item[Prototype based concept learning] These theories assume humans memorise a `prototypical' instance of category, comparing other potential instances to that one.\cite{griffiths2007unifying} It measures `conceptual distance' from the prototype to judge if another example should be placed in the same category. An example may be a labrador being the prototypical dog, while other forms of dogs (such as chihuahuas) are still in that same category as long as they are close to the prototype.
         \item[Exemplar based concept learning] Exemplar based theories work on the basis that we store memories of examples we have seen from a category, and categorise new instances in terms of their proximity to that cluster of examples.\cite{griffiths2007unifying}
     \end{description}
 
-    \citealt{rouder2006comparing} ran a psychological study to try and determine whether humans used rule or exemplar based logic for categorisation problems. Participants were asked to categorise squares by their size, for example putting small and large squares in category A, but medium sized squares in category B. Additionally, some of the participants had the task simplified by the inclusion of an on-screen ruler. Different patterns of  results were expected depending on which categorisation method they were using.
+    Jeffrey Rouder \cite{rouder2006comparing} ran a psychological study to try and determine whether humans used rule or exemplar based logic for categorisation problems. Participants were asked to categorise squares by their size, for example putting small and large squares in category A, but medium sized squares in category B. Additionally, some of the participants had the task simplified by the inclusion of an on-screen ruler. Different patterns of  results were expected depending on which categorisation method they were using.
     
     The paper's conclusion was that the participants used a mixture of rule and exemplar approaches for the harder tasks, but once they were given a ruler, they exclusively used an exemplar approach. This indicated that humans use a rule based system only when the differentiation task becomes too difficult.
 
     In a similar combination of theories, more modern work has argued that prototype and exemplar theories are two extremes of a spectrum, with `multiple prototype' theories existing in between. To take an example- a Wooden Spoon for cooking and a standard metal spoon for eating are quite different- the distribution of the `spoon' area in difference space will not be isometric- take for example the property of bowl depth- a soup spoon has a deeper bowl relative to it's length, compared to other table top spoons. But if that spoon was proportionally expanded to the size of a wooden spoon used for cooking it would now fall out of the spoon zone into the ladle zone. To understand why both these kinds of spoon are part of the `spoon' category, there will have to be multiple prototypes- one for table spoons, and one for wooden spoons.
 
-    \citealt{griffiths2007unifying} offers a mathematical treatment using Hierarchical bayesian approach- it models the distribution within a class as a number of clusters around \(K\) prototypes in difference space. The mathematical problem then becomes finding the optimum number of clusters and their positions to predict the spread of examples.
+    Griffiths et al. 2007 \cite{griffiths2007unifying} offers a mathematical treatment using Hierarchical bayesian approach- it models the distribution within a class as a number of clusters around \(K\) prototypes in difference space. The mathematical problem then becomes finding the optimum number of clusters and their positions to predict the spread of examples.
 
-    \subsubsection{Relations to knowledge representation}
+    \subsection{Relations to knowledge representation}
     There are analogies to be drawn between the concept learning theories discussed here and various knowledge representation schemes discussed above. Perhaps the most obvious is the connection between Prototype theories of concept learning and Frame based knowledge representation- indeed, some literature explicitly refers to `prototypes' in relation to frames, and prototypal inheritance (where an child instance of an object inherits all it's properties unless they are overwritten) is a term used to describe some object orientated languages like Javascript. These will work by spawning a new instance using the prototype's properties as default values, which can then be overwritten if needed on the instance.
 
     Rule based classification is obviously more analogous to first order logic languages- my our Prolog implementation of logic around conceptual dependencies (which is discuss in more detail below), we have a predicates such as `isEvent' and `isTime', which are inferred if a variable is used in certain ways.
 
-    \section{Aims}
+    \chapter{Aims}
     To plug the gap between some of the above knowledge representation systems, we aimed to build a system with the abilities of a numerical simulation, while maintaining the knowledge representation abilities of discrete events. To do this, Conceptual Dependencies were used as an intermediary between numerical data, natural language and visual representations- given how CD theory reduces actions to a small number of primitives, it simplifies the problem of simulations CD theory also has the advantage of having being developed with natural language in mind from day one, making this a natural stepping stone between the different knowledge representation regimes.
 
     It was also decided to explore the query answering capabilities of conceptual dependencies, using a logical programming module which could support querying about an input scenario.
@@ -86,25 +86,24 @@
 
 
 
-    \section{Implementation}
+    \chapter{Implementation}
     \subfile{report}
     % \subfile{cd-pred-arg/cd-propositional}
 
     % \section{results}
 
-    \section{Discussion}
+    \chapter{Discussion}
     Defining verbs as CD scenarios seems to be broadly successful, with the primitive actions being sufficient to capture the meaning of words and to reconstruct events in a simulation scenario.
 
     The simulation to natural language pathway was successful, and could offer a technique for event recognition in future systems. An example would be using natural language to instruct a system what scenario to search for, setting the end condition for a program or experiment.
 
     Simulation systems could act as a research aid for scientists- by tapping into humans' ability to instinctively identify events in a visual scene, scientists could understand results quickly, identifying missing or unexpected features in a scenario.
 
-    \section{Conclusion}
-    \subsection{Future Work}
+    \chapter{Future Work}
     % ML
     By breaking down verbs into a sequence of finite events, we open the possibility of reducing machine learning tasks regarding verbs to a question of learning and recognising patterns. Hierarchical Bayesian Program learning (BPL)~\cite{one-shot-learning} is built around combinations of primitives, and so offers a promising Machine learning regimes for a CD based system.
 
-    \citealt{one-shot-learning} uses the problem of handwriting recognition to demonstrate their technique- alphabetical symbols are split into character types (e.g.~specific letters) and character tokens (instances of a letter drawn by a single person). The types are defined in terms of their strokes (individual lines, separated by the pen leaving the page), sub-strokes (instances where the pen stops, but does not leave the page), and the relative spatial positions of strokes. In our compound verb definitions, the tokens would be analogous to a verb, strokes analogous to the primitive CD events which make up that verb (varying in number), and the relative positions of the strokes analogous to the order of the CD primitive events which are expressed in a verb.
+    Lake et al. 2015~\cite{one-shot-learning} uses the problem of handwriting recognition to demonstrate their technique- alphabetical symbols are split into character types (e.g.~specific letters) and character tokens (instances of a letter drawn by a single person). The types are defined in terms of their strokes (individual lines, separated by the pen leaving the page), sub-strokes (instances where the pen stops, but does not leave the page), and the relative spatial positions of strokes. In our compound verb definitions, the tokens would be analogous to a verb, strokes analogous to the primitive CD events which make up that verb (varying in number), and the relative positions of the strokes analogous to the order of the CD primitive events which are expressed in a verb.
     
     The work in this dissertation required the creation of a library of verbs expressed as a sequence of CD events. These were manually input, a task which would be impractical for any system with a large dictionary. BPL offers `one shot' approaches to learning, promising a system to quickly learn from few examples.
     
@@ -130,7 +129,7 @@
     A natural language parser which can construct Prolog queries would be a good asset for this project- at the moment, when using `Question Mode', the query must be written in Prolog, obviously a barrier for most users. Translating natural language questions into Prolog could end up being a complex task.
 
     % Object constraints
-    The addition of object constraints for verbs could benefit both generation of natural language, and the parsing of input information. In his work on the BABEL natural language engine, \citeauthor{GOLDMAN1975289} used the example of `drink' and `eat'- two verbs which correspond to the same CD primitive (INGEST), but which are incorrect if used with the wrong object. This can be language dependent: Malay and Tagalog don't have gender distinctions for third person pronouns like English.
+    The addition of object constraints for verbs could benefit both generation of natural language, and the parsing of input information. In his work on the BABEL natural language engine, Goldman~\cite{GOLDMAN1975289} used the example of `drink' and `eat'- two verbs which correspond to the same CD primitive (INGEST), but which are incorrect if used with the wrong object. This can be language dependent: Malay and Tagalog don't have gender distinctions for third person pronouns like English.
 
     As a more relevant example, the verbs `emit' and `eject' both correspond to the EXPEL primitive, but are used for different objects (you wouldn't say `it ejected radiation').
 
