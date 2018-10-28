@@ -1,12 +1,12 @@
-from pymunk_cd.action_event import ActionEvent
-from pymunk_cd.cd_event import CDEvent
-from pymunk_cd.primitives import Primitives
-from pymunk_cd.parsing.VerbSense import VerbSense
-from pymunk_cd.parsing.cd_definitions import CDDefinition
+from condep.action_event import ActionEvent
+from condep.cd_event import CDEvent
+from condep.primitives import Primitives
+from condep.parsing.VerbSense import VerbSense
+from condep.parsing.cd_definitions import CDDefinition
 
-from pymunk_cd.definitions import primitives as primitive_definitions
+from condep.definitions import primitives as primitive_definitions
 
-from pymunk_cd.definitions import verbs
+from condep.definitions import verbs
 
 class CDConverter:
 

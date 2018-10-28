@@ -1,12 +1,12 @@
 from unittest import mock
 import unittest
 
-import pymunk_cd.setup
+import condep.setup
 
-from pymunk_cd.action_event import ActionEvent, EntityAttributes, EntityAttributeOutcomes
-from pymunk_cd.CDManager import CDManager
-from pymunk_cd.primitives import Primitives
-from pymunk_cd.CompoundEntity import CompoundEntity
+from condep.action_event import ActionEvent, EntityAttributes, EntityAttributeOutcomes
+from condep.CDManager import CDManager
+from condep.primitives import Primitives
+from condep.CompoundEntity import CompoundEntity
 
 class SpawningEntities(unittest.TestCase):
 
@@ -22,7 +22,7 @@ class SpawningEntities(unittest.TestCase):
         fake_event.subject = 'Star'
         fake_event.affected_attribute = EntityAttributes.position
         
-        pymunk_cd.setup._create_entities(self.manager, [fake_event])
+        condep.setup._create_entities(self.manager, [fake_event])
 
         self.assertEqual(len(self.manager.objects), 1)
 
@@ -33,7 +33,7 @@ class SpawningEntities(unittest.TestCase):
         fake_event.event_object ='particle'
         fake_event.affected_attribute = EntityAttributes.distance_from_subject
         
-        pymunk_cd.setup._create_entities(self.manager, [fake_event])
+        condep.setup._create_entities(self.manager, [fake_event])
 
         self.assertEqual(len(self.manager.objects), 2)
 
@@ -43,7 +43,7 @@ class SpawningEntities(unittest.TestCase):
         fake_event.subject = 'particle'
         fake_event.affected_attribute = EntityAttributes.position
         
-        pymunk_cd.setup._create_entities(self.manager, [fake_event])
+        condep.setup._create_entities(self.manager, [fake_event])
 
         particle = self.manager.objects[0].parts[0].body
 
@@ -58,7 +58,7 @@ class ApplyAttributes(unittest.TestCase):
         agent = CompoundEntity()
         patient = CompoundEntity()
 
-        pymunk_cd.setup._apply_attributes(event, agent, patient)
+        condep.setup._apply_attributes(event, agent, patient)
 
 
         self.assertIn(('event',event), agent.attribute_changes[0])
@@ -71,7 +71,7 @@ class ApplyAttributes(unittest.TestCase):
         agent = CompoundEntity()
         patient = CompoundEntity()
 
-        pymunk_cd.setup._apply_attributes(event, agent, patient)
+        condep.setup._apply_attributes(event, agent, patient)
 
 
         self.assertIn(('event',event), agent.attribute_changes[0])

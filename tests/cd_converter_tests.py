@@ -2,20 +2,20 @@ from unittest import mock
 from unittest.mock import patch
 import unittest
 
-from pymunk_cd.action_event import ActionEvent
-from pymunk_cd.action_event import EntityAttributes
-from pymunk_cd.action_event import EntityAttributeOutcomes
-from pymunk_cd.cd_event import CDEvent
-from pymunk_cd.primitives import Primitives
+from condep.action_event import ActionEvent
+from condep.action_event import EntityAttributes
+from condep.action_event import EntityAttributeOutcomes
+from condep.cd_event import CDEvent
+from condep.primitives import Primitives
 
-from pymunk_cd.parsing import cd_converter
-from pymunk_cd.parsing.NLPParser import NLPParser
-from pymunk_cd.parsing.VerbSense import VerbArgumentInstance
-from pymunk_cd.parsing.VerbSense import VerbSense
-from pymunk_cd.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
+from condep.parsing import cd_converter
+from condep.parsing.NLPParser import NLPParser
+from condep.parsing.VerbSense import VerbArgumentInstance
+from condep.parsing.VerbSense import VerbSense
+from condep.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
 
-from pymunk_cd.definitions import verbs
-from pymunk_cd.definitions import primitives
+from condep.definitions import verbs
+from condep.definitions import primitives
 
 
 class ConvertVerbToCdEvent(unittest.TestCase):
@@ -49,7 +49,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
 
         mock_dictionary = mock.MagicMock()
         mock_dictionary.__getitem__.side_effect = getitem
-        with patch('pymunk_cd.definitions.verbs.dictionary', new=mock_dictionary):
+        with patch('condep.definitions.verbs.dictionary', new=mock_dictionary):
 
             converter.convert_verb_event_to_cd_event(mock_verb_data)
 
@@ -74,7 +74,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
         mock_dictionary = mock.MagicMock()
         mock_dictionary.__getitem__.side_effect = getitem
         
-        with patch('pymunk_cd.definitions.verbs.dictionary', new=mock_dictionary):
+        with patch('condep.definitions.verbs.dictionary', new=mock_dictionary):
 
             prim_dict = {Primitives.INGEST: fake_verb_def}
 
@@ -84,7 +84,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
             mock_prim_dictionary = mock.MagicMock()
             mock_prim_dictionary.__getitem__.side_effect = getprim
             
-            with patch('pymunk_cd.definitions.primitives.dictionary', new=mock_prim_dictionary):
+            with patch('condep.definitions.primitives.dictionary', new=mock_prim_dictionary):
 
                 converter.convert_verb_event_to_cd_event(mock_verb_data)
 
@@ -115,7 +115,7 @@ class ConvertVerbToCdEvent(unittest.TestCase):
         mock_dictionary = mock.MagicMock()
         mock_dictionary.__getitem__.side_effect = getitem
         
-        with patch('pymunk_cd.definitions.verbs.dictionary', new = mock_dictionary):
+        with patch('condep.definitions.verbs.dictionary', new = mock_dictionary):
 
             event = converter.convert_verb_event_to_cd_event(mock_verb_data)
             self.assertEqual(event.preceding.primitive, Primitives.PROPEL)

@@ -1,6 +1,6 @@
 import unittest
-from pymunk_cd.parsing.NLPParser import VerbLookup
-from pymunk_cd.parsing import VerbSense
+from condep.parsing.NLPParser import VerbLookup
+from condep.parsing import VerbSense
 
 
 # class unittest.TestCase(unittest.TestCase):    

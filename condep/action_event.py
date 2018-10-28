@@ -1,7 +1,7 @@
 from enum import Enum
 import typing
 
-#from pymunk_cd.CompoundEntity import CompoundEntity
+#from condep.CompoundEntity import CompoundEntity
 
 class ActionEvent:
     subject = None # type!: typing.Union[CompoundEntity, str]

@@ -1,5 +1,5 @@
 import pymunk
-from pymunk_cd.CompoundEntity import CompoundEntity
+from condep.CompoundEntity import CompoundEntity
 
 def to_pygame(p:int):
     """Small hack to convert pymunk to pygame coordinates"""

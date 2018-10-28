@@ -7,15 +7,15 @@ import pymunk
 import pymunk.pygame_util
 from pygame.locals import *
 
-import pymunk_cd.CompoundEntity as CompoundEntity
-from pymunk_cd import CDUtilities, utilities
-from pymunk_cd.action_event import (ActionEvent, EntityAttributeOutcomes,
+import condep.CompoundEntity as CompoundEntity
+from condep import CDUtilities, utilities
+from condep.action_event import (ActionEvent, EntityAttributeOutcomes,
                                     EntityAttributes)
-from pymunk_cd.cd_event import CDEvent
-from pymunk_cd.CDManager import CDManager
-from pymunk_cd.CDUtilities import CollisionTypes
-from pymunk_cd.definitions.primitives import dictionary as prim_definitions
-from pymunk_cd.parsing.cd_converter import CDConverter
+from condep.cd_event import CDEvent
+from condep.CDManager import CDManager
+from condep.CDUtilities import CollisionTypes
+from condep.definitions.primitives import dictionary as prim_definitions
+from condep.parsing.cd_converter import CDConverter
 
 
 def setup_pymunk_environment(events: List[ActionEvent], sentence: str=None):

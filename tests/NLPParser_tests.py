@@ -1,13 +1,13 @@
 from unittest import mock
 import unittest
-from pymunk_cd.parsing import NLPParser
-from pymunk_cd.parsing.NLPParser import NLPParser
-from pymunk_cd.parsing.VerbSense import *
+from condep.parsing import NLPParser
+from condep.parsing.NLPParser import NLPParser
+from condep.parsing.VerbSense import *
 
 class PassesVerbDataToCDConverter(unittest.TestCase):
 
-    @mock.patch('pymunk_cd.parsing.cd_converter.CDConverter')
-    @mock.patch('pymunk_cd.parsing.NLPParser.VerbLookup')
+    @mock.patch('condep.parsing.cd_converter.CDConverter')
+    @mock.patch('condep.parsing.NLPParser.VerbLookup')
     def test_passes_verb_data_to_converter(self, mockVerbLookup, mockCDConverter):
 
         arg0 = VerbArgument('emitting entity', 'PAG')
@@ -20,8 +20,8 @@ class PassesVerbDataToCDConverter(unittest.TestCase):
 
         mockCDConverter.convert_verb_event_to_cd_event.assert_called_once_with(mock_verb_data)
 
-    @mock.patch('pymunk_cd.parsing.cd_converter.CDConverter')
-    @mock.patch('pymunk_cd.parsing.NLPParser.VerbLookup')
+    @mock.patch('condep.parsing.cd_converter.CDConverter')
+    @mock.patch('condep.parsing.NLPParser.VerbLookup')
     def test_converts_verb_to_infinitive(self, mockVerbLookup, mockCDConverter):
 
         arg0 = VerbArgument('emitting entity', 'PAG')
@@ -34,8 +34,8 @@ class PassesVerbDataToCDConverter(unittest.TestCase):
 
         mockVerbLookup.get_verb.assert_called_once_with('emit')
         
-    @mock.patch('pymunk_cd.parsing.cd_converter.CDConverter')
-    @mock.patch('pymunk_cd.parsing.NLPParser.VerbLookup')
+    @mock.patch('condep.parsing.cd_converter.CDConverter')
+    @mock.patch('condep.parsing.NLPParser.VerbLookup')
     def test_removes_full_stops(self, mockVerbLookup, mockCDConverter):
 
         arg0 = VerbArgument('emitting entity', 'PAG')

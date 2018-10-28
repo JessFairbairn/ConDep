@@ -2,7 +2,7 @@ import ctypes
 import pygame.font
 import pymunk
 
-from pymunk_cd import utilities
+from condep import utilities
 
 from .primitives import Primitives 
 

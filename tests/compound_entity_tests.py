@@ -4,15 +4,15 @@ import unittest
 
 from pymunk.vec2d import Vec2d
 
-from pymunk_cd.action_event import ActionEvent
-from pymunk_cd.action_event import EntityAttributes
-from pymunk_cd.action_event import EntityAttributeOutcomes
-from pymunk_cd.cd_event import CDEvent
-from pymunk_cd.CDManager import CDManager
-from pymunk_cd.primitives import Primitives
-import pymunk_cd.CDUtilities as CDUtilities
+from condep.action_event import ActionEvent
+from condep.action_event import EntityAttributes
+from condep.action_event import EntityAttributeOutcomes
+from condep.cd_event import CDEvent
+from condep.CDManager import CDManager
+from condep.primitives import Primitives
+import condep.CDUtilities as CDUtilities
 
-from pymunk_cd.CompoundEntity import CompoundEntity
+from condep.CompoundEntity import CompoundEntity
 
 
 class UpdateChangingAttributes(unittest.TestCase):

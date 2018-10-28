@@ -1,5 +1,5 @@
-from pymunk_cd.primitives import Primitives
-from pymunk_cd.action_event import EntityAttributes
+from condep.primitives import Primitives
+from condep.action_event import EntityAttributes
 from enum import Enum
 
 class CDDefinition:

@@ -2,12 +2,12 @@
 import sys
 import tempfile
 
-from pymunk_cd.setup import setup_pymunk_environment
+from condep.setup import setup_pymunk_environment
 
-from pymunk_cd.parsing.cd_converter import CDConverter
-from pymunk_cd.parsing.NLPParser import NLPParser, VerbLookup
+from condep.parsing.cd_converter import CDConverter
+from condep.parsing.NLPParser import NLPParser, VerbLookup
 
-from pymunk_cd.prolog import converter as prolog_converter
+from condep.prolog import converter as prolog_converter
 
 args = sys.argv
 

@@ -1,5 +1,5 @@
 from ..cd_event import CDEvent
-from pymunk_cd.primitives import Primitives
+from condep.primitives import Primitives
 
 def convert_to_prolog(event:CDEvent):
     'Returns an array of prolog predicates describing the event'

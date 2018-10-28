@@ -1,8 +1,8 @@
 from unittest import mock
 import unittest
 
-from pymunk_cd.definitions import verbs
-from pymunk_cd.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
+from condep.definitions import verbs
+from condep.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
 
 
 class ReturnsCorrectSubjectAndObject(unittest.TestCase):

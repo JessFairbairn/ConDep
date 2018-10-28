@@ -6,12 +6,12 @@ from pygame.locals import *
 import pymunk
 import pymunk.pygame_util
 
-import pymunk_cd.CompoundEntity
-import pymunk_cd.CDManager
+import condep.CompoundEntity
+import condep.CDManager
 
-from pymunk_cd import utilities
+from condep import utilities
 
-from pymunk_cd import CDUtilities    
+from condep import CDUtilities    
 
 def main():
     #pylint: disable=no-member
@@ -26,7 +26,7 @@ def main():
     
     draw_options = pymunk.pygame_util.DrawOptions(screen)
 
-    manager = pymunk_cd.CDManager.CDManager(screen,space)
+    manager = condep.CDManager.CDManager(screen,space)
     star = CDUtilities.create_star(manager)
     balls = star.parts
 

@@ -1,8 +1,8 @@
 from unittest import mock
 import unittest
 
-from pymunk_cd.parsing.cd_definitions import CDDefinition
-from pymunk_cd.primitives import Primitives
+from condep.parsing.cd_definitions import CDDefinition
+from condep.primitives import Primitives
 
 class CompoundDefinition(unittest.TestCase):    
 

@@ -2,10 +2,10 @@ import sys
 
 import nltk
 
-from pymunk_cd.parsing.cd_converter import CDConverter
+from condep.parsing.cd_converter import CDConverter
 from .VerbSense import VerbArgument, VerbSense
 
-import pymunk_cd.utilities as utilities
+import condep.utilities as utilities
 
 class VerbLookup:
     

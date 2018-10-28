@@ -2,17 +2,17 @@ from unittest import mock
 from unittest.mock import patch
 import unittest
 
-from pymunk_cd.action_event import ActionEvent
-from pymunk_cd.primitives import Primitives
-from pymunk_cd.CDManager import CDManager
-from pymunk_cd.CompoundEntity import CompoundEntity
+from condep.action_event import ActionEvent
+from condep.primitives import Primitives
+from condep.CDManager import CDManager
+from condep.CompoundEntity import CompoundEntity
 
-from pymunk_cd.parsing.cd_definitions import CDDefinition
-from pymunk_cd.parsing.cd_definitions import EntityAttributes
-from pymunk_cd.action_event import EntityAttributeOutcomes
+from condep.parsing.cd_definitions import CDDefinition
+from condep.parsing.cd_definitions import EntityAttributes
+from condep.action_event import EntityAttributeOutcomes
 
-from pymunk_cd.definitions import verbs
-from pymunk_cd.definitions import primitives
+from condep.definitions import verbs
+from condep.definitions import primitives
 
 
 class ReturnsCandidateVerbsForScenario(unittest.TestCase):

@@ -2,11 +2,11 @@ from unittest import mock
 from unittest.mock import patch
 import unittest
 
-from pymunk_cd.action_event import EntityAttributes
-from pymunk_cd.action_event import EntityAttributeOutcomes
-from pymunk_cd.cd_event import CDEvent
-from pymunk_cd.primitives import Primitives
-from pymunk_cd.prolog import converter
+from condep.action_event import EntityAttributes
+from condep.action_event import EntityAttributeOutcomes
+from condep.cd_event import CDEvent
+from condep.primitives import Primitives
+from condep.prolog import converter
 
 
 class ConvertEventToPredicates(unittest.TestCase):

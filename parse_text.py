@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import sys
 
-from pymunk_cd.setup import setup_pymunk_environment
+from condep.setup import setup_pymunk_environment
 
-from pymunk_cd.parsing.cd_converter import CDConverter
-from pymunk_cd.parsing.NLPParser import NLPParser, VerbLookup
+from condep.parsing.cd_converter import CDConverter
+from condep.parsing.NLPParser import NLPParser, VerbLookup
 
 args = sys.argv
 

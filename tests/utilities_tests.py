@@ -1,7 +1,7 @@
 from unittest import mock
 import unittest
 
-from pymunk_cd import utilities
+from condep import utilities
 
 
 class ReturnsSquareMatrix(unittest.TestCase):

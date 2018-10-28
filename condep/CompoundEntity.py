@@ -3,9 +3,9 @@ import pymunk
 from .action_event import ActionEvent
 from .action_event import EntityAttributes
 from .action_event import EntityAttributeOutcomes
-import pymunk_cd.primitives as EventType
+import condep.primitives as EventType
 # from .EventType import EventType
-from pymunk_cd import *
+from condep import *
 
 import statistics
 

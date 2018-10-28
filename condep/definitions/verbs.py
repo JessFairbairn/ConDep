@@ -1,9 +1,9 @@
-from pymunk_cd.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
+from condep.parsing.cd_definitions import CDDefinition, CDDefinitionPredecessorWrapper
 
-from pymunk_cd.action_event import EntityAttributes
-from pymunk_cd.action_event import EntityAttributeOutcomes
+from condep.action_event import EntityAttributes
+from condep.action_event import EntityAttributeOutcomes
 
-from pymunk_cd.primitives import Primitives
+from condep.primitives import Primitives
 
 dictionary = dict() # type: Dict[str, object]
 

@@ -1,8 +1,8 @@
-from pymunk_cd.primitives import Primitives
-from pymunk_cd.action_event import EntityAttributes
-from pymunk_cd.action_event import EntityAttributeOutcomes
+from condep.primitives import Primitives
+from condep.action_event import EntityAttributes
+from condep.action_event import EntityAttributeOutcomes
 
-from pymunk_cd.parsing.cd_definitions import *
+from condep.parsing.cd_definitions import *
 
 from typing import Dict
 
