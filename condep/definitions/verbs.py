@@ -11,7 +11,7 @@ dictionary = dict() # type: Dict[str, object]
 ##EXPEL
 _emit = CDDefinition(Primitives.EXPEL)
 _emit.sense_id = 'emit'
-_emit.object_constraint = 'kind(raidiation)'
+_emit.object_override = 'kind(raidiation)'
 _emit.affected_attribute = EntityAttributes.inside_subject
 _emit.attribute_outcome = EntityAttributeOutcomes.outside
 
@@ -40,6 +40,17 @@ _fall.preceding.definition = CDDefinition(Primitives.PROPEL)
 _fall.preceding.definition.affected_attribute = EntityAttributes.distance_from_subject
 _fall.preceding.definition.attribute_outcome = EntityAttributeOutcomes.decrease
 dictionary['fall'] = _fall
+
+
+_heat = CDDefinition(Primitives.INGEST)
+_heat.sense_id = 'heat.01'
+_heat.object_override = 'Energy'
+
+_heat.preceding = CDDefinitionPredecessorWrapper()
+_heat.preceding.applies_to = 'Subject'
+_heat.preceding.definition = CDDefinition(Primitives.EXPEL)
+
+dictionary['heat'] = _heat
 
 ##PTRANS
 _move = CDDefinition(Primitives.PTRANS)

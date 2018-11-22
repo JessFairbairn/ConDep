@@ -10,7 +10,9 @@ class CDDefinition:
 
     sense_id = None #type: str
     primitive = None # type: EventType
-    object_constraint = None 
+
+    object_override = None
+
     affected_attribute = None # type: EntityAttributes
     attribute_outcome = None # type: EntityAttributeOutcomes
 
