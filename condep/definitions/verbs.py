@@ -53,6 +53,17 @@ _heat.preceding.definition = CDDefinition(Primitives.EXPEL)
 
 dictionary['heat'] = _heat
 
+_charge = CDDefinition(Primitives.INGEST)
+_charge.sense_id = 'charge.03'
+_charge.object_override = 'Charge'
+_charge.actor_override = 'Object'
+
+_charge.preceding = CDDefinitionPredecessorWrapper()
+_charge.preceding.applies_to = 'Subject'
+_charge.preceding.definition = CDDefinition(Primitives.EXPEL)
+
+dictionary['charge'] = _charge
+
 ##PTRANS
 _move = CDDefinition(Primitives.PTRANS)
 _move.sense_id = 'move'
