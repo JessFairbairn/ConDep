@@ -45,6 +45,7 @@ dictionary['fall'] = _fall
 _heat = CDDefinition(Primitives.INGEST)
 _heat.sense_id = 'heat.01'
 _heat.object_override = 'Energy'
+_heat.actor_override = 'Object'
 
 _heat.preceding = CDDefinitionPredecessorWrapper()
 _heat.preceding.applies_to = 'Subject'

@@ -12,6 +12,7 @@ class CDDefinition:
     primitive = None # type: EventType
 
     object_override = None
+    actor_override = None
 
     affected_attribute = None # type: EntityAttributes
     attribute_outcome = None # type: EntityAttributeOutcomes
