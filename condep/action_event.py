@@ -25,3 +25,4 @@ class EntityAttributeOutcomes(Enum):
 
     increase = 3
     decrease = 4
+    zero = 5

@@ -24,6 +24,19 @@ _eject.attribute_outcome = EntityAttributeOutcomes.outside
 
 dictionary['eject'] = _eject
 
+_leave = CDDefinition(Primitives.EXPEL)
+
+_leave.preceding = CDDefinitionPredecessorWrapper()
+_leave.preceding.definition = CDDefinition(Primitives.PTRANS)
+_leave.preceding.definition.affected_attribute = EntityAttributes.distance_from_subject
+_leave.preceding.definition.attribute_outcome = EntityAttributeOutcomes.increase
+
+_leave.sense_id = 'leave'
+_leave.affected_attribute = EntityAttributes.inside_subject
+_leave.attribute_outcome = EntityAttributeOutcomes.outside
+
+dictionary['leave'] = _leave
+
 ##INGEST
 _absorb = CDDefinition(Primitives.INGEST)
 _absorb.sense_id = 'absorb'
@@ -64,13 +77,38 @@ _charge.preceding.definition = CDDefinition(Primitives.EXPEL)
 
 dictionary['charge'] = _charge
 
+_consume = CDDefinition(Primitives.INGEST)
+_consume.sense_id = 'consume.v.02'
+dictionary['consume'] = _consume
+
+_take = CDDefinition(Primitives.INGEST)
+_take.preceding = CDDefinitionPredecessorWrapper()
+_take.preceding.definition = CDDefinition(Primitives.PTRANS)
+_take.preceding.definition.affected_attribute =   EntityAttributes.distance_from_subject
+
+_take.preceding.definition.attribute_outcome =    EntityAttributeOutcomes.decrease
+dictionary['take'] = _take
+
+_enter = CDDefinition(Primitives.INGEST)
+_enter.actor_override = 'Container'
+_enter.object_override = 'Subject'
+
+_enter.preceding = CDDefinitionPredecessorWrapper()
+_enter.preceding.applies_to = 'Subject'
+_enter.preceding.definition = CDDefinition(Primitives.PTRANS)
+_enter.preceding.definition.affected_attribute =   EntityAttributes.distance_from_subject
+_enter.preceding.definition.attribute_outcome =    EntityAttributeOutcomes.decrease
+dictionary['enter'] = _enter
+
 ##PTRANS
 _move = CDDefinition(Primitives.PTRANS)
+_move.sense_id = 'move.v.02'
 _move.sense_id = 'move'
 _move.affected_attribute = EntityAttributes.position
 
 dictionary['move'] = _move
 
+dictionary['displace'] = _move
 
 _escape = CDDefinition(Primitives.PTRANS)
 _escape.sense_id = 'escape'
@@ -78,6 +116,50 @@ _escape.affected_attribute = EntityAttributes.position
 
 dictionary['escape'] = _escape
 
+
+_receive = CDDefinition(Primitives.PTRANS)
+_receive.sense_id = 'receive.v.05'
+_receive.affected_attribute = EntityAttributes.distance_from_subject
+_receive.attribute_outcome = EntityAttributeOutcomes.decrease
+dictionary['receive'] = _receive
+
+_collide = CDDefinition(Primitives.PTRANS)
+_collide.affected_attribute = EntityAttributes.distance_from_subject
+_collide.attribute_outcome = EntityAttributeOutcomes.zero
+dictionary['collide'] = _collide
+
+_meet = CDDefinition(Primitives.PTRANS)
+_meet.affected_attribute = EntityAttributes.distance_from_subject
+_meet.attribute_outcome = EntityAttributeOutcomes.zero
+dictionary['meet'] = _meet
+
+_give = CDDefinition(Primitives.PTRANS)
+_give.affected_attribute = EntityAttributes.distance_from_subject
+_give.attribute_outcome = EntityAttributeOutcomes.increase
+dictionary['give'] = _give
+
+_CLOSE = CDDefinition(Primitives.PTRANS)
+_CLOSE.sense_id = 'close_up.v.01'
+_CLOSE.affected_attribute = EntityAttributes.position
+_CLOSE.object_override = "part(Object)"
+dictionary['close'] = _CLOSE
+
+_LOSE = CDDefinition(Primitives.PTRANS)
+_LOSE.affected_attribute = EntityAttributes.distance_from_subject
+_LOSE.object_override = "part(Subject)"
+dictionary['lose'] = _LOSE
+
+_ARRIVE = CDDefinition(Primitives.PTRANS)
+_ARRIVE.object_override = 'Subject'
+dictionary['arrive'] = _ARRIVE
+
+_APPEAR = CDDefinition(Primitives.PTRANS)
+_APPEAR.object_override = 'Subject'
+_APPEAR.sense_id = 'appear.v.02'
+dictionary['appear'] = _APPEAR
+
+_INSTALL = CDDefinition(Primitives.PTRANS)
+dictionary['install'] = _INSTALL
 
 ##MOVE
 _contract = CDDefinition(Primitives.MOVE)
@@ -98,6 +180,12 @@ _EXPAND.affected_attribute = EntityAttributes.radius
 _EXPAND.attribute_outcome = EntityAttributeOutcomes.increase
 dictionary['expand'] = _EXPAND
 
+_grow = CDDefinition(Primitives.MOVE)
+_grow.sense_id = 'grow'
+_grow.affected_attribute = EntityAttributes.radius
+_grow.attribute_outcome = EntityAttributeOutcomes.increase
+dictionary['grow'] = _grow
+
 _GORGE = CDDefinition(Primitives.MOVE)
 _GORGE.sense_id = 'gorge'
 _GORGE.affected_attribute = EntityAttributes.radius
@@ -107,7 +195,6 @@ _GORGE.preceding.definition = CDDefinition(Primitives.INGEST)
 dictionary['gorge'] = _GORGE
 
 _ACCRETE = CDDefinition(Primitives.MOVE)
-_ACCRETE.sense_id = 'accrete'
 _ACCRETE.affected_attribute = EntityAttributes.radius
 _ACCRETE.attribute_outcome = EntityAttributeOutcomes.increase
 
@@ -129,11 +216,7 @@ _DECELERATE.attribute_outcome = EntityAttributeOutcomes.decrease
 dictionary['decelerate'] = _DECELERATE
 
 # TODO:
-# escape
 # deform
 # reflect
 # form
-# grow
-# fall
-# heat
 # friction
