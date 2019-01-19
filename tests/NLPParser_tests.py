@@ -48,6 +48,23 @@ class PassesVerbDataToCDConverter(unittest.TestCase):
 
         mockCDConverter.convert_verb_event_to_cd_event.assert_called_once_with(mock_verb_data)
 
+class PassiveVoiceProcessingTests(unittest.TestCase):
+
+    @mock.patch('condep.parsing.cd_converter.CDConverter')
+    @mock.patch('condep.parsing.NLPParser.VerbLookup')
+    def test_gets_object_correctly(self, mockVerbLookup, mockCDConverter):
+
+        arg0 = VerbArgument('emitting entity', 'PAG')
+        arg1 = VerbArgument('thing emitted', 'PPT')
+        mock_verb_data = VerbSense("emit", [arg0, arg1])
+        mockVerbLookup.get_verb.return_value = mock_verb_data
+
+        parser = NLPParser(mockVerbLookup, mockCDConverter)
+        parser.parse_sentence('A rock is ejected from a star')
+
+        passed_verb_data = mockCDConverter.convert_verb_event_to_cd_event.call_args_list[0][0][0] # type: VerbSense
+        self.assertEqual(passed_verb_data.get_verb_object().argument, 'rock')
+        pass
 
 if __name__ == "__main__":
     unittest.main()

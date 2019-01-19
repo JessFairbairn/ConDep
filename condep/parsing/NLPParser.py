@@ -34,8 +34,18 @@ class NLPParser:
             words = words[0:-1]
             pos_tags = pos_tags[0:-1]
 
+        # check for passive voice
+        passive_voice = False
+        for i in range(0, len(pos_tags) - 1):
+            tup = pos_tags[i]
+            if tup[0] == 'is' and pos_tags[i+1][1] == 'VBN':
+                passive_voice = True
+                break
 
-        verbs = list(filter(lambda tuple: tuple[1].startswith('VB'), pos_tags))
+        if passive_voice:
+            verbs = list(filter(lambda tuple: tuple[1].startswith('VB') and tuple[0] != 'is', pos_tags))
+        else:
+            verbs = list(filter(lambda tuple: tuple[1].startswith('VB'), pos_tags))
 
         if len(verbs) == 1:
             verb = verbs[0][0]
@@ -44,16 +54,23 @@ class NLPParser:
             utilities.warn('No verbs found, guessing '+ verb + ' is verb')
         else:
             raise NotImplementedError('Multiple verbs found')
+        
+
 
         # stem verb
-        if verb.endswith('s'):
-            verb = verb[:-1]
-        
-        verb_info = self.verbLookup.get_verb(verb)
-        
-        verb_info.get_verb_subject().argument = words[0]
+        stemmer = nltk.stem.PorterStemmer()
+
+        verb_info = self.verbLookup.get_verb(stemmer.stem(verb))
+
 
         pos_tags = list(filter(lambda tuple: tuple, filter(lambda tuple: tuple[1] != 'DT', pos_tags)))
+        stripped_words = list(map(lambda pos: pos[0],pos_tags))
+        
+        if passive_voice:
+            verb_info.get_verb_object().argument = stripped_words[0]
+        else:
+            verb_info.get_verb_subject().argument = stripped_words[0]
+
 
         if len(pos_tags) == 3:
             verb_info.get_verb_object().argument = pos_tags[2][0]
@@ -63,8 +80,9 @@ class NLPParser:
                 raise NotImplementedError('Too many prepositions')
             elif not prepositions:
                 raise NotImplementedError('Sentence is too complex to process sorry :(')
-            index = words.index(prepositions[0])
-            location = words[index + 1]
+
+            index = stripped_words.index(prepositions[0])
+            location = stripped_words[index + 1]
 
             try:
                 propbank_tag = self.preposition_to_propbank[prepositions[0]]
