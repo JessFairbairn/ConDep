@@ -6,8 +6,7 @@ from condep.setup import setup_pymunk_environment
 
 from condep.parsing.cd_converter import CDConverter
 from condep.parsing.NLPParser import NLPParser, VerbLookup
-
-from condep.prolog import converter as prolog_converter
+from condep.prolog import prolog_service
 
 args = sys.argv
 
@@ -29,13 +28,6 @@ parser = NLPParser(verbLookup, converter)
 
 cd_event = parser.parse_sentence(sentence)
 
-tempFileWrapepr = tempfile.NamedTemporaryFile(suffix='.lgt')
 
-predicates = prolog_converter.convert_to_prolog(cd_event)
-fileContents = prolog_converter.output_logtalk_file(predicates)
 
-with open(tempFileWrapepr.name, "w") as tempFile:
-    tempFile.write(fileContents)
-
-from subprocess import run
-run(["swilgt","-s", "prolog/condep.lgt", "-s", tempFileWrapepr.name])#-s prolog/condep.lgt
+prolog_service.run_prolog_enivornment(cd_event)#-s prolog/condep.lgt

@@ -8,6 +8,8 @@ from condep.definitions import primitives as primitive_definitions
 
 from condep.definitions import verbs
 
+from condep.prolog import prolog_service
+
 class CDConverter:
 
     def convert_verb_event_to_cd_event(self, verb_data:VerbSense):
@@ -21,7 +23,11 @@ class CDConverter:
         prim_def = primitive_definitions.dictionary[verb_definition.primitive]
 
         event = CDConverter._merge_definitions(verb_definition, prim_def)
-        event.subject = subject.argument
+        try:
+            event.subject = subject.argument
+        except AttributeError:
+            pass
+            
         try:
             event.event_object = verb_object.argument
         except AttributeError:
@@ -32,6 +38,9 @@ class CDConverter:
             prec_verb_def = verb_definition.preceding
             prec_prim_def = primitive_definitions.dictionary[prec_verb_def.definition.primitive]
             event.preceding = CDConverter._merge_definitions(prec_verb_def.definition, prec_prim_def)
+
+        #TODO: check for missing info
+        self._check_missing_info(event)
 
         return event
 
@@ -87,3 +96,9 @@ class CDConverter:
             
 
         return new_def
+
+    @staticmethod
+    def _check_missing_info(event:CDEvent):
+        if not event.subject:
+            if event.primitive == Primitives.EXPEL or event.primitive == Primitives.INGEST:
+                prolog_service.query_prolog(event)
