@@ -135,7 +135,11 @@ def _spawn_entity(manager: CDManager, kind: str, offset: int=0, collision: Colli
         'radiation': lambda manager: CDUtilities.create_particle(manager, x, y, collision_type=collision),
     }
 
-    return factory_dict[kind](manager)
+    try:
+        return factory_dict[kind](manager)
+    except KeyError:
+        print(f'No definition for {kind}, using generic object for simulation')
+        return CDUtilities.create_particle(manager, x, y, collision_type=collision)
 
 
 def _apply_attributes(event: ActionEvent, agent: CompoundEntity, patient: CompoundEntity):
