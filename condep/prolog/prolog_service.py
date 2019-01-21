@@ -16,10 +16,10 @@ def query_prolog(cd_event:CDEvent):
 
     eventName = 'eve' + str(id(cd_event))
 
-    goal = f'state::objectOfEvent(A,{eventName}), nonvar(A), write(A)'
+    goal = f'state::actorOfEvent(A,{eventName}), nonvar(A), write(A)'
     try:
         proc = subprocess.Popen(
-            ["swilgt","-q","-s", "prolog/condep.lgt", "-s", tempFileWrapper.name, '-g', f'{goal}.', '-t', 'halt'],
+            ["swilgt",'-q',"-s", "prolog/condep.lgt", "-s", tempFileWrapper.name, '-g', f'{goal}.', '-t', 'halt'],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )#-s prolog/condep.lgt
         
@@ -28,12 +28,14 @@ def query_prolog(cd_event:CDEvent):
         if return_code == 0:
             answer = proc.communicate(timeout=15)[0].decode()
         else:
-            errs = proc.communicate(timeout=15)[1]
-            raise ChildProcessError(errs)
+            out, errs = proc.communicate(timeout=15)
+            raise ChildProcessError(errs.decode())
 
-        return
+        return answer
     finally:
         proc.wait()
+
+
 ## PRIVATE
 
 def _setup_prolog(cd_event):

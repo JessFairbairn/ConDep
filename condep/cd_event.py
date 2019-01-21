@@ -12,6 +12,9 @@ class CDEvent:
     event_object = None # type: str
     '''Object in logical sense'''
 
+    actor_attributes = dict()
+    object_attributes = dict()
+
     affected_attribute = None
     attribute_outcome = None
 

@@ -12,6 +12,9 @@
     ]
 ).
 
+:- discontiguous(actorOfEvent/2).
+
+
 %%% Event defintions %%%
 isEvent(B) :- ::expelEvent(B).
 isEvent(B) :- ::injestEvent(B).
@@ -55,10 +58,16 @@ missingEventBetween(ExpEvent, InjEvent) :-
     ::beforeEvent(T1,InjEvent) ; ::afterEvent(InjEvent, T1).
     % not((::isEvent(MiddleEvent),::betweenEvents(MiddleEvent, T1, InjEvent))).
 
-    
+% in expel events, the actor is the position of the object just before the event
+actorOfEvent(Container, Event) :-
+    ::objectOfEvent(Obj, Event),
+    ::justBefore(T, Event),
+    ::inside(Obj, Container, T).
 
 
 %%% Physical definitions %%%
+% entityPosition(_entity, _position, _time).
+
 inside(Food,Eater,T) :-
     ::isTime(T),
     ::injestEvent(InjEvent),
