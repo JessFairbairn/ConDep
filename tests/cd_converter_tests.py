@@ -120,7 +120,29 @@ class ConvertVerbToCdEvent(unittest.TestCase):
             event = converter.convert_verb_event_to_cd_event(mock_verb_data)
             self.assertEqual(event.preceding.primitive, Primitives.PROPEL)
 
-                
+    def test_handlesComplexArguments(self):
+        converter = cd_converter.CDConverter()
+
+        arg0 = VerbArgumentInstance(None, 'PAG', 'Barbara')
+        arg0 = VerbArgumentInstance('position before', 'DIR', 'Preston')
+        mock_verb_data = VerbSense("nom", [arg0])
+
+        fake_verb_def = CDDefinition(Primitives.INGEST)
+        fake_verb_def.sense_id = 'nom'
+
+        my_dict = {'nom': fake_verb_def}
+
+        def getitem(name):
+            return my_dict[name]
+
+        mock_dictionary = mock.MagicMock()
+        mock_dictionary.__getitem__.side_effect = getitem
+        
+        with patch('condep.definitions.verbs.dictionary', new = mock_dictionary):
+            with patch('condep.prolog.prolog_service.query_prolog'):
+
+                event = converter.convert_verb_event_to_cd_event(mock_verb_data)
+                self.assertDictContainsSubset({'position_before':'Preston'}, event.object_attributes)
 
 
 class ConvertCDEventToActionEvent(unittest.TestCase):

@@ -14,9 +14,6 @@ class CDConverter:
 
     def convert_verb_event_to_cd_event(self, verb_data:VerbSense):
         '''Outputs a CDEvent'''
-        
-        subject = [arg for arg in verb_data.arguments if arg.type == 'PAG'][0]
-        verb_object = [arg for arg in verb_data.arguments if arg.type == 'PPT'][0]
 
         # get verb definition
         verb_definition = verbs.dictionary[verb_data.verb_sense_id or verb_data.verb_name]
@@ -24,15 +21,22 @@ class CDConverter:
 
         event = CDConverter._merge_definitions(verb_definition, prim_def)
         try:
+            subject = [arg for arg in verb_data.arguments if arg.type == 'PAG'][0]
             event.subject = subject.argument
-        except AttributeError:
+        except (AttributeError, IndexError):
             pass
             
         try:
+            verb_object = [arg for arg in verb_data.arguments if arg.type == 'PPT'][0]
             event.event_object = verb_object.argument
-        except AttributeError:
+        except (AttributeError, IndexError):
             pass
-        #TODO: handle more complex argument types
+
+        # handle other verb arguments
+        for argument in verb_data.arguments:
+            role = argument.type
+            if role == 'DIR':
+                event.object_attributes['position_before']  = argument.argument
 
         if verb_definition.preceding:
             prec_verb_def = verb_definition.preceding
@@ -101,4 +105,4 @@ class CDConverter:
     def _check_missing_info(event:CDEvent):
         if not event.subject:
             if event.primitive == Primitives.EXPEL or event.primitive == Primitives.INGEST:
-                prolog_service.query_prolog(event)
+                event.subject = prolog_service.query_prolog(event)
