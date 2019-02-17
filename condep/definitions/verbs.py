@@ -11,7 +11,7 @@ dictionary = dict() # type: Dict[str, object]
 ##EXPEL
 _emit = CDDefinition(Primitives.EXPEL)
 _emit.sense_id = 'emit'
-_emit.object_override = 'kind(raidiation)'
+_emit.object_override = 'kind(radiation)'
 _emit.affected_attribute = EntityAttributes.inside_subject
 _emit.attribute_outcome = EntityAttributeOutcomes.outside
 
@@ -107,6 +107,7 @@ _move.sense_id = 'move'
 _move.affected_attribute = EntityAttributes.position
 
 dictionary['move'] = _move
+dictionary['move.v.03'] = _move
 
 dictionary['displace'] = _move
 
@@ -161,6 +162,13 @@ dictionary['appear'] = _APPEAR
 _INSTALL = CDDefinition(Primitives.PTRANS)
 dictionary['install'] = _INSTALL
 
+
+_PRESSURIZE = CDDefinition(Primitives.PTRANS)
+_PRESSURIZE.object_override = 'kind(Fluid)'
+_PRESSURIZE.object_attributes['position_after'] = 'inside(Object)'
+dictionary['pressurize'] = _PRESSURIZE
+
+
 ##MOVE
 _contract = CDDefinition(Primitives.MOVE)
 _contract.sense_id = 'contract'
@@ -197,6 +205,7 @@ dictionary['gorge'] = _GORGE
 _ACCRETE = CDDefinition(Primitives.MOVE)
 _ACCRETE.affected_attribute = EntityAttributes.radius
 _ACCRETE.attribute_outcome = EntityAttributeOutcomes.increase
+_ACCRETE.object_override = 'Radius'
 
 _ACCRETE.preceding = CDDefinitionPredecessorWrapper()
 _ACCRETE.preceding.definition = CDDefinition(Primitives.INGEST)
