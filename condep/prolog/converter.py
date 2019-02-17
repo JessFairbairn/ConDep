@@ -26,7 +26,7 @@ def convert_to_prolog(event: CDEvent):
             beforeEvent = 'bef' + str(id(event))
 
             beforePred = f'justBefore({beforeEvent}, {eventName}).'
-            objectPred = f'inside({event.event_object}, {value}, beforeEvent).'
+            objectPred = f'inside({event.event_object}, {value}, {beforeEvent}).'
 
             predicates = predicates + [beforePred, objectPred]
 
