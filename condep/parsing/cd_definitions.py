@@ -14,6 +14,9 @@ class CDDefinition:
     object_override = None
     actor_override = None
 
+    object_attributes = dict()
+    actor_attributes = dict()
+
     affected_attribute = None # type: EntityAttributes
     attribute_outcome = None # type: EntityAttributeOutcomes
 
