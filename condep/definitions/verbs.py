@@ -45,14 +45,7 @@ _absorb.attribute_outcome = EntityAttributeOutcomes.inside
 
 dictionary['absorb'] = _absorb
 
-_fall = CDDefinition(Primitives.INGEST)
-_fall.sense_id = 'fall'
 
-_fall.preceding = CDDefinitionPredecessorWrapper()
-_fall.preceding.definition = CDDefinition(Primitives.PROPEL)
-_fall.preceding.definition.affected_attribute = EntityAttributes.distance_from_subject
-_fall.preceding.definition.attribute_outcome = EntityAttributeOutcomes.decrease
-dictionary['fall'] = _fall
 
 
 _heat = CDDefinition(Primitives.INGEST)
@@ -65,6 +58,18 @@ _heat.preceding.applies_to = 'Subject'
 _heat.preceding.definition = CDDefinition(Primitives.EXPEL)
 
 dictionary['heat'] = _heat
+
+_POWER = CDDefinition(Primitives.INGEST)
+_POWER.object_override = 'Energy'
+_POWER.actor_override = 'Object'
+
+_POWER.preceding = CDDefinitionPredecessorWrapper()
+_POWER.preceding.applies_to = 'Subject'
+_POWER.preceding.definition = CDDefinition(Primitives.EXPEL)
+
+dictionary['power'] = _POWER
+
+
 
 _charge = CDDefinition(Primitives.INGEST)
 _charge.sense_id = 'charge.03'
@@ -84,9 +89,9 @@ dictionary['consume'] = _consume
 _take = CDDefinition(Primitives.INGEST)
 _take.preceding = CDDefinitionPredecessorWrapper()
 _take.preceding.definition = CDDefinition(Primitives.PTRANS)
-_take.preceding.definition.affected_attribute =   EntityAttributes.distance_from_subject
+_take.preceding.definition.affected_attribute = EntityAttributes.distance_from_subject
 
-_take.preceding.definition.attribute_outcome =    EntityAttributeOutcomes.decrease
+_take.preceding.definition.attribute_outcome = EntityAttributeOutcomes.decrease
 dictionary['take'] = _take
 
 _enter = CDDefinition(Primitives.INGEST)
@@ -95,6 +100,7 @@ _enter.object_override = 'Subject'
 
 _enter.preceding = CDDefinitionPredecessorWrapper()
 _enter.preceding.applies_to = 'Subject'
+_enter.preceding.object_override = 'Subject'
 _enter.preceding.definition = CDDefinition(Primitives.PTRANS)
 _enter.preceding.definition.affected_attribute =   EntityAttributes.distance_from_subject
 _enter.preceding.definition.attribute_outcome =    EntityAttributeOutcomes.decrease
@@ -167,6 +173,11 @@ _PRESSURIZE = CDDefinition(Primitives.PTRANS)
 _PRESSURIZE.object_override = 'kind(Fluid)'
 _PRESSURIZE.object_attributes['position_after'] = 'inside(Object)'
 dictionary['pressurize'] = _PRESSURIZE
+
+_DEFLECT = CDDefinition(Primitives.PTRANS)
+_DEFLECT.affected_attribute = EntityAttributes.distance_from_subject
+_DEFLECT.attribute_outcome = EntityAttributeOutcomes.increase
+dictionary['deflect'] = _DEFLECT
 
 
 ##MOVE
