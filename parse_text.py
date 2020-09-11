@@ -4,7 +4,7 @@ import sys
 from condep.setup import setup_pymunk_environment
 
 from condep.parsing.cd_converter import CDConverter
-from condep.parsing.NLPParser import NLPParser, VerbLookup
+from condep.parsing.SpacyParser import NLPParser, VerbLookup
 
 args = sys.argv
 
